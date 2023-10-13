@@ -37,3 +37,4 @@ out/
 .vscode/
 
 .aws-sam
+**.toml

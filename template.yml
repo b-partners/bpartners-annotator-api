@@ -1,0 +1,63 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: BPartners Annotator API - Computation and API
+
+Parameters:
+  Env:
+    Type: String
+  Subnet1Id:
+    Type: String
+  Subnet2Id:
+    Type: String
+  SecurityGroupId:
+    Type: String
+
+
+Globals:
+  Function:
+    Runtime: java17
+    Tracing: Active
+    Architectures:
+      - x86_64
+    Timeout: 60
+    MemorySize: 1024
+
+Resources:
+  BpartnersAnnotatorApiFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: .
+      AutoPublishAlias: live
+      SnapStart:
+        ApplyOn: PublishedVersions
+      Handler: api.bpartners.annotator.LambdaHandler::handleRequest
+      VpcConfig:
+        SecurityGroupIds:
+          - !Ref SecurityGroupId
+        SubnetIds:
+          - !Ref Subnet1Id
+          - !Ref Subnet2Id
+      Events:
+        ApiCall:
+          Type: Api
+          Properties:
+            Path: /{proxy+}
+            Method: ANY
+
+  ApplicationResourceGroup:
+    Type: AWS::ResourceGroups::Group
+    Properties:
+      Name:
+        Fn::Sub: ApplicationInsights-SAM-${AWS::StackName}
+      ResourceQuery:
+        Type: CLOUDFORMATION_STACK_1_0
+  ApplicationInsightsMonitoring:
+    Type: AWS::ApplicationInsights::Application
+    Properties:
+      ResourceGroupName: !Ref ApplicationResourceGroup
+      AutoConfigurationEnabled: 'true'
+
+Outputs:
+  BpartnersApiAnnotator:
+    Description: API Gateway endpoint URL for Prod stage for Bpartners Annotator Api function
+    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod"
