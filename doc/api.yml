@@ -70,6 +70,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Job'
+        '500':
+          $ref: '#/components/responses/500'
   '/teams/{teamId}/jobs/{jobId}/stop':
     put:
       tags:
@@ -94,6 +96,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Job'
+        '500':
+          $ref: '#/components/responses/500'
 
   '/teams/{teamId}/jobs/{jobId}':
     post:
@@ -124,6 +128,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Job'
+        '500':
+          $ref: '#/components/responses/500'
 
   '/teams/{teamId}/jobs/{jobId}/request_task':
     get:
@@ -148,9 +154,35 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Task"
+        '500':
+          $ref: '#/components/responses/500'
 
 components:
   responses:
+    400:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/BadRequestException'
+    403:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/NotAuthorizedException'
+    404:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ResourceNotFoundException'
+    429:
+      description: Too many requests to the API
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/TooManyRequestsException'
     '500':
       description: Internal server error
       content:
@@ -241,3 +273,27 @@ components:
       example:
         type: InternalServerException
         message: Unexpected error
+    BadRequestException:
+      allOf:
+        - $ref: '#/components/schemas/Exception'
+      example:
+        type: BadRequestException
+        message: Bad request
+    NotAuthorizedException:
+      allOf:
+        - $ref: '#/components/schemas/Exception'
+      example:
+        type: NotAuthorizedException
+        message: Not authorized
+    ResourceNotFoundException:
+      allOf:
+        - $ref: '#/components/schemas/Exception'
+      example:
+        type: ResourceNotFoundException
+        message: Resource of type <T> identified by <I> not found
+    TooManyRequestsException:
+      allOf:
+        - $ref: '#/components/schemas/Exception'
+      example:
+        type: TooManyRequestsException
+        message: Too many requests
