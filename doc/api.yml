@@ -1,0 +1,243 @@
+openapi: 3.0.3
+info:
+  version: '1.0'
+  title: Image Annotation API
+
+servers:
+  - url: ''
+
+paths:
+  '/ping':
+    get:
+      tags:
+        - Security
+      summary: Check server health
+      operationId: checkHealth
+      responses:
+        '200':
+          description: pong
+          content:
+            application/json:
+              schema:
+                type: string
+                example: pong
+        500:
+          $ref: './api.yml#/components/responses/500'
+  '/teams/{teamId}/jobs':
+    get:
+      tags:
+        - Jobs
+      summary: Get a list of jobs
+      operationId: getJobs
+      parameters:
+        - name: teamId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: List of jobs
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Job'
+        '500':
+          $ref: '#/components/responses/500'
+  '/teams/{teamId}/jobs/{jobId}/start':
+    put:
+      tags:
+        - Jobs
+      summary: Start a job and computes its task from the S3 folder
+      operationId: startJob
+      parameters:
+        - name: teamId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: jobId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A successfully started job
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Job'
+  '/teams/{teamId}/jobs/{jobId}/stop':
+    put:
+      tags:
+        - Jobs
+      summary: Stops a job and resets its tasks
+      operationId: stopJob
+      parameters:
+        - name: teamId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: jobId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A successfully stopped job
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Job'
+
+  '/teams/{teamId}/jobs/{jobId}':
+    post:
+      tags:
+        - Jobs
+      summary: Create a job
+      operationId: createJob
+      parameters:
+        - name: teamId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: jobId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateJob'
+      responses:
+        '200':
+          description: A job
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Job'
+
+  '/teams/{teamId}/jobs/{jobId}/request_task':
+    get:
+      tags:
+        - Tasks
+      operationId: getTask
+      parameters:
+        - name: teamId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: jobId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: get an annotation task for a job
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Task"
+
+components:
+  responses:
+    '500':
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/InternalServerException'
+  schemas:
+    CreateJob:
+      type: object
+      properties:
+        id:
+          type: string
+        bucketPath:
+          type: string
+
+    Job:
+      type: object
+      allOf:
+        - $ref: "#/components/schemas/CreateJob"
+      properties:
+        status:
+          $ref: "#/components/schemas/JobStatus"
+        tasks:
+          type: array
+          items:
+            $ref: "#/components/schemas/Task"
+    JobStatus:
+      type: string
+      enum:
+        - STARTED
+        - FAILED
+        - COMPLETED
+    Task:
+      type: object
+      properties:
+        id:
+          type: string
+        imageURI:
+          type: string
+        status:
+          $ref: "#/components/schemas/TaskStatus"
+    TaskStatus:
+      type: string
+      enum:
+        - PENDING
+        - UNDER_COMPLETION
+        - COMPLETED
+    TaskResponse:
+      type: object
+      properties:
+        annotations:
+          type: array
+          items:
+            $ref: '#/components/schemas/Annotation'
+    Annotation:
+      type: object
+      properties:
+        label:
+          type: string
+        polygon:
+          $ref: '#/components/schemas/Polygon'
+    Polygon:
+      type: object
+      properties:
+        points:
+          type: array
+          items:
+            $ref: '#/components/schemas/Point'
+    Point:
+      type: object
+      properties:
+        x:
+          type: number
+          format: double
+        y:
+          type: number
+          format: double
+    Exception:
+      type: object
+      properties:
+        type:
+          type: string
+        message:
+          type: string
+    InternalServerException:
+      allOf:
+        - $ref: '#/components/schemas/Exception'
+      example:
+        type: InternalServerException
+        message: Unexpected error
