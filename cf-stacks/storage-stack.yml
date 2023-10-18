@@ -1,0 +1,85 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: Storage stack for BPartners Annotator
+
+Parameters:
+  Env:
+    Type: String
+  DBName:
+    Type: String
+    Default: bpartners_annotator
+
+Resources:
+  DeploymentPackageStorage:
+    Type: AWS::S3::Bucket
+    DeletionPolicy: Retain
+    Properties:
+      VersioningConfiguration:
+        Status: Enabled
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: true
+        BlockPublicPolicy: true
+        IgnorePublicAcls: true
+        RestrictPublicBuckets: true
+
+  BucketSSM:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Name: !Join [ '', [ /bpartners-annotator/, !Ref Env, /deployment-package/s3/bucket-name ] ]
+      Type: String
+      Value: !Ref DeploymentPackageStorage
+
+  DBSubnetGroup:
+    Type: AWS::RDS::DBSubnetGroup
+    Properties:
+      DBSubnetGroupDescription: !Join [ '', [ Subnet group for Bpartners Annotator , !Ref Env ] ]
+      DBSubnetGroupName: !Join [ '', [ bpartners-annotator-, !Ref Env, -subnet-group ] ]
+      SubnetIds:
+        - !Sub '{{resolve:ssm:/bpartners/private/subnet1/id}}'
+        - !Sub '{{resolve:ssm:/bpartners/private/subnet2/id}}'
+
+  DatabaseCluster:
+    Type: AWS::RDS::DBCluster
+    Properties:
+      BackupRetentionPeriod: 35
+      DatabaseName: !Ref DBName
+      DBSubnetGroupName: !Ref DBSubnetGroup
+      DeletionProtection: true
+      Engine: aurora-postgresql
+      EngineMode: serverless
+      EngineVersion: 13.9 #Only postgresql version 13.9 and 11.9 supports Aurora serverless v1
+      MasterUsername: !Sub '{{resolve:ssm:/bpartners-annotator/${Env}/db/username}}'
+      MasterUserPassword: !Sub '{{resolve:ssm:/bpartners-annotator/${Env}/db/password}}'
+      VpcSecurityGroupIds:
+        - !Sub '{{resolve:ssm:/bpartners/sg/id}}'
+
+  DatabaseClusterSSM:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Name: !Join [ '', [ /bpartners/, !Ref Env, /db/url ] ]
+      Type: String
+      Value:
+        Fn::Join:
+          - ''
+          - - jdbc:postgresql://
+            - Fn::GetAtt:
+                - DatabaseCluster
+                - Endpoint.Address
+            - ':'
+            - Fn::GetAtt:
+                - DatabaseCluster
+                - Endpoint.Port
+            - '/'
+            - !Ref DBName
+
+  DatabaseClusterIdentifierSSM:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Name: !Join [ '', [ /bpartners-annotator/, !Ref Env, /db/identifier ] ]
+      Type: String
+      Value: !GetAtt DatabaseCluster.Endpoint.Address
+
+Outputs:
+  DatabaseClusterSSM:
+    Value: !GetAtt DatabaseClusterSSM.Value
+  BucketSSM:
+    Value: !GetAtt BucketSSM.Value
