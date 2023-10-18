@@ -65,6 +65,7 @@ task generateJavaClient(type: org.openapitools.generator.gradle.plugin.tasks.Gen
     enablePostProcessFile = false
     version = 'latest'
 }
+
 task generateReactClient(type: org.openapitools.generator.gradle.plugin.tasks.GenerateTask) {
     generatorName = "typescript-axios"
     inputSpec = "$rootDir/doc/api.yml".toString()
@@ -84,6 +85,7 @@ task generateReactClient(type: org.openapitools.generator.gradle.plugin.tasks.Ge
             npmVersion        : project.properties["args"] ?: "latest"
     ]
 }
+
 task publishJavaClientToMavenLocal(type: Exec, dependsOn: generateJavaClient) {
     if (org.apache.tools.ant.taskdefs.condition.Os.isFamily(org.apache.tools.ant.taskdefs.condition.Os.FAMILY_WINDOWS)) {
         commandLine './.shell/publish_gen_to_maven_local.bat'
@@ -98,16 +100,23 @@ checkstyle {
     toolVersion '10.3.3'
     configFile file('config/checkstyle/google_checks_custom.xml')
 }
+
 checkstyleMain {
     source = 'src/main/java'
 }
+
 checkstyleTest {
     source = 'src/test/java'
 }
+
 tasks.withType(Checkstyle) {
     reports {
         xml.destination file("${projectDir}/build/reports/checkstyle/checkstyle.xml")
     }
+}
+
+ext {
+    set('testcontainersVersion', "1.19.0")
 }
 
 test {
@@ -117,27 +126,42 @@ test {
     useJUnitPlatform()
     finalizedBy jacocoTestReport
 }
+
 jacocoTestReport {
     dependsOn test
     reports {
         xml.required = true
     }
 }
+
 dependencies {
-//	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-//	implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-web'
+//	    implementation 'org.springframework.boot:spring-boot-starter-security'
+	    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+//      implementation 'org.springframework.boot:spring-boot-starter-validation'
+
     implementation 'com.amazonaws.serverless:aws-serverless-java-container-springboot3:2.0.0-M2'
+
     implementation 'api.bpartners.annotator:api-rest:latest'
+
     implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
+
+    implementation 'org.postgresql:postgresql'
+
     compileOnly 'org.projectlombok:lombok'
-    developmentOnly 'org.springframework.boot:spring-boot-devtools'
-    runtimeOnly 'org.postgresql:postgresql'
     annotationProcessor 'org.projectlombok:lombok'
+    testCompileOnly 'org.projectlombok:lombok'
+    testAnnotationProcessor 'org.projectlombok:lombok'
+
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
+
+    testImplementation 'org.testcontainers:junit-jupiter'
+    testImplementation 'org.testcontainers:postgresql'
 }
 
-tasks.named('test') {
-    useJUnitPlatform()
+dependencyManagement {
+    imports {
+        mavenBom "org.testcontainers:testcontainers-bom:${testcontainersVersion}"
+    }
 }
