@@ -4,7 +4,7 @@ info:
   title: Image Annotation API
 
 servers:
-  - url: ''
+  - url: 'https://annotator-api.dev.bpartners.app'
 
 paths:
   '/ping':
