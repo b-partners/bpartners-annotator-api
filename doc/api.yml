@@ -23,21 +23,16 @@ paths:
                 example: pong
         500:
           $ref: './api.yml#/components/responses/500'
-  '/teams/{teamId}/jobs':
+
+  '/jobs':
     get:
       tags:
         - Jobs
-      summary: Get a list of jobs
+      summary: Get all jobs
       operationId: getJobs
-      parameters:
-        - name: teamId
-          in: path
-          required: true
-          schema:
-            type: string
       responses:
         '200':
-          description: List of jobs
+          description: List of all jobs
           content:
             application/json:
               schema:
@@ -46,18 +41,14 @@ paths:
                   $ref: '#/components/schemas/Job'
         '500':
           $ref: '#/components/responses/500'
-  '/teams/{teamId}/jobs/{jobId}/start':
-    put:
+
+  '/jobs/{jobId}':
+    get:
       tags:
         - Jobs
-      summary: Start a job and computes its task from the S3 folder
-      operationId: startJob
+      summary: get a job specified by its id
+      operationId: getJob
       parameters:
-        - name: teamId
-          in: path
-          required: true
-          schema:
-            type: string
         - name: jobId
           in: path
           required: true
@@ -65,33 +56,30 @@ paths:
             type: string
       responses:
         '200':
-          description: A successfully started job
+          description: the job with the given id
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Job'
-        '500':
-          $ref: '#/components/responses/500'
-  '/teams/{teamId}/jobs/{jobId}/stop':
+                $ref: "#/components/schemas/Job"
     put:
       tags:
         - Jobs
-      summary: Stops a job and resets its tasks
-      operationId: stopJob
+      summary: Create or update a job
+      operationId: saveJob
       parameters:
-        - name: teamId
-          in: path
-          required: true
-          schema:
-            type: string
         - name: jobId
           in: path
           required: true
           schema:
             type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CrupdateJob'
       responses:
         '200':
-          description: A successfully stopped job
+          description: The created or updated job
           content:
             application/json:
               schema:
@@ -99,12 +87,89 @@ paths:
         '500':
           $ref: '#/components/responses/500'
 
-  '/teams/{teamId}/jobs/{jobId}':
-    post:
+  '/teams/{teamId}/jobs':
+    get:
       tags:
-        - Jobs
-      summary: Create a job
-      operationId: createJob
+        - TeamJobs
+      operationId: getTeamJobs
+      parameters:
+        - name: teamId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: get all jobs of a team
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Job"
+        '500':
+          $ref: '#/components/responses/500'
+
+  '/teams/{teamId}/jobs/{jobId}':
+    get:
+      tags:
+        - TeamJobs
+      summary: get a job specified by its id and the team owner
+      operationId: getTeamJobById
+      parameters:
+        - name: teamId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: jobId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: the job identified by its id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Job'
+        '500':
+          $ref: '#/components/responses/500'
+
+  '/teams/{teamId}/jobs/{jobId}/tasks':
+    get:
+      tags:
+        - UserTasks
+      summary: get all user tasks for a job
+      operationId: getUserTasksByJob
+      parameters:
+        - name: teamId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: jobId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: List of tasks for the specified Job and the specified Team
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Task'
+        '500':
+          $ref: '#/components/responses/500'
+    put:
+      tags:
+        - UserTasks
+      summary: updates a task status
+      operationId: updateTask
       parameters:
         - name: teamId
           in: path
@@ -120,24 +185,79 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreateJob'
+              $ref: "#/components/schemas/UpdateTask"
       responses:
         '200':
-          description: A job
+          description: the updated task
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Job'
+                $ref: "#/components/schemas/Task"
         '500':
           $ref: '#/components/responses/500'
 
-  '/teams/{teamId}/jobs/{jobId}/request_task':
+  '/jobs/{jobId}/tasks':
     get:
       tags:
         - Tasks
-      operationId: getTask
+      summary: gets information about a task
+      operationId: getJobTasks
+      parameters:
+        - name: jobId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A task
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+        '500':
+          $ref: '#/components/responses/500'
+
+  '/jobs/{jobId}/tasks/{taskId}':
+    get:
+      tags:
+        - Tasks
+      summary: gets information about a task
+      operationId: getJobTaskById
+      parameters:
+        - name: jobId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: taskId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A task
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+        '500':
+          $ref: '#/components/responses/500'
+
+  '/teams/{teamId}/users/{userId}/jobs/{jobId}/tasks/{taskId}/annotations':
+    put:
+      tags:
+        - Tasks
+      summary: annotates a task
+      operationId: annotateTask
       parameters:
         - name: teamId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: userId
           in: path
           required: true
           schema:
@@ -147,13 +267,24 @@ paths:
           required: true
           schema:
             type: string
+        - name: taskId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TaskAnnotation'
       responses:
         '200':
-          description: get an annotation task for a job
+          description:
+            Annotations on the task
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Task"
+                $ref: '#/components/schemas/TaskAnnotation'
         '500':
           $ref: '#/components/responses/500'
 
@@ -190,49 +321,67 @@ components:
           schema:
             $ref: '#/components/schemas/InternalServerException'
   schemas:
-    CreateJob:
+    CrupdateJob:
       type: object
       properties:
         id:
           type: string
         bucketPath:
           type: string
-
+        status:
+          $ref: '#/components/schemas/JobStatus'
+        teamId:
+          type: string
+        labels:
+          type: array
+          items:
+            $ref: "#/components/schemas/Label"
     Job:
       type: object
       allOf:
-        - $ref: "#/components/schemas/CreateJob"
+        - $ref: "#/components/schemas/CrupdateJob"
       properties:
-        status:
-          $ref: "#/components/schemas/JobStatus"
-        tasks:
-          type: array
-          items:
-            $ref: "#/components/schemas/Task"
+        remaining_tasks:
+          type: integer
+          format: int32
+          minimum: 0
     JobStatus:
       type: string
       enum:
+        - PENDING
+        - READY
         - STARTED
         - FAILED
         - COMPLETED
-    Task:
+    UpdateTask:
       type: object
       properties:
         id:
           type: string
-        imageURI:
+        userId:
           type: string
         status:
           $ref: "#/components/schemas/TaskStatus"
+    Task:
+      type: object
+      allOf:
+        - $ref: "#/components/schemas/UpdateTask"
+      properties:
+        imageURI:
+          type: string
     TaskStatus:
       type: string
       enum:
         - PENDING
         - UNDER_COMPLETION
         - COMPLETED
-    TaskResponse:
+    TaskAnnotation:
       type: object
       properties:
+        taskId:
+          type: string
+        jobId:
+          type: string
         annotations:
           type: array
           items:
@@ -240,6 +389,8 @@ components:
     Annotation:
       type: object
       properties:
+        id:
+          type: string
         label:
           type: string
         polygon:
@@ -260,6 +411,13 @@ components:
         y:
           type: number
           format: double
+    Label:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
     Exception:
       type: object
       properties:
