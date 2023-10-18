@@ -1,4 +1,13 @@
-# 0.1.0 (2023-10-18)
+## [0.1.1](https://github.com/b-partners/bpartners-annotator-api/compare/v0.1.0...v0.1.1) (2023-10-18)
+
+
+### Bug Fixes
+
+* npm install on react client ([218d4e8](https://github.com/b-partners/bpartners-annotator-api/commit/218d4e85c72b8359fd376e969412a92be9c73abb))
+
+
+
+# [0.1.0](https://github.com/b-partners/bpartners-annotator-api/compare/c8bffe77f83466cdc066fb6e71ec3ee1f948249a...v0.1.0) (2023-10-18)
 
 
 ### Features
