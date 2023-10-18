@@ -1,0 +1,33 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: Stack to create custom domain name for Bpartners Annotator Api
+
+Parameters:
+  DomainName:
+    Type: String
+    Description: The custom domain name **Required**
+  CertificateArn:
+    Type: String
+    Description: The arn of the ACM (certificate) of the domain name **Required**
+  ApiId:
+    Type: String
+    Description: The id of the api to target **Required**
+  ApiStage:
+    Type: String
+    Description: the api stage **Required**
+
+Resources:
+  CustomDomainName:
+    Type: AWS::ApiGatewayV2::DomainName
+    Properties:
+      DomainName: !Ref DomainName
+      DomainNameConfigurations:
+        - CertificateArn: !Ref CertificateArn
+          EndpointType: REGIONAL
+          SecurityPolicy: TLS_1_2
+
+  ApiMapping:
+    Type: AWS::ApiGatewayV2::ApiMapping
+    Properties:
+      DomainName: !Ref CustomDomainName
+      ApiId: !Ref ApiId
+      Stage: !Ref ApiStage
