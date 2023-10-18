@@ -11,6 +11,10 @@ Globals:
     Timeout: 60
     MemorySize: 1024
 
+Parameters:
+  Env:
+    Type: String
+
 Resources:
   BpartnersAnnotatorApiFunction:
     Type: AWS::Serverless::Function
@@ -20,6 +24,11 @@ Resources:
       SnapStart:
         ApplyOn: PublishedVersions
       Handler: api.bpartners.annotator.LambdaHandler::handleRequest
+      Environment:
+        Variables:
+          SPRING_DATASOURCE_URL: !Sub '{{resolve:ssm:/bpartners-annotator/${Env}/db/url}}'
+          SPRING_DATASOURCE_USERNAME: !Sub '{{resolve:ssm:/bpartners-annotator/${Env}/db/username}}'
+          SPRING_DATASOURCE_PASSWORD: !Sub '{{resolve:ssm:/bpartners-annotator/${Env}/db/password}}'
       VpcConfig:
         SecurityGroupIds:
           - !Sub '{{resolve:ssm:/bpartners/sg/id}}'
