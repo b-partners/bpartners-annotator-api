@@ -15,7 +15,7 @@ public class JobMapper {
   public Job toRest(api.bpartners.annotator.repository.jpa.model.Job domain) {
     return new Job()
         .id(domain.getId())
-        .remainingTasks(0)
+        .remainingTasks(domain.getTasks().size())
         .bucketPath(domain.getBucketPath())
         .status(statusMapper.toRest(domain.getStatus()))
         .labels(domain.getLabels().stream().map(labelMapper::toRest).toList())
@@ -25,6 +25,7 @@ public class JobMapper {
   public api.bpartners.annotator.repository.jpa.model.Job toDomain(CrupdateJob rest) {
     return api.bpartners.annotator.repository.jpa.model.Job.builder()
         .id(rest.getId())
+        .tasks(List.of())
         .status(statusMapper.toDomain(rest.getStatus()))
         .bucketPath(rest.getBucketPath())
         .teamId(rest.getTeamId())
