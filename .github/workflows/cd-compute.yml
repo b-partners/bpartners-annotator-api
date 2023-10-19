@@ -16,7 +16,7 @@ jobs:
 
     runs-on: ubuntu-latest
 
-    timeout-minutes: 45
+    timeout-minutes: 15
 
     env:
       AWS_REGION: eu-west-3
@@ -50,15 +50,8 @@ jobs:
           aws-secret-access-key: ${{ secrets.PROD_AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
 
-      - name: Retrieve S3 Bucket-name for storing package
-        id: s3_bucket_name
-        run: |
-          SSM_PARAMETER_NAME="/bpartners-annotator/${{ github.ref_name }}/deployment-package/s3/bucket-name"
-          SSM_PARAMETER_VALUE=$(aws ssm get-parameter --name $SSM_PARAMETER_NAME --query 'Parameter.Value' --output text)
-          echo "s3_bucket=$SSM_PARAMETER_VALUE" >> $GITHUB_ENV
-
       - name: Build application
         run: sam build
 
       - name: Deploy application
-        run: sam deploy --no-confirm-changeset --no-fail-on-empty-changeset --stack-name ${{ github.ref_name }}-bpartners-annotator-api --resolve-s3 --capabilities CAPABILITY_IAM --region ${{ env.AWS_REGION }} --parameter-overrides Env=${{ github.ref_name }}
+        run: sam deploy --no-confirm-changeset --no-fail-on-empty-changeset --stack-name ${{ github.ref_name }}-bpartners-annotator-api --capabilities CAPABILITY_IAM --parameter-overrides Env=${{ github.ref_name }} --resolve-s3
