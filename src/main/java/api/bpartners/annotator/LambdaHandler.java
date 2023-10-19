@@ -9,9 +9,7 @@ import com.amazonaws.services.lambda.runtime.RequestStreamHandler;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import org.springframework.stereotype.Component;
 
-@Component
 public class LambdaHandler implements RequestStreamHandler {
   private static final SpringBootLambdaContainerHandler<AwsProxyRequest, AwsProxyResponse> handler;
 
