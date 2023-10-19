@@ -26,12 +26,10 @@ import static api.bpartners.annotator.model.exception.ApiException.ExceptionType
 @Component
 @Slf4j
 public class EventProducer implements Consumer<List<TypedEvent>> {
+  private static final String EVENT_SOURCE = "api.bpartners.annotator";
   private final ObjectMapper om;
   private final String eventBusName;
   private final EventBridgeClient eventBridgeClient;
-
-
-  private static final String EVENT_SOURCE = "api.bpartners.annotator";
 
   public EventProducer(ObjectMapper om,
                        @Value("${aws.eventBridge.bus") String eventBusName,
@@ -39,21 +37,6 @@ public class EventProducer implements Consumer<List<TypedEvent>> {
     this.om = om;
     this.eventBusName = eventBusName;
     this.eventBridgeClient = eventBridgeClient;
-  }
-
-  @Configuration
-  public static class Conf {
-    private final Region region;
-    public static final int MAX_PUT_EVENT_ENTRIES = 10;
-
-    public Conf(@Value("${aws.region}") String region) {
-      this.region = Region.of(region);
-    }
-
-    @Bean
-    public EventBridgeClient getEventBridgeClient() {
-      return EventBridgeClient.builder().region(region).build();
-    }
   }
 
   @Override
@@ -100,6 +83,7 @@ public class EventProducer implements Consumer<List<TypedEvent>> {
           "Request entries must be <= " + Conf.MAX_PUT_EVENT_ENTRIES);
     }
   }
+
   private void checkResponse(PutEventsResponse response) {
     List<PutEventsResultEntry> failedEntries = new ArrayList<>();
     List<PutEventsResultEntry> successfulEntries = new ArrayList<>();
@@ -116,6 +100,21 @@ public class EventProducer implements Consumer<List<TypedEvent>> {
     }
     if (!successfulEntries.isEmpty()) {
       log.info("Following events were successfully sent: {}", successfulEntries);
+    }
+  }
+
+  @Configuration
+  public static class Conf {
+    public static final int MAX_PUT_EVENT_ENTRIES = 10;
+    private final Region region;
+
+    public Conf(@Value("${aws.region}") String region) {
+      this.region = Region.of(region);
+    }
+
+    @Bean
+    public EventBridgeClient getEventBridgeClient() {
+      return EventBridgeClient.builder().region(region).build();
     }
   }
 }
