@@ -9,25 +9,6 @@ Parameters:
     Default: bpartners_annotator
 
 Resources:
-  DeploymentPackageStorage:
-    Type: AWS::S3::Bucket
-    DeletionPolicy: Retain
-    Properties:
-      VersioningConfiguration:
-        Status: Enabled
-      PublicAccessBlockConfiguration:
-        BlockPublicAcls: true
-        BlockPublicPolicy: true
-        IgnorePublicAcls: true
-        RestrictPublicBuckets: true
-
-  BucketSSM:
-    Type: AWS::SSM::Parameter
-    Properties:
-      Name: !Join [ '', [ /bpartners-annotator/, !Ref Env, /deployment-package/s3/bucket-name ] ]
-      Type: String
-      Value: !Ref DeploymentPackageStorage
-
   DBSubnetGroup:
     Type: AWS::RDS::DBSubnetGroup
     Properties:
@@ -81,5 +62,3 @@ Resources:
 Outputs:
   DatabaseClusterSSM:
     Value: !GetAtt DatabaseClusterSSM.Value
-  BucketSSM:
-    Value: !GetAtt BucketSSM.Value
