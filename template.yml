@@ -28,7 +28,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: .
-      Handler: api.bpartners.annotator.LambdaHandler::handleRequest
+      Handler: api.bpartners.annotator.handler.LambdaHandler::handleRequest
       VpcConfig:
         SecurityGroupIds:
           - !Sub '{{resolve:ssm:/bpartners/sg/id}}'

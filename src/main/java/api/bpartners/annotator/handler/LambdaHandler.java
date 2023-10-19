@@ -1,5 +1,6 @@
-package api.bpartners.annotator;
+package api.bpartners.annotator.handler;
 
+import api.bpartners.annotator.BpartnersAnnotatorApiApplication;
 import com.amazonaws.serverless.exceptions.ContainerInitializationException;
 import com.amazonaws.serverless.proxy.model.AwsProxyRequest;
 import com.amazonaws.serverless.proxy.model.AwsProxyResponse;
