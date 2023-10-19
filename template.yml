@@ -28,9 +28,6 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: .
-      AutoPublishAlias: live
-      SnapStart:
-        ApplyOn: PublishedVersions
       Handler: api.bpartners.annotator.LambdaHandler::handleRequest
       VpcConfig:
         SecurityGroupIds:
