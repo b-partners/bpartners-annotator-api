@@ -31,9 +31,6 @@ jobs:
           java-version: '17'
           distribution: 'corretto'
 
-      - name: Install AWS SAM cli
-        uses: aws-actions/setup-sam@v1
-
       - name: Configure preprod AWS credentials
         if: ${{ github.ref_name != 'prod' }}
         uses: aws-actions/configure-aws-credentials@13d241b293754004c80624b5567555c4a39ffbe3
@@ -50,8 +47,12 @@ jobs:
           aws-secret-access-key: ${{ secrets.PROD_AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
 
-      - name: Build application
-        run: sam build
+      - name: Make gradlew executable
+        run: chmod +x gradlew
+
+      - run: ./gradlew build -x test
+
+      - run: sam build
 
       - name: Deploy application
         run: sam deploy --no-confirm-changeset --no-fail-on-empty-changeset --stack-name ${{ github.ref_name }}-bpartners-annotator-api --capabilities CAPABILITY_IAM --parameter-overrides Env=${{ github.ref_name }} --resolve-s3
