@@ -147,6 +147,7 @@ dependencies {
     implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
 
     implementation 'org.postgresql:postgresql'
+    implementation 'org.flywaydb:flyway-core'
 
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
