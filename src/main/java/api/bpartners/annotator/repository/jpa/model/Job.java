@@ -8,6 +8,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -31,6 +32,9 @@ public class Job {
   @ColumnTransformer(read = "CAST(status AS varchar)", write = "CAST(? AS job_status)")
   private JobStatus status;
   private String teamId;
+  @OneToMany()
+  @JoinColumn(insertable = false, updatable = false, name = "job_id", referencedColumnName = "id")
+  private List<Task> tasks;
   @ManyToMany()
   @JoinTable(name = "has_label", joinColumns = @JoinColumn(name = "job_id"), inverseJoinColumns = @JoinColumn(name = "label_id"))
   private List<Label> labels;
