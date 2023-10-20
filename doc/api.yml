@@ -251,19 +251,14 @@ paths:
         '500':
           $ref: '#/components/responses/500'
 
-  '/teams/{teamId}/jobs/{jobId}/tasks/{taskId}/annotations':
+  '/users/{userId}/tasks/{taskId}/annotations':
     put:
       tags:
-        - Tasks
+        - UserTasks
       summary: annotates a task
       operationId: annotateTask
       parameters:
-        - name: teamId
-          in: path
-          required: true
-          schema:
-            type: string
-        - name: jobId
+        - name: userId
           in: path
           required: true
           schema:
