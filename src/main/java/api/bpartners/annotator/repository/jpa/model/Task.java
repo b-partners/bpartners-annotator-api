@@ -8,7 +8,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Transient;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -30,8 +29,6 @@ public class Task {
   @ManyToOne
   @JoinColumn(name = "job_id", updatable = false, insertable = false)
   private Job job;
-  @Transient
-  private String imageURI;
   @Column(name = "s3_image_key")
   private String s3ImageKey;
   @Enumerated(STRING)

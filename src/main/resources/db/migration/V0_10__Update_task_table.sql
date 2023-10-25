@@ -1,0 +1,1 @@
+ALTER TABLE IF EXISTS task DROP COLUMN image_uri;
