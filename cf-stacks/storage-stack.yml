@@ -32,6 +32,8 @@ Resources:
       MasterUserPassword: !Sub '{{resolve:ssm:/bpartners-annotator/${Env}/db/password}}'
       VpcSecurityGroupIds:
         - !Sub '{{resolve:ssm:/bpartners/sg/id}}'
+      ScalingConfiguration:
+        SecondsUntilAutoPause: 910 # the time to wait before scaling down the DBCluster to 0
 
   DatabaseClusterSSM:
     Type: AWS::SSM::Parameter
