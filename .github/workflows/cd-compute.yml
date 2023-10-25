@@ -11,9 +11,6 @@ on:
   workflow_call:
 
 jobs:
-  check-api-health:
-    uses: ./.github/workflows/health-check.yml
-
   deploy-api:
     if: ${{ github.ref_name == 'prod' || github.ref_name == 'preprod' }}
 
