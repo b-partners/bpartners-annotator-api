@@ -272,7 +272,9 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/TaskAnnotation'
+              type: array
+              items:
+                $ref: '#/components/schemas/Annotation'
       responses:
         '200':
           description:
@@ -280,7 +282,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/TaskAnnotation'
+                type: array
+                items:
+                  $ref: '#/components/schemas/Annotation'
         '500':
           $ref: '#/components/responses/500'
 
@@ -371,24 +375,17 @@ components:
         - PENDING
         - UNDER_COMPLETION
         - COMPLETED
-    TaskAnnotation:
-      type: object
-      properties:
-        taskId:
-          type: string
-        jobId:
-          type: string
-        annotations:
-          type: array
-          items:
-            $ref: '#/components/schemas/Annotation'
     Annotation:
       type: object
       properties:
         id:
           type: string
-        label:
+        taskId:
           type: string
+        userId:
+          type: string
+        label:
+          $ref: '#/components/schemas/Label'
         polygon:
           $ref: '#/components/schemas/Polygon'
     Polygon:
