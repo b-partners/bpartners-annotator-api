@@ -38,3 +38,6 @@ out/
 
 .aws-sam
 **.toml
+
+### JPA BUDDY ###
+.jpb
