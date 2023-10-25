@@ -18,7 +18,7 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 @Testcontainers
 @SpringBootTest(webEnvironment = RANDOM_PORT)
 @ContextConfiguration(initializers = SecurityIT.ContextInitializer.class)
-public class SecurityIT {
+class SecurityIT {
 
   private static ApiClient anApiClient(String token) {
     return TestUtils.anApiClient(token, ContextInitializer.SERVER_PORT);
