@@ -4,7 +4,7 @@ info:
   title: Image Annotation API
 
 servers:
-  - url: 'https://annotator-api.dev.bpartners.app'
+  - url: 'https://annotator-api.preprod.bpartners.app'
 
 paths:
   '/ping':
@@ -23,6 +23,21 @@ paths:
                 example: pong
         500:
           $ref: './api.yml#/components/responses/500'
+  '/dummy':
+    get:
+      tags:
+        - Security
+      summary: Check serverless database health
+      operationId: checkDbHealth
+      responses:
+        '200':
+          description: Dummy table data
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DummyComponent'
+        500:
+          $ref: '#/components/responses/500'
 
   '/jobs':
     get:
@@ -321,6 +336,11 @@ components:
           schema:
             $ref: '#/components/schemas/InternalServerException'
   schemas:
+    DummyComponent:
+      type: object
+      properties:
+        id:
+          type: string
     CrupdateJob:
       type: object
       properties:
