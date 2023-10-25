@@ -1,0 +1,20 @@
+name: Health check
+on:
+  schedule:
+    - cron: '*/15 * * * *'
+  workflow_dispatch:
+  workflow_call:
+  push:
+    branches:
+      - 'prod'
+      - 'preprod'
+
+jobs:
+  dummy-table:
+    timeout-minutes: 300
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: GET /dummy
+        run:
+          curl --fail https://annotator-api.${{ github.ref_name }}.bpartners.app/dummy
