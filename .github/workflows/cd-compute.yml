@@ -11,6 +11,9 @@ on:
   workflow_call:
 
 jobs:
+  check-api-health:
+    uses: ./.github/workflows/health-check.yml
+
   deploy-api:
     if: ${{ github.ref_name == 'prod' || github.ref_name == 'preprod' }}
 
@@ -46,11 +49,6 @@ jobs:
           aws-access-key-id: ${{ secrets.PROD_AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.PROD_AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
-
-      - name: Make gradlew executable
-        run: chmod +x gradlew
-
-      - run: ./gradlew build -x test
 
       - run: sam build
 
