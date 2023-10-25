@@ -23,7 +23,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4.1.1
 
       - name: Set up JDK 17
         uses: actions/setup-java@v3
@@ -33,7 +33,7 @@ jobs:
 
       - name: Configure preprod AWS credentials
         if: ${{ github.ref_name != 'prod' }}
-        uses: aws-actions/configure-aws-credentials@13d241b293754004c80624b5567555c4a39ffbe3
+        uses: aws-actions/configure-aws-credentials@v4.0.1
         with:
           aws-access-key-id: ${{ secrets.PREPROD_AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.PREPROD_AWS_SECRET_ACCESS_KEY }}
@@ -41,7 +41,7 @@ jobs:
 
       - name: Configure prod AWS credentials
         if: ${{ github.ref_name == 'prod' }}
-        uses: aws-actions/configure-aws-credentials@13d241b293754004c80624b5567555c4a39ffbe3
+        uses: aws-actions/configure-aws-credentials@v4.0.1
         with:
           aws-access-key-id: ${{ secrets.PROD_AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.PROD_AWS_SECRET_ACCESS_KEY }}
