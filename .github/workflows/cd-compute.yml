@@ -50,11 +50,6 @@ jobs:
           aws-secret-access-key: ${{ secrets.PROD_AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ env.AWS_REGION }}
 
-      - name: Make gradlew executable
-        run: chmod +x gradlew
-
-      - run: ./gradlew build -x test
-
       - run: sam build
 
       - name: Deploy application
