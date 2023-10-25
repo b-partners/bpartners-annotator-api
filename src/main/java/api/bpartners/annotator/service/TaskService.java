@@ -25,7 +25,6 @@ public class TaskService {
 
   public Task update(String jobId, String id, Task task) {
     Task entity = getByJobIdAndId(jobId, id);
-    task.setImageURI(entity.getImageURI());
     task.setS3ImageKey(entity.getS3ImageKey());
     return repository.save(task);
   }
@@ -36,7 +35,6 @@ public class TaskService {
       return null;
     }
     availableTask.setStatus(UNDER_COMPLETION);
-    //TODO: get image URI from S3 everytime we get available task
     return repository.save(availableTask);
   }
 }
