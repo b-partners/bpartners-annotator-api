@@ -346,8 +346,13 @@ components:
       properties:
         id:
           type: string
-        bucketPath:
+        bucketName:
           type: string
+        folderPath:
+          type: string
+        ownerEmail:
+          type: string
+          format: email
         status:
           $ref: '#/components/schemas/JobStatus'
         teamId:

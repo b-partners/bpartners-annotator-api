@@ -16,7 +16,9 @@ public class JobMapper {
     return new Job()
         .id(domain.getId())
         .remainingTasks(domain.getTasks().size())
-        .bucketPath(domain.getBucketPath())
+        .bucketName(domain.getBucketName())
+        .folderPath(domain.getFolderPath())
+        .ownerEmail(domain.getOwnerEmail())
         .status(statusMapper.toRest(domain.getStatus()))
         .labels(domain.getLabels().stream().map(labelMapper::toRest).toList())
         .teamId(domain.getTeamId());
@@ -27,7 +29,9 @@ public class JobMapper {
         .id(rest.getId())
         .tasks(List.of())
         .status(statusMapper.toDomain(rest.getStatus()))
-        .bucketPath(rest.getBucketPath())
+        .bucketName(rest.getBucketName())
+        .folderPath(rest.getFolderPath())
+        .ownerEmail(rest.getOwnerEmail())
         .teamId(rest.getTeamId())
         .labels(rest.getLabels().stream().map(labelMapper::toDomain).toList())
         .build();
