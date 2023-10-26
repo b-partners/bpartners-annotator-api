@@ -48,7 +48,7 @@ public class EventProducer implements Consumer<List<TypedEvent>> {
 
   private PutEventsRequest toEventsRequest(List<TypedEvent> events) {
     return PutEventsRequest.builder()
-        .entries(events.stream().map(this::toRequestEntry).collect(Collectors.toList()))
+        .entries(events.stream().map(this::toRequestEntry).toList())
         .build();
   }
 

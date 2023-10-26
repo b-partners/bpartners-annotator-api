@@ -13,7 +13,7 @@ public class S3Conf {
   private final Region region;
 
   public S3Conf(
-      @Value("${AWS_REGION}")
+      @Value("${aws.region}")
       Region region) {
     this.region = region;
   }
