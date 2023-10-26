@@ -1,6 +1,9 @@
 package api.bpartners.annotator.endpoint.event;
 
+import api.bpartners.annotator.endpoint.event.gen.JobCreated;
 import api.bpartners.annotator.endpoint.event.model.TypedEvent;
+import api.bpartners.annotator.endpoint.event.model.TypedJobCreated;
+import api.bpartners.annotator.repository.jpa.model.exception.BadRequestException;
 import com.amazonaws.services.lambda.runtime.events.SQSEvent;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -58,12 +61,17 @@ public class EventConsumer implements Consumer<List<EventConsumer.Acknowledgeabl
 
   private static TypedEvent toTypedEvent(SQSEvent.SQSMessage message)
       throws JsonProcessingException {
-    TypedEvent typedEvent = null;
+    TypedEvent typedEvent;
     TypeReference<Map<String, Object>> typeRef = new TypeReference<>() {
     };
     Map<String, Object> body = om.readValue(message.getBody(), typeRef);
     String typeName = body.get(DETAIL_TYPE_PROPERTY).toString();
-    // TODO: implement according to event type
+    if (JobCreated.class.getTypeName().equals(typeName)) {
+      JobCreated jobCreated = om.convertValue(body.get(DETAIL_TYPE_PROPERTY), JobCreated.class);
+      typedEvent = new TypedJobCreated(jobCreated);
+    } else {
+      throw new BadRequestException("Unexpected message type for message=" + message);
+    }
     return typedEvent;
   }
 

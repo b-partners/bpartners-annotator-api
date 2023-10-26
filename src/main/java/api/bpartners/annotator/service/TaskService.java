@@ -37,4 +37,8 @@ public class TaskService {
     availableTask.setStatus(UNDER_COMPLETION);
     return repository.save(availableTask);
   }
+
+  public List<Task> createTasks(List<Task> tasks) {
+    return repository.saveAll(tasks);
+  }
 }

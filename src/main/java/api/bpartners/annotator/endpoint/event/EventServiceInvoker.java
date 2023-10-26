@@ -1,6 +1,8 @@
 package api.bpartners.annotator.endpoint.event;
 
+import api.bpartners.annotator.endpoint.event.gen.JobCreated;
 import api.bpartners.annotator.endpoint.event.model.TypedEvent;
+import api.bpartners.annotator.service.JobCreatedService;
 import java.io.Serializable;
 import java.util.function.Consumer;
 import lombok.AllArgsConstructor;
@@ -11,10 +13,14 @@ import org.springframework.stereotype.Component;
 @Component
 @Slf4j
 public class EventServiceInvoker implements Consumer<TypedEvent> {
+  private final JobCreatedService jobCreatedService;
   @Override
   public void accept(TypedEvent typedEvent) {
     Serializable payload = typedEvent.getPayload();
-    //TODO: correctly configure with event types
-//    log.error("Unexpected type for event={}", typedEvent);
+    if(JobCreated.class.getTypeName().equals(typedEvent.getTypeName())) {
+        jobCreatedService.accept((JobCreated) payload);
+    }else {
+      log.error("Unexpected type for event={}", typedEvent);
+    }
   }
 }
