@@ -26,7 +26,9 @@ import static jakarta.persistence.EnumType.STRING;
 public class Job {
   @Id
   private String id;
-  private String bucketPath;
+  private String bucketName;
+  private String folderPath;
+  private String ownerEmail;
   @Enumerated(STRING)
   @Column(name = "status")
   @ColumnTransformer(read = "CAST(status AS varchar)", write = "CAST(? AS job_status)")
