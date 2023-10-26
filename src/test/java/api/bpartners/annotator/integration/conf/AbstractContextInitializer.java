@@ -20,6 +20,8 @@ public abstract class AbstractContextInitializer
     TestPropertySourceUtils.addInlinedPropertiesToEnvironment(
         applicationContext,
         "server.port=" + this.getServerPort(),
+        "sqs.queue.url=dummy",
+        "aws.region=dummy",
         "spring.datasource.url=" + postgresContainer.getJdbcUrl(),
         "spring.datasource.username=" + postgresContainer.getUsername(),
         "spring.datasource.password=" + postgresContainer.getPassword(),

@@ -11,7 +11,7 @@ public class EventConf {
   private final Region region;
   private final String sqsQueue;
 
-  public EventConf(@Value("eu-west-3") Region region,
+  public EventConf(@Value("${aws.region}") Region region,
                    @Value("${sqs.queue.url}") String sqsQueue) {
     this.region = region;
     this.sqsQueue = sqsQueue;
