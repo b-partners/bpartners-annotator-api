@@ -23,4 +23,8 @@ public class EventConf {
         .region(region)
         .build();
   }
+
+  public String getSqsQueue() {
+    return sqsQueue;
+  }
 }
