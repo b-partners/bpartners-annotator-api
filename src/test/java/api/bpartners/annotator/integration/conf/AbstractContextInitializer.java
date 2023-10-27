@@ -19,6 +19,7 @@ public abstract class AbstractContextInitializer
     String flywayTestdataPath = "classpath:/db/testdata";
     TestPropertySourceUtils.addInlinedPropertiesToEnvironment(
         applicationContext,
+        "AWS_REGION=dummy",
         "server.port=" + this.getServerPort(),
         "spring.datasource.url=" + postgresContainer.getJdbcUrl(),
         "spring.datasource.username=" + postgresContainer.getUsername(),
