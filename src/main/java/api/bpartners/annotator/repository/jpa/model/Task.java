@@ -27,7 +27,7 @@ public class Task {
   @GeneratedValue(strategy = IDENTITY)
   private String id;
   @ManyToOne
-  @JoinColumn(name = "job_id", updatable = false, insertable = false)
+  @JoinColumn(name = "job_id", updatable = false, insertable = true)
   private Job job;
   @Column(name = "s3_image_key")
   private String s3ImageKey;
