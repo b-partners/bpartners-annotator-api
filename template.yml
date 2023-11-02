@@ -49,6 +49,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       Handler: api.bpartners.annotator.MailboxEventHandler::handleRequest
+      Role: !Sub '{{resolve:ssm:/bpartners-annotator/${Env}/mailbox-execution/role-arn}}'
       Events:
         GetFeatures:
           Type: SQS
