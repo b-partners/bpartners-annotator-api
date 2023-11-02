@@ -22,6 +22,7 @@ Resources:
         - 'arn:aws:iam::aws:policy/AmazonEventBridgeFullAccess'
         - 'arn:aws:iam::aws:policy/AmazonCognitoPowerUser'
         - 'arn:aws:iam::aws:policy/AmazonSESFullAccess'
+        - 'arn:aws:iam::aws:policy/CloudWatchFullAccess'
 
   ExecutionRoleArnSSM:
     Type: AWS::SSM::Parameter
