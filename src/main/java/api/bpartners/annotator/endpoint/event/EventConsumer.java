@@ -28,6 +28,7 @@ public class EventConsumer implements Consumer<List<EventConsumer.Acknowledgeabl
   public static final String DETAIL_TYPE_PROPERTY = "detail-type";
   private static final int MAX_THREADS = 10;
   private static final ObjectMapper om = new ObjectMapper();
+  private static final String DETAIL_ROPERTY = "detail";
   private final Executor executor;
   private final EventServiceInvoker eventServiceInvoker;
 
@@ -67,7 +68,7 @@ public class EventConsumer implements Consumer<List<EventConsumer.Acknowledgeabl
     Map<String, Object> body = om.readValue(message.getBody(), typeRef);
     String typeName = body.get(DETAIL_TYPE_PROPERTY).toString();
     if (JobCreated.class.getTypeName().equals(typeName)) {
-      JobCreated jobCreated = om.convertValue(body.get(DETAIL_TYPE_PROPERTY), JobCreated.class);
+      JobCreated jobCreated = om.convertValue(body.get(DETAIL_ROPERTY), JobCreated.class);
       typedEvent = new TypedJobCreated(jobCreated);
     } else {
       throw new BadRequestException("Unexpected message type for message=" + message);
