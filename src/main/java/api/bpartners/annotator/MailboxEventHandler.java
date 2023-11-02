@@ -18,9 +18,9 @@ public class MailboxEventHandler implements RequestHandler<SQSEvent, String> {
 
   @Override
   public String handleRequest(SQSEvent event, Context context) {
-    log.info("Following received events : %s\n", event);
+    log.info("Following received events : {}\n", event);
     List<SQSEvent.SQSMessage> messages = event.getRecords();
-    log.info("Following received messages : %s\n", messages);
+    log.info("Following received messages : {}\n", messages);
 
     ConfigurableApplicationContext applicationContext = applicationContext();
     EventConsumer eventConsumer = applicationContext.getBean(EventConsumer.class);
