@@ -11,7 +11,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Executor;
 import java.util.function.Consumer;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -20,20 +19,15 @@ import org.springframework.stereotype.Component;
 import software.amazon.awssdk.services.sqs.SqsClient;
 import software.amazon.awssdk.services.sqs.model.DeleteMessageRequest;
 
-import static java.util.concurrent.Executors.newFixedThreadPool;
-
 @Component
 @Slf4j
 public class EventConsumer implements Consumer<List<EventConsumer.AcknowledgeableTypedEvent>> {
   public static final String DETAIL_TYPE_PROPERTY = "detail-type";
-  private static final int MAX_THREADS = 10;
   private static final ObjectMapper om = new ObjectMapper();
   private static final String DETAIL_ROPERTY = "detail";
-  private final Executor executor;
   private final EventServiceInvoker eventServiceInvoker;
 
   public EventConsumer(EventServiceInvoker eventServiceInvoker) {
-    this.executor = newFixedThreadPool(MAX_THREADS);
     this.eventServiceInvoker = eventServiceInvoker;
   }
 
@@ -79,10 +73,8 @@ public class EventConsumer implements Consumer<List<EventConsumer.Acknowledgeabl
   @Override
   public void accept(List<AcknowledgeableTypedEvent> ackTypedEvents) {
     for (AcknowledgeableTypedEvent ackTypedEvent : ackTypedEvents) {
-      executor.execute(() -> {
-        eventServiceInvoker.accept(ackTypedEvent.getTypedEvent());
-        ackTypedEvent.ack();
-      });
+      eventServiceInvoker.accept(ackTypedEvent.getTypedEvent());
+      ackTypedEvent.ack();
     }
   }
 

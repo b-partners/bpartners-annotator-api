@@ -29,6 +29,7 @@ public class MailboxEventHandler implements RequestHandler<SQSEvent, String> {
 
     eventConsumer.accept(toAcknowledgeableTypedEvent(eventConf, sqsClient, messages));
 
+    applicationContext.close();
     return "{message: ok}";
   }
 
