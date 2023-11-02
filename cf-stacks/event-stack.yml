@@ -19,7 +19,7 @@ Resources:
   DeadLetterQueue:
     Type: AWS::SQS::Queue
     Properties:
-      QueueName:  !Join ['' , [!Ref Env , -bpartners-annotator]]
+      QueueName:  !Join ['' , [!Ref Env , -bpartners-annotator-dl]]
       SqsManagedSseEnabled: false
 
   MailboxQueuePolicy:
@@ -69,21 +69,21 @@ Resources:
   MailboxQueueSSM:
     Type: AWS::SSM::Parameter
     Properties:
-      Name: !Join ['' , [/bpartners/annotator/ , !Ref Env , /sqs/mailbox-queue-url]]
+      Name: !Join ['' , [/bpartners-annotator/ , !Ref Env , /sqs/mailbox-queue-url]]
       Type: String
       Value: !Ref MailboxQueue
 
   MailboxQueueSSMArn:
     Type: AWS::SSM::Parameter
     Properties:
-      Name: !Join ['' , [/bpartners/annotator/ , !Ref Env , /sqs/mailbox-queue-arn]]
+      Name: !Join ['' , [/bpartners-annotator/ , !Ref Env , /sqs/mailbox-queue-arn]]
       Type: String
       Value: !GetAtt MailboxQueue.Arn
 
   DeadLetterQueueSSM:
     Type: AWS::SSM::Parameter
     Properties:
-      Name: !Join ['' , [/bpartners/annotator/ , !Ref Env , /sqs/dead-letter-queue-url]]
+      Name: !Join ['' , [/bpartners-annotator/ , !Ref Env , /sqs/dead-letter-queue-url]]
       Type: String
       Value: !Ref DeadLetterQueue
 
@@ -113,7 +113,7 @@ Resources:
   EventBridgeBusNameSSM:
     Type: AWS::SSM::Parameter
     Properties:
-      Name: !Join ['',[/bpartners/annotator/ , !Ref Env , /eventbridge/bus-name]]
+      Name: !Join ['',[/bpartners-annotator/ , !Ref Env , /eventbridge/bus-name]]
       Type: String
       Value: !GetAtt EventBridgeBus.Name
 

@@ -51,7 +51,7 @@ Resources:
         GetFeatures:
           Type: SQS
           Properties:
-            Queue: !Sub '{{resolve:ssm:/bpartners/annotator/${Env}/sqs/mailbox-queue-arn}}'
+            Queue: !Sub '{{resolve:ssm:/bpartners-annotator/${Env}/sqs/mailbox-queue-arn}}'
             BatchSize: 1
 
 
