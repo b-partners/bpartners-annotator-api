@@ -37,6 +37,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       Handler: api.bpartners.annotator.LambdaHandler::handleRequest
+      Role: !Sub '{{resolve:ssm:/bpartners-annotator/${Env}//execution/role-arn}}'
       Events:
         ApiCall:
           Type: Api
