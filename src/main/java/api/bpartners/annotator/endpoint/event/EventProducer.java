@@ -32,7 +32,7 @@ public class EventProducer implements Consumer<List<TypedEvent>> {
   private final EventBridgeClient eventBridgeClient;
 
   public EventProducer(ObjectMapper om,
-                       @Value("${aws.eventBridge.bus") String eventBusName,
+                       @Value("${aws.eventBridge.bus}") String eventBusName,
                        EventBridgeClient eventBridgeClient) {
     this.om = om;
     this.eventBusName = eventBusName;

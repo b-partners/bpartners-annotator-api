@@ -20,6 +20,7 @@ Globals:
         DATABASE_USERNAME: !Sub '{{resolve:ssm:/bpartners-annotator/${Env}/db/username}}'
         DATABASE_PASSWORD: !Sub '{{resolve:ssm:/bpartners-annotator/${Env}/db/password}}'
         AWS_SQS_QUEUE_URL: !Sub '{{resolve:ssm:/bpartners-annotator/${Env}/sqs/mailbox-queue-url}}'
+        AWS_EVENTBRIDGE_BUS: !Sub '{{resolve:ssm:/bpartners-annotator/preprod/eventbridge/bus-name}}'
     VpcConfig:
       SecurityGroupIds:
         - !Sub '{{resolve:ssm:/bpartners/sg/id}}'
