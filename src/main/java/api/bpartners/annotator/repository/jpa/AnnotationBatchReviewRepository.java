@@ -13,7 +13,7 @@ public interface AnnotationBatchReviewRepository
       """
                     select abr from AnnotationBatchReview abr
                     inner join AnnotationBatch ab on abr.annotationBatchId = ab.id
-                    inner join Task t on ab.taskId = t.id
+                    inner join Task t on ab.task.id = t.id
                     where t.job.id = ?1 and t.id = ?2 and abr.annotationBatchId = ?3
                     """)
   List<AnnotationBatchReview> findAllByJobTaskAndAnnotationBatch(
@@ -23,7 +23,7 @@ public interface AnnotationBatchReviewRepository
       """
                     select abr from AnnotationBatchReview abr
                     inner join AnnotationBatch ab on abr.annotationBatchId = ab.id
-                    inner join Task t on ab.taskId = t.id
+                    inner join Task t on ab.task.id = t.id
                     where t.job.id = ?1 and t.id = ?2 and abr.annotationBatchId = ?3
                     and abr.id = ?4
                     """)
@@ -34,7 +34,7 @@ public interface AnnotationBatchReviewRepository
       """
                     select abr from AnnotationBatchReview abr
                     inner join AnnotationBatch ab on abr.annotationBatchId = ab.id
-                    inner join Task t on ab.taskId = t.id
+                    inner join Task t on ab.task.id = t.id
                     where t.userId = ?1 and t.id = ?2 and abr.annotationBatchId = ?3
                     """)
   List<AnnotationBatchReview> findAllByUserTaskAndAnnotationBatch(
@@ -44,7 +44,7 @@ public interface AnnotationBatchReviewRepository
       """
                     select abr from AnnotationBatchReview abr
                     inner join AnnotationBatch ab on abr.annotationBatchId = ab.id
-                    inner join Task t on ab.taskId = t.id
+                    inner join Task t on ab.task.id = t.id
                     where t.userId = ?1 and t.id = ?2 and abr.annotationBatchId = ?3
                     and abr.id = ?4
                     """)
