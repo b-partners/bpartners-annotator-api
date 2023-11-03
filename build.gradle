@@ -151,6 +151,7 @@ dependencies {
     implementation 'api.bpartners.annotator:api-rest:latest'
 
     implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
+    implementation 'org.thymeleaf:thymeleaf:3.1.2.RELEASE'
 
     implementation 'org.postgresql:postgresql'
     implementation 'org.flywaydb:flyway-core'

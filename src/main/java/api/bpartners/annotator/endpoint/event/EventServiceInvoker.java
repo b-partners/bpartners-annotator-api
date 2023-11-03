@@ -14,12 +14,13 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class EventServiceInvoker implements Consumer<TypedEvent> {
   private final JobCreatedService jobCreatedService;
+
   @Override
   public void accept(TypedEvent typedEvent) {
     Serializable payload = typedEvent.getPayload();
-    if(JobCreated.class.getTypeName().equals(typedEvent.getTypeName())) {
-        jobCreatedService.accept((JobCreated) payload);
-    }else {
+    if (JobCreated.class.getTypeName().equals(typedEvent.getTypeName())) {
+      jobCreatedService.accept((JobCreated) payload);
+    } else {
       log.error("Unexpected type for event={}", typedEvent);
     }
   }
