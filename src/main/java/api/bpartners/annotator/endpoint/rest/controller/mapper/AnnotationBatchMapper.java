@@ -2,6 +2,7 @@ package api.bpartners.annotator.endpoint.rest.controller.mapper;
 
 import api.bpartners.annotator.endpoint.rest.model.Annotation;
 import api.bpartners.annotator.endpoint.rest.model.AnnotationBatch;
+import api.bpartners.annotator.service.TaskService;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Component;
 @AllArgsConstructor
 public class AnnotationBatchMapper {
   private final AnnotationMapper annotationMapper;
+  private final TaskService taskService;
 
   public AnnotationBatch toRest(api.bpartners.annotator.repository.model.AnnotationBatch domain) {
     List<Annotation> annotations =
@@ -29,7 +31,7 @@ public class AnnotationBatchMapper {
             rest.getAnnotations().stream()
                 .map(restAnnotation -> annotationMapper.toDomain(rest.getId(), restAnnotation))
                 .toList())
-        .taskId(taskId)
+        .task(taskService.getById(taskId))
         .build();
   }
 }
