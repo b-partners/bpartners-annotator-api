@@ -7,6 +7,7 @@ import api.bpartners.annotator.model.exception.NotFoundException;
 import api.bpartners.annotator.repository.jpa.JobRepository;
 import api.bpartners.annotator.repository.jpa.LabelRepository;
 import api.bpartners.annotator.repository.jpa.model.Job;
+import api.bpartners.annotator.repository.jpa.model.Label;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -42,10 +43,18 @@ public class JobService {
 
   @Transactional
   public Job save(Job job) {
+    var labels = job.getLabels();
     if (!repository.existsById(job.getId()) && job.getStatus().equals(PENDING)) {
-      eventProducer.accept(List.of(toTypeEvent(job)));
+      var savedJob = saveJobAndLabels(job, labels);
+      eventProducer.accept(List.of(toTypeEvent(savedJob)));
+      return savedJob;
+    } else {
+      return saveJobAndLabels(job, labels);
     }
-    labelRepository.saveAll(job.getLabels());
+  }
+
+  private Job saveJobAndLabels(Job job, List<Label> labels) {
+    labelRepository.saveAll(labels);
     return repository.save(job);
   }
 
