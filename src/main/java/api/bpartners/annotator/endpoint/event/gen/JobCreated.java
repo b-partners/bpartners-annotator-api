@@ -21,6 +21,6 @@ import lombok.ToString;
 public class JobCreated implements Serializable {
   @JsonProperty("job")
   private Job job;
-  @JsonProperty("continuation_token")
-  private String continuationToken;
+  @JsonProperty("next_continuation_token")
+  private String nextContinuationToken;
 }

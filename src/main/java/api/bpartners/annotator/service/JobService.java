@@ -22,6 +22,15 @@ public class JobService {
   private final LabelRepository labelRepository;
   private final EventProducer eventProducer;
 
+  public static TypedJobCreated toTypedEvent(Job job, String nextContinuationToken) {
+    return new TypedJobCreated(
+        JobCreated.builder()
+            .nextContinuationToken(nextContinuationToken)
+            .job(job)
+            .build()
+    );
+  }
+
   public List<Job> getAllByTeam(String teamId) {
     return repository.findAllByTeamId(teamId);
   }
@@ -46,7 +55,7 @@ public class JobService {
     var labels = job.getLabels();
     if (!repository.existsById(job.getId()) && job.getStatus().equals(PENDING)) {
       var savedJob = saveJobAndLabels(job, labels);
-      eventProducer.accept(List.of(toTypeEvent(savedJob)));
+      eventProducer.accept(List.of(toTypedEvent(savedJob, null)));
       return savedJob;
     } else {
       return saveJobAndLabels(job, labels);
@@ -56,13 +65,5 @@ public class JobService {
   private Job saveJobAndLabels(Job job, List<Label> labels) {
     labelRepository.saveAll(labels);
     return repository.save(job);
-  }
-
-  private TypedJobCreated toTypeEvent(Job job) {
-    return new TypedJobCreated(
-        JobCreated.builder()
-            .job(job)
-            .build()
-    );
   }
 }
