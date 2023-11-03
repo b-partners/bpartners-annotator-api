@@ -23,14 +23,19 @@ public class JobValidator implements Consumer<CrupdateJob> {
           .append("folder path: ")
           .append(crupdateJob.getFolderPath())
           .append("does not follow regex ")
-          .append(VALID_FOLDER_PATH_PATTERN.pattern());
+          .append(VALID_FOLDER_PATH_PATTERN.pattern())
+          .append(".");
     }
-    if (!isValidEmailAddress(crupdateJob.getOwnerEmail())) {
+    if (crupdateJob.getOwnerEmail() == null) {
+      exceptionMessageBuilder
+          .append("Owner Email is mandatory.");
+    } else if (!isValidEmailAddress(crupdateJob.getOwnerEmail())) {
       exceptionMessageBuilder
           .append("email address : ")
           .append(crupdateJob.getOwnerEmail())
           .append("does not follow regex ")
-          .append(VALID_EMAIL_PATTERN.pattern());
+          .append(VALID_EMAIL_PATTERN.pattern())
+          .append(".");
     }
     String exceptionMessage = exceptionMessageBuilder.toString();
     if (!exceptionMessage.isBlank()) {
@@ -39,6 +44,9 @@ public class JobValidator implements Consumer<CrupdateJob> {
   }
 
   private boolean isValidFolderPath(String folderPath) {
+    if (folderPath == null) {
+      return true;
+    }
     return VALID_FOLDER_PATH_PATTERN.matcher(folderPath).matches();
   }
 
