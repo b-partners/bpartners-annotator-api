@@ -27,6 +27,7 @@ public class TaskService {
   public Task update(String jobId, String id, Task task) {
     Task entity = getByJobIdAndId(jobId, id);
     task.setFilename(entity.getFilename());
+    task.setJob(entity.getJob());
     return repository.save(task);
   }
 
