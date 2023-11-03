@@ -229,6 +229,14 @@ paths:
           required: true
           schema:
             type: string
+        - in: query
+          name: page
+          schema:
+            $ref: '#/components/schemas/Page'
+        - in: query
+          name: pageSize
+          schema:
+            $ref: '#/components/schemas/PageSize'
       responses:
         '200':
           description: A task
@@ -336,6 +344,12 @@ components:
           schema:
             $ref: '#/components/schemas/InternalServerException'
   schemas:
+    Page:
+      type: integer
+      description: Start at `1`
+    PageSize:
+      type: integer
+      description: Cannot exceed `500`
     DummyComponent:
       type: object
       properties:
