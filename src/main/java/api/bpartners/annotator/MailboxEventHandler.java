@@ -5,6 +5,9 @@ import api.bpartners.annotator.endpoint.event.EventConsumer;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.amazonaws.services.lambda.runtime.events.SQSEvent;
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.util.Collections;
 import java.util.List;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
@@ -15,6 +18,13 @@ import static api.bpartners.annotator.endpoint.event.EventConsumer.toAcknowledge
 
 @Slf4j
 public class MailboxEventHandler implements RequestHandler<SQSEvent, String> {
+  private static int anAvailableRandomPort() {
+    try(ServerSocket serverSocket = new ServerSocket(0)) {
+      return serverSocket.getLocalPort();
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
+  }
 
   @Override
   public String handleRequest(SQSEvent event, Context context) {
@@ -34,6 +44,9 @@ public class MailboxEventHandler implements RequestHandler<SQSEvent, String> {
   }
 
   private ConfigurableApplicationContext applicationContext(String... args) {
-    return SpringApplication.run(BpartnersAnnotatorApiApplication.class, args);
+    SpringApplication application = new SpringApplication(BpartnersAnnotatorApiApplication.class);
+    application.setDefaultProperties(Collections.singletonMap(
+        "server.port", anAvailableRandomPort()));
+    return application.run(args);
   }
 }
