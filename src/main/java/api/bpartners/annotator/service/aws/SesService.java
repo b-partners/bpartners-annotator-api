@@ -1,7 +1,7 @@
 package api.bpartners.annotator.service.aws;
 
 import api.bpartners.annotator.endpoint.event.EventConf;
-import api.bpartners.annotator.repository.jpa.model.exception.ApiException;
+import api.bpartners.annotator.model.exception.ApiException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import software.amazon.awssdk.awscore.exception.AwsServiceException;
@@ -12,7 +12,8 @@ import software.amazon.awssdk.services.ses.model.Content;
 import software.amazon.awssdk.services.ses.model.Message;
 import software.amazon.awssdk.services.ses.model.SendEmailRequest;
 
-import static api.bpartners.annotator.repository.jpa.model.exception.ApiException.ExceptionType.SERVER_EXCEPTION;
+import static api.bpartners.annotator.model.exception.ApiException.ExceptionType.SERVER_EXCEPTION;
+
 
 @Service
 @AllArgsConstructor
