@@ -1,4 +1,4 @@
-package api.bpartners.annotator.repository.jpa.model.exception;
+package api.bpartners.annotator.model.exception;
 
 public class BadRequestException extends ApiException {
   public BadRequestException(String message) {

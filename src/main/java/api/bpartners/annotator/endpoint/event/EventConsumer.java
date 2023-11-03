@@ -3,7 +3,7 @@ package api.bpartners.annotator.endpoint.event;
 import api.bpartners.annotator.endpoint.event.gen.JobCreated;
 import api.bpartners.annotator.endpoint.event.model.TypedEvent;
 import api.bpartners.annotator.endpoint.event.model.TypedJobCreated;
-import api.bpartners.annotator.repository.jpa.model.exception.BadRequestException;
+import api.bpartners.annotator.model.exception.BadRequestException;
 import com.amazonaws.services.lambda.runtime.events.SQSEvent;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
