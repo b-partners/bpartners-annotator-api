@@ -145,6 +145,7 @@ dependencies {
     implementation 'com.amazonaws:aws-lambda-java-events:3.11.3'
 
     implementation 'software.amazon.awssdk:sqs:2.21.7'
+    implementation 'software.amazon.awssdk:ses:2.21.12'
     implementation 'software.amazon.awssdk:eventbridge:2.21.7'
 
     implementation 'api.bpartners.annotator:api-rest:latest'
