@@ -3,6 +3,7 @@ package api.bpartners.annotator.service;
 import api.bpartners.annotator.endpoint.event.EventProducer;
 import api.bpartners.annotator.endpoint.event.gen.JobCreated;
 import api.bpartners.annotator.endpoint.event.model.TypedJobCreated;
+import api.bpartners.annotator.model.exception.NotFoundException;
 import api.bpartners.annotator.repository.jpa.JobRepository;
 import api.bpartners.annotator.repository.jpa.LabelRepository;
 import api.bpartners.annotator.repository.jpa.model.Job;
@@ -26,7 +27,7 @@ public class JobService {
 
   public Job getByTeamAndId(String teamId, String id) {
     return repository.findByTeamIdAndId(teamId, id)
-        .orElseThrow(() -> new RuntimeException(
+        .orElseThrow(() -> new NotFoundException(
             "Job identified by team.id = " + teamId + " and id = " + id + " not found"));
   }
 
@@ -36,7 +37,7 @@ public class JobService {
 
   public Job getById(String id) {
     return repository.findById(id)
-        .orElseThrow(() -> new RuntimeException("Job identified by id = " + id + " not found"));
+        .orElseThrow(() -> new NotFoundException("Job identified by id = " + id + " not found"));
   }
 
   @Transactional
