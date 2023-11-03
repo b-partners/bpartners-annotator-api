@@ -1,5 +1,6 @@
 package api.bpartners.annotator.service.aws;
 
+import api.bpartners.annotator.model.S3CustomObject;
 import java.net.URL;
 import java.time.Duration;
 import java.util.List;
@@ -40,7 +41,7 @@ public class S3Service {
     }
   }
 
-  public List<String> getObjectKeys(String bucketName, String prefix, String continuationToken) {
+  public S3CustomObject getObjectKeys(String bucketName, String prefix, String continuationToken) {
     ListObjectsV2Response response = client.listObjectsV2(ListObjectsV2Request.builder()
         .bucket(bucketName)
         .prefix(prefix == null ? "" : prefix)
@@ -48,10 +49,14 @@ public class S3Service {
         .maxKeys(MAX_KEYS)
         .build());
 
-    return response.contents().stream()
-        .map(S3Object::key)
-        .map(key -> replacePrefix(key, prefix))
-        .toList();
+    return S3CustomObject.builder()
+        .objectsFilename(response.contents().stream()
+            .map(S3Object::key)
+            .map(key -> replacePrefix(key, prefix))
+            .toList())
+        .nextContinuationToken(response.nextContinuationToken() == null
+                ? null : response.nextContinuationToken())
+        .build();
   }
 
   private String replacePrefix(String original, String prefix) {
