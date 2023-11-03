@@ -95,6 +95,8 @@ public class SecurityConf extends WebSecurityConfigurerAdapter {
         .hasRole(ADMIN.getRole())
         .antMatchers(PUT, "/jobs/*")
         .hasRole(ADMIN.getRole())
+        .antMatchers(GET, "/jobs/*/export")
+        .hasRole(ADMIN.getRole())
         .antMatchers(GET, "/jobs/*/tasks")
         .hasRole(ADMIN.getRole())
         .antMatchers(GET, "/jobs/*/tasks/*")

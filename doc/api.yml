@@ -136,6 +136,36 @@ paths:
                 $ref: '#/components/schemas/Job'
         '500':
           $ref: '#/components/responses/500'
+  '/jobs/{jobId}/export':
+      get:
+        tags:
+          - Jobs
+          - Admin
+        operationId: exportJob
+        description: exports a job to COCO or VGG format
+        parameters:
+          - name: jobId
+            required: true
+            in: path
+            content:
+              application/json:
+                schema:
+                  type: string
+          - name: format
+            required: true
+            in: query
+            content:
+              application/json:
+                schema:
+                  $ref: "#/components/schemas/ExportFormat"
+        responses:
+          "200":
+            description: a File containing the job informations as a file
+            content:
+              application/json:
+                schema:
+                  type: string
+                  format: byte
 
   '/teams/{teamId}/jobs':
     get:
@@ -1097,6 +1127,11 @@ components:
             $ref: "#/components/schemas/AnnotationReview"
         status:
           $ref: "#/components/schemas/ReviewStatus"
+    ExportFormat:
+      type: string
+      enum:
+        - COCO
+        - VGG
     Exception:
       type: object
       properties:

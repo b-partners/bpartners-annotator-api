@@ -25,10 +25,10 @@ public class AnnotationBatchService {
 
   @Transactional
   public AnnotationBatch annotateAndCompleteTask(AnnotationBatch annotationBatch) {
-    if (isTaskNotAnnotable(annotationBatch.getTaskId())) {
+    if (isTaskNotAnnotable(annotationBatch.getTask().getId())) {
       throw new BadRequestException("Task is already completed");
     }
-    taskService.updateStatus(annotationBatch.getTaskId(), COMPLETED);
+    taskService.updateStatus(annotationBatch.getTask().getId(), COMPLETED);
     return repository.save(annotationBatch);
   }
 
@@ -82,5 +82,9 @@ public class AnnotationBatchService {
                         + " and taskId = "
                         + taskId
                         + " not found"));
+  }
+
+  public List<AnnotationBatch> findLatestPerTaskByJobId(String jobId) {
+    return repository.findLatestPerTaskByJobId(jobId);
   }
 }

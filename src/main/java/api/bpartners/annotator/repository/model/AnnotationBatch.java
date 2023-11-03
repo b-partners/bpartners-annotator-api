@@ -6,6 +6,8 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,7 +22,9 @@ import org.hibernate.annotations.CreationTimestamp;
 @AllArgsConstructor
 public class AnnotationBatch {
   @Id private String id;
-  private String taskId;
+  @ManyToOne
+  @JoinColumn(name = "task_id")
+  private Task task;
   private String annotatorId;
 
   @OneToMany(mappedBy = "batchId", cascade = CascadeType.ALL)
