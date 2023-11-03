@@ -20,7 +20,7 @@ public class TaskMapper {
     URL presignedUrl =
         fileService.getPresignedUrl(
             domain.getJob().getBucketName(),
-            domain.getJob().getFolderPath() + domain.getS3ImageKey()
+            domain.getJob().getFolderPath() + domain.getFilename()
         );
     return new Task()
         .id(domain.getId())
@@ -34,7 +34,7 @@ public class TaskMapper {
         .id(rest.getId())
         .userId(rest.getUserId())
         .job(null)
-        .s3ImageKey(null)
+        .filename(null)
         .status(statusMapper.toDomain(rest.getStatus()))
         .build();
   }

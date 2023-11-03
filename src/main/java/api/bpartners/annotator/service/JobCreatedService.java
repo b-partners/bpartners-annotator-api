@@ -30,7 +30,7 @@ public class JobCreatedService implements Consumer<JobCreated> {
         .map(objectKey -> Task.builder()
             .job(jobCreated.getJob())
             .status(PENDING)
-            .s3ImageKey(objectKey)
+            .filename(objectKey)
             .build())
         .toList();
     log.info("{} tasks are to be created from bucket={}", tasksToCreate.size(), bucketName);

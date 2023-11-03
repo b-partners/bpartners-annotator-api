@@ -40,4 +40,11 @@ public class Job {
   @ManyToMany()
   @JoinTable(name = "has_label", joinColumns = @JoinColumn(name = "job_id"), inverseJoinColumns = @JoinColumn(name = "label_id"))
   private List<Label> labels;
+
+  public String getFolderPath() {
+    if (folderPath == null) {
+      return "";
+    }
+    return folderPath;
+  }
 }

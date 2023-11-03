@@ -26,7 +26,7 @@ public class TaskService {
 
   public Task update(String jobId, String id, Task task) {
     Task entity = getByJobIdAndId(jobId, id);
-    task.setS3ImageKey(entity.getS3ImageKey());
+    task.setFilename(entity.getFilename());
     return repository.save(task);
   }
 
