@@ -1,5 +1,6 @@
 package api.bpartners.annotator.service;
 
+import api.bpartners.annotator.model.exception.NotFoundException;
 import api.bpartners.annotator.repository.jpa.TaskRepository;
 import api.bpartners.annotator.repository.jpa.model.Task;
 import java.util.List;
@@ -19,13 +20,13 @@ public class TaskService {
   }
 
   public Task getByJobIdAndId(String jobId, String id) {
-    return repository.findByJobIdAndId(jobId, id).orElseThrow(() -> new RuntimeException(
+    return repository.findByJobIdAndId(jobId, id).orElseThrow(() -> new NotFoundException(
         "Task identified by job.id = " + jobId + " and id = " + id + " not found"));
   }
 
   public Task update(String jobId, String id, Task task) {
     Task entity = getByJobIdAndId(jobId, id);
-    task.setS3ImageKey(entity.getS3ImageKey());
+    task.setFilename(entity.getFilename());
     return repository.save(task);
   }
 

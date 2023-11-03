@@ -1,14 +1,13 @@
 package api.bpartners.annotator.endpoint.event;
 
 import api.bpartners.annotator.endpoint.event.model.TypedEvent;
-import api.bpartners.annotator.repository.jpa.model.exception.ApiException;
-import api.bpartners.annotator.repository.jpa.model.exception.BadRequestException;
+import api.bpartners.annotator.model.exception.ApiException;
+import api.bpartners.annotator.model.exception.BadRequestException;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -21,7 +20,7 @@ import software.amazon.awssdk.services.eventbridge.model.PutEventsRequestEntry;
 import software.amazon.awssdk.services.eventbridge.model.PutEventsResponse;
 import software.amazon.awssdk.services.eventbridge.model.PutEventsResultEntry;
 
-import static api.bpartners.annotator.repository.jpa.model.exception.ApiException.ExceptionType.SERVER_EXCEPTION;
+import static api.bpartners.annotator.model.exception.ApiException.ExceptionType.SERVER_EXCEPTION;
 
 @Component
 @Slf4j

@@ -50,6 +50,11 @@ public class S3Service {
 
     return response.contents().stream()
         .map(S3Object::key)
+        .map(key -> replacePrefix(key, prefix))
         .toList();
+  }
+
+  private String replacePrefix(String original, String prefix) {
+    return original.replace(prefix, "");
   }
 }

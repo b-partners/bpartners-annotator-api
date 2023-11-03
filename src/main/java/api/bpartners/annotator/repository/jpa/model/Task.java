@@ -29,8 +29,8 @@ public class Task {
   @ManyToOne
   @JoinColumn(name = "job_id", updatable = false, insertable = true)
   private Job job;
-  @Column(name = "s3_image_key")
-  private String s3ImageKey;
+  @Column(name = "filename")
+  private String filename;
   @Enumerated(STRING)
   @Column(name = "status")
   @ColumnTransformer(read = "CAST(status AS varchar)", write = "CAST(? AS task_status)")

@@ -3,9 +3,11 @@ package api.bpartners.annotator.service;
 import api.bpartners.annotator.endpoint.event.EventProducer;
 import api.bpartners.annotator.endpoint.event.gen.JobCreated;
 import api.bpartners.annotator.endpoint.event.model.TypedJobCreated;
+import api.bpartners.annotator.model.exception.NotFoundException;
 import api.bpartners.annotator.repository.jpa.JobRepository;
 import api.bpartners.annotator.repository.jpa.LabelRepository;
 import api.bpartners.annotator.repository.jpa.model.Job;
+import api.bpartners.annotator.repository.jpa.model.Label;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -26,7 +28,7 @@ public class JobService {
 
   public Job getByTeamAndId(String teamId, String id) {
     return repository.findByTeamIdAndId(teamId, id)
-        .orElseThrow(() -> new RuntimeException(
+        .orElseThrow(() -> new NotFoundException(
             "Job identified by team.id = " + teamId + " and id = " + id + " not found"));
   }
 
@@ -36,15 +38,23 @@ public class JobService {
 
   public Job getById(String id) {
     return repository.findById(id)
-        .orElseThrow(() -> new RuntimeException("Job identified by id = " + id + " not found"));
+        .orElseThrow(() -> new NotFoundException("Job identified by id = " + id + " not found"));
   }
 
   @Transactional
   public Job save(Job job) {
+    var labels = job.getLabels();
     if (!repository.existsById(job.getId()) && job.getStatus().equals(PENDING)) {
-      eventProducer.accept(List.of(toTypeEvent(job)));
+      var savedJob = saveJobAndLabels(job, labels);
+      eventProducer.accept(List.of(toTypeEvent(savedJob)));
+      return savedJob;
+    } else {
+      return saveJobAndLabels(job, labels);
     }
-    labelRepository.saveAll(job.getLabels());
+  }
+
+  private Job saveJobAndLabels(Job job, List<Label> labels) {
+    labelRepository.saveAll(labels);
     return repository.save(job);
   }
 
