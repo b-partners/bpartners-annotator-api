@@ -10,14 +10,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-public class LambdaHandler implements RequestStreamHandler {
+@PojaGenerated
+public class ApiEventHandler implements RequestStreamHandler {
   private static final SpringBootLambdaContainerHandler<AwsProxyRequest, AwsProxyResponse> handler;
 
   static {
     try {
-      handler =
-          SpringBootLambdaContainerHandler.getAwsProxyHandler(
-              BpartnersAnnotatorApiApplication.class);
+      handler = SpringBootLambdaContainerHandler.getAwsProxyHandler(PojaApplication.class);
     } catch (ContainerInitializationException e) {
       throw new RuntimeException("Initialization of Spring Boot Application failed", e);
     }

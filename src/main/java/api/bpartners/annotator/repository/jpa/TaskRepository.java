@@ -1,7 +1,7 @@
 package api.bpartners.annotator.repository.jpa;
 
-import api.bpartners.annotator.repository.jpa.model.Task;
-import api.bpartners.annotator.repository.jpa.model.enums.TaskStatus;
+import api.bpartners.annotator.repository.model.Task;
+import api.bpartners.annotator.repository.model.enums.TaskStatus;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Pageable;

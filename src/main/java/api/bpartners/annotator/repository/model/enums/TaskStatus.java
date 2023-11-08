@@ -1,4 +1,4 @@
-package api.bpartners.annotator.repository.jpa.model.enums;
+package api.bpartners.annotator.repository.model.enums;
 
 public enum TaskStatus {
   PENDING,

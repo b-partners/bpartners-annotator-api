@@ -9,7 +9,7 @@ import static api.bpartners.annotator.endpoint.rest.model.TaskStatus.UNDER_COMPL
 
 @Component
 public class TaskStatusMapper {
-  public TaskStatus toRest(api.bpartners.annotator.repository.jpa.model.enums.TaskStatus domain) {
+  public TaskStatus toRest(api.bpartners.annotator.repository.model.enums.TaskStatus domain) {
     return switch (domain) {
       case PENDING -> PENDING;
       case UNDER_COMPLETION -> UNDER_COMPLETION;
@@ -17,12 +17,12 @@ public class TaskStatusMapper {
     };
   }
 
-  public api.bpartners.annotator.repository.jpa.model.enums.TaskStatus toDomain(TaskStatus rest) {
+  public api.bpartners.annotator.repository.model.enums.TaskStatus toDomain(TaskStatus rest) {
     return switch (rest) {
-      case PENDING -> api.bpartners.annotator.repository.jpa.model.enums.TaskStatus.PENDING;
+      case PENDING -> api.bpartners.annotator.repository.model.enums.TaskStatus.PENDING;
       case UNDER_COMPLETION ->
-          api.bpartners.annotator.repository.jpa.model.enums.TaskStatus.UNDER_COMPLETION;
-      case COMPLETED -> api.bpartners.annotator.repository.jpa.model.enums.TaskStatus.COMPLETED;
+          api.bpartners.annotator.repository.model.enums.TaskStatus.UNDER_COMPLETION;
+      case COMPLETED -> api.bpartners.annotator.repository.model.enums.TaskStatus.COMPLETED;
     };
   }
 }

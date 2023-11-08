@@ -3,6 +3,7 @@ package api.bpartners.annotator.endpoint.rest.controller.mapper;
 import api.bpartners.annotator.endpoint.rest.model.CrupdateJob;
 import api.bpartners.annotator.endpoint.rest.model.Job;
 import api.bpartners.annotator.endpoint.rest.validator.JobValidator;
+import api.bpartners.annotator.repository.model.Job;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -14,7 +15,7 @@ public class JobMapper {
   private final LabelMapper labelMapper;
   private final JobValidator validator;
 
-  public Job toRest(api.bpartners.annotator.repository.jpa.model.Job domain) {
+  public Job toRest(Job domain) {
     return new Job()
         .id(domain.getId())
         .remainingTasks(domain.getTasks().size())
@@ -26,9 +27,9 @@ public class JobMapper {
         .teamId(domain.getTeamId());
   }
 
-  public api.bpartners.annotator.repository.jpa.model.Job toDomain(CrupdateJob rest) {
+  public Job toDomain(CrupdateJob rest) {
     validator.accept(rest);
-    return api.bpartners.annotator.repository.jpa.model.Job.builder()
+    return Job.builder()
         .id(rest.getId())
         .tasks(List.of())
         .status(statusMapper.toDomain(rest.getStatus()))

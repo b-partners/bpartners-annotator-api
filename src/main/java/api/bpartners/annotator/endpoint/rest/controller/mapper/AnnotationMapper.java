@@ -1,6 +1,7 @@
 package api.bpartners.annotator.endpoint.rest.controller.mapper;
 
 import api.bpartners.annotator.endpoint.rest.model.Annotation;
+import api.bpartners.annotator.repository.model.Annotation;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -10,7 +11,7 @@ public class AnnotationMapper {
     private final LabelMapper labelMapper;
     private final PolygonMapper polygonMapper;
 
-    public Annotation toRest(api.bpartners.annotator.repository.jpa.model.Annotation domain) {
+    public Annotation toRest(Annotation domain) {
         return new Annotation()
                 .id(domain.getId())
                 .label(labelMapper.toRest(domain.getLabel()))
@@ -19,8 +20,8 @@ public class AnnotationMapper {
                 .polygon(polygonMapper.toRest(domain.getPolygon()));
     }
 
-    public api.bpartners.annotator.repository.jpa.model.Annotation toDomain(Annotation rest) {
-        return api.bpartners.annotator.repository.jpa.model.Annotation.builder()
+    public Annotation toDomain(Annotation rest) {
+        return Annotation.builder()
                 .id(rest.getId())
                 .label(labelMapper.toDomain(rest.getLabel()))
                 .taskId(rest.getTaskId())

@@ -39,5 +39,5 @@ out/
 .aws-sam
 **.toml
 
-### JPA BUDDY ###
-.jpb
+### Mac OS ###
+.DS_Store

@@ -6,14 +6,14 @@ import api.bpartners.annotator.endpoint.event.model.TypedJobCreated;
 import api.bpartners.annotator.model.exception.NotFoundException;
 import api.bpartners.annotator.repository.jpa.JobRepository;
 import api.bpartners.annotator.repository.jpa.LabelRepository;
-import api.bpartners.annotator.repository.jpa.model.Job;
-import api.bpartners.annotator.repository.jpa.model.Label;
+import api.bpartners.annotator.repository.model.Job;
+import api.bpartners.annotator.repository.model.Label;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static api.bpartners.annotator.repository.jpa.model.enums.JobStatus.PENDING;
+import static api.bpartners.annotator.repository.model.enums.JobStatus.PENDING;
 
 @Service
 @AllArgsConstructor

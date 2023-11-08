@@ -1,6 +1,6 @@
 package api.bpartners.annotator.repository.jpa;
 
-import api.bpartners.annotator.repository.jpa.model.Job;
+import api.bpartners.annotator.repository.model.Job;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -11,7 +11,7 @@ import static api.bpartners.annotator.endpoint.rest.model.JobStatus.STARTED;
 
 @Component
 public class JobStatusMapper {
-  public JobStatus toRest(api.bpartners.annotator.repository.jpa.model.enums.JobStatus domain) {
+  public JobStatus toRest(api.bpartners.annotator.repository.model.enums.JobStatus domain) {
     return switch (domain) {
       case PENDING -> PENDING;
       case READY -> READY;
@@ -21,13 +21,13 @@ public class JobStatusMapper {
     };
   }
 
-  public api.bpartners.annotator.repository.jpa.model.enums.JobStatus toDomain(JobStatus rest) {
+  public api.bpartners.annotator.repository.model.enums.JobStatus toDomain(JobStatus rest) {
     return switch (rest) {
-      case PENDING -> api.bpartners.annotator.repository.jpa.model.enums.JobStatus.PENDING;
-      case READY -> api.bpartners.annotator.repository.jpa.model.enums.JobStatus.READY;
-      case STARTED -> api.bpartners.annotator.repository.jpa.model.enums.JobStatus.STARTED;
-      case FAILED -> api.bpartners.annotator.repository.jpa.model.enums.JobStatus.FAILED;
-      case COMPLETED -> api.bpartners.annotator.repository.jpa.model.enums.JobStatus.COMPLETED;
+      case PENDING -> api.bpartners.annotator.repository.model.enums.JobStatus.PENDING;
+      case READY -> api.bpartners.annotator.repository.model.enums.JobStatus.READY;
+      case STARTED -> api.bpartners.annotator.repository.model.enums.JobStatus.STARTED;
+      case FAILED -> api.bpartners.annotator.repository.model.enums.JobStatus.FAILED;
+      case COMPLETED -> api.bpartners.annotator.repository.model.enums.JobStatus.COMPLETED;
     };
   }
 }

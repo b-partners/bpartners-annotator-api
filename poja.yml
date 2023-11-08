@@ -1,0 +1,8 @@
+app_name: bpartners-annotator
+cli_version: 1.3.0
+custom_java_deps: poja-custom-java-deps.txt
+package_full_name: api.bpartners.annotator
+region: eu-west-3
+ssm_sg_id: /bpartners/sg/id
+ssm_subnet1_id: /bpartners/private/subnet1/id
+ssm_subnet2_id: /bpartners/private/subnet2/id

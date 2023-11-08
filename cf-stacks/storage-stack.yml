@@ -1,12 +1,12 @@
 AWSTemplateFormatVersion: 2010-09-09
-Description: Storage stack for BPartners Annotator
+Description: bpartners-annotator - Storage
 
 Parameters:
   Env:
     Type: String
   DBName:
     Type: String
-    Default: bpartners_annotator
+    Default: bpartners-annotator-rds
   ProdDbClusterTimeout:
     Type: Number
 
@@ -19,7 +19,7 @@ Resources:
   DBSubnetGroup:
     Type: AWS::RDS::DBSubnetGroup
     Properties:
-      DBSubnetGroupDescription: !Join [ '', [ Subnet group for Bpartners Annotator , !Ref Env ] ]
+      DBSubnetGroupDescription: !Join [ '', [ Subnet group for bpartners-annotator , !Ref Env ] ]
       DBSubnetGroupName: !Join [ '', [ bpartners-annotator-, !Ref Env, -subnet-group ] ]
       SubnetIds:
         - !Sub '{{resolve:ssm:/bpartners/private/subnet1/id}}'
@@ -29,7 +29,7 @@ Resources:
     Type: AWS::RDS::DBCluster
     Properties:
       BackupRetentionPeriod: 35
-      DatabaseName: !Ref DBName
+      DatabaseName: !Join [ '', !Split [ '-', !Ref DBName ] ]
       DBSubnetGroupName: !Ref DBSubnetGroup
       DeletionProtection: true
       Engine: aurora-postgresql
@@ -42,6 +42,7 @@ Resources:
       ScalingConfiguration:
         SecondsUntilAutoPause:
           !If [ IsProdEnv,  !Ref ProdDbClusterTimeout, 300 ]
+
 
   DatabaseClusterSSM:
     Type: AWS::SSM::Parameter
@@ -60,7 +61,7 @@ Resources:
                 - DatabaseCluster
                 - Endpoint.Port
             - '/'
-            - !Ref DBName
+            - !Join [ '', !Split [ '-', !Ref DBName ] ]
 
   DatabaseClusterIdentifierSSM:
     Type: AWS::SSM::Parameter
