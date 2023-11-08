@@ -1,5 +1,6 @@
 package api.bpartners.annotator.repository.model;
 
+import api.bpartners.annotator.repository.model.types.PostgresEnumType;
 import api.bpartners.annotator.repository.model.enums.TaskStatus;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,7 +13,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.ColumnTransformer;
+import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
 
 import static javax.persistence.EnumType.STRING;
 import static javax.persistence.GenerationType.IDENTITY;
@@ -22,6 +24,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@TypeDef(name = "pgsql_enum", typeClass = PostgresEnumType.class)
 public class Task {
   @Id
   @GeneratedValue(strategy = IDENTITY)
@@ -33,7 +36,7 @@ public class Task {
   private String filename;
   @Enumerated(STRING)
   @Column(name = "status")
-  @ColumnTransformer(read = "CAST(status AS varchar)", write = "CAST(? AS task_status)")
+  @Type(type = "pgsql_enum")
   private TaskStatus status;
   private String userId;
 }
