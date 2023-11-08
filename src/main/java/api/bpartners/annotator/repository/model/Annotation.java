@@ -1,16 +1,18 @@
 package api.bpartners.annotator.repository.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
 import java.util.List;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.type.SqlTypes;
+import org.hibernate.annotations.Type;
+
+import static api.bpartners.annotator.repository.model.types.PostgresTypes.JSONB;
 
 @Entity
 @Data
@@ -25,7 +27,8 @@ public class Annotation {
   @JoinColumn(name = "label_id", updatable = false)
   private Label label;
   private String userId;
-  @JdbcTypeCode(SqlTypes.JSON)
+  @Type(type = JSONB)
+  @Column(columnDefinition = JSONB)
   private Polygon polygon;
 
   @Data
