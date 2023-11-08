@@ -112,6 +112,9 @@ dependencies {
 
     implementation 'org.reflections:reflections:0.10.2'
 
+    implementation 'com.vladmihalcea:hibernate-types-52:1.0.0'
+    implementation 'io.hypersistence:hypersistence-utils-hibernate-55:3.5.1'
+
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
     testCompileOnly 'org.projectlombok:lombok'
