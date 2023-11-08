@@ -2,7 +2,6 @@ package api.bpartners.annotator.endpoint.rest.controller.mapper;
 
 import api.bpartners.annotator.endpoint.rest.model.Task;
 import api.bpartners.annotator.endpoint.rest.model.UpdateTask;
-import api.bpartners.annotator.repository.model.Task;
 import api.bpartners.annotator.service.aws.S3Service;
 import java.net.URL;
 import lombok.AllArgsConstructor;
@@ -14,7 +13,7 @@ public class TaskMapper {
   private final TaskStatusMapper statusMapper;
   private final S3Service fileService;
 
-  public Task toRest(Task domain) {
+  public Task toRest(api.bpartners.annotator.repository.model.Task domain) {
     if (domain == null) {
       return null;
     }
@@ -30,8 +29,8 @@ public class TaskMapper {
         .userId(domain.getUserId());
   }
 
-  public Task toDomain(UpdateTask rest) {
-    return Task.builder()
+  public api.bpartners.annotator.repository.model.Task toDomain(UpdateTask rest) {
+    return api.bpartners.annotator.repository.model.Task.builder()
         .id(rest.getId())
         .userId(rest.getUserId())
         .job(null)
