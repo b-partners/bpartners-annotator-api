@@ -57,7 +57,8 @@ public class SecurityConf extends WebSecurityConfigurerAdapter {
         .addFilterBefore(
             bearerFilter(new NegatedRequestMatcher(
                 new OrRequestMatcher(
-                    new AntPathRequestMatcher("/ping")
+                    new AntPathRequestMatcher("/ping"),
+                    new AntPathRequestMatcher("/dummy")
                 )
             )),
             AnonymousAuthenticationFilter.class)
@@ -67,8 +68,16 @@ public class SecurityConf extends WebSecurityConfigurerAdapter {
         .and()
         .authorizeRequests()
         .antMatchers(HttpMethod.GET, "/ping").permitAll()
+        .antMatchers("/dummy").permitAll()
         .antMatchers("/jobs").hasRole(ADMIN.getRole())
+        .antMatchers("/jobs/*").hasRole(ADMIN.getRole())
+        .antMatchers("/jobs/*/tasks").hasRole(ADMIN.getRole())
+        .antMatchers("/jobs/*/tasks/*").hasRole(ADMIN.getRole())
         .antMatchers("/teams/*/jobs").hasAnyRole(ADMIN.getRole(), ANNOTATOR.getRole())
+        .antMatchers("/teams/*/jobs/*").hasAnyRole(ADMIN.getRole(), ANNOTATOR.getRole())
+        .antMatchers("/teams/*/jobs/*/task").hasAnyRole(ADMIN.getRole(), ANNOTATOR.getRole())
+        .antMatchers("/teams/*/jobs/*/tasks/*").hasAnyRole(ADMIN.getRole(), ANNOTATOR.getRole())
+        .antMatchers("/users/*/tasks/*/annotations").hasAnyRole(ADMIN.getRole(), ANNOTATOR.getRole())
         .antMatchers("/**").denyAll()
 
         // disable superfluous protections
