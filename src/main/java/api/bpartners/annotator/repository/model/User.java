@@ -3,6 +3,7 @@ package api.bpartners.annotator.repository.model;
 import api.bpartners.annotator.endpoint.rest.security.model.Role;
 import api.bpartners.annotator.repository.model.types.PostgresEnumType;
 import io.hypersistence.utils.hibernate.type.array.EnumArrayType;
+import io.hypersistence.utils.hibernate.type.array.internal.AbstractArrayType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -14,6 +15,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Parameter;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 import org.hibernate.annotations.TypeDefs;
@@ -27,7 +29,16 @@ import static javax.persistence.GenerationType.IDENTITY;
 @AllArgsConstructor
 @TypeDefs({
     @TypeDef(name = "pgsql_enum", typeClass = PostgresEnumType.class),
-    @TypeDef(name = "user_roles", typeClass = EnumArrayType.class, defaultForType = Enum[].class)
+    @TypeDef(name = "user_roles", typeClass = EnumArrayType.class, defaultForType = Enum[].class),
+    @TypeDef(
+        name = "user_roles",
+        typeClass = EnumArrayType.class,
+        defaultForType = Role[].class,
+        parameters = @Parameter(
+            name = AbstractArrayType.SQL_ARRAY_TYPE,
+            value = "user_role"
+        )
+    )
 })
 @Table(name = "\"user\"")
 public class User {
@@ -40,4 +51,5 @@ public class User {
   @Type(type = "user_roles")
   @Column(name = "roles", columnDefinition = "user_role[]")
   private Role[] roles;
+  private String email;
 }
