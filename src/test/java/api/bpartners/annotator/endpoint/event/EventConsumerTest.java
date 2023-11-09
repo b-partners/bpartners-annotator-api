@@ -28,7 +28,7 @@ class EventConsumerTest extends FacadeTest {
         List.of(
             new EventConsumer.AcknowledgeableTypedEvent(
                 new EventConsumer.TypedEvent(
-                    "com.company.base.endpoint.event.gen.UuidCreated", payloadReceived),
+                    "api.bpartners.annotator.endpoint.event.gen.UuidCreated", payloadReceived),
                 () -> {})));
 
     Thread.sleep(2_000);
