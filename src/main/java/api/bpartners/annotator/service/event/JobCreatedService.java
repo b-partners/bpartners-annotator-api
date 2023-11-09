@@ -1,10 +1,12 @@
-package api.bpartners.annotator.service;
+package api.bpartners.annotator.service.event;
 
 import api.bpartners.annotator.endpoint.event.EventProducer;
 import api.bpartners.annotator.endpoint.event.gen.JobCreated;
 import api.bpartners.annotator.model.S3CustomObject;
 import api.bpartners.annotator.repository.model.Job;
 import api.bpartners.annotator.repository.model.Task;
+import api.bpartners.annotator.service.JobService;
+import api.bpartners.annotator.service.TaskService;
 import api.bpartners.annotator.service.aws.S3Service;
 import api.bpartners.annotator.service.aws.SesService;
 import java.util.List;
@@ -16,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.thymeleaf.context.Context;
 
 import static api.bpartners.annotator.repository.model.enums.TaskStatus.PENDING;
-import static api.bpartners.annotator.service.JobService.toTypedEvent;
+import static api.bpartners.annotator.service.JobService.toEventType;
 import static api.bpartners.annotator.service.utils.TemplateResolverUtils.parseTemplateResolver;
 
 @Service
@@ -51,7 +53,7 @@ public class JobCreatedService implements Consumer<JobCreated> {
 
     if (response.getNextContinuationToken() != null) {
       eventProducer.accept(
-          List.of(toTypedEvent(jobCreated.getJob(), response.getNextContinuationToken())));
+          List.of(toEventType(jobCreated.getJob(), response.getNextContinuationToken())));
     } else {
       Job createdJob = jobService.getById(jobCreated.getJob().getId());
       String subject = "[Bpartners-Annotator] Initialisation de job complète";
