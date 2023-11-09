@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  cd-event:
+  cd-compute-permission:
     if: github.ref_name == 'prod' || github.ref_name == 'preprod'
 
     runs-on: ubuntu-latest
