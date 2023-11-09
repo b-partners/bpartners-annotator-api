@@ -67,6 +67,7 @@ public class SecurityConf extends WebSecurityConfigurerAdapter {
         .and()
         .authorizeRequests()
         .antMatchers(HttpMethod.GET, "/ping").permitAll()
+        .antMatchers("/jobs").hasRole(ADMIN.getRole())
         .antMatchers("/teams/*/jobs").hasAnyRole(ADMIN.getRole(), ANNOTATOR.getRole())
         .antMatchers("/**").denyAll()
 

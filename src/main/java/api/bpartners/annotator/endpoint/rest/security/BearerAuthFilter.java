@@ -11,8 +11,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 
+import static api.bpartners.annotator.endpoint.rest.security.AuthProvider.API_KEY_HEADER_NAME;
+
 @Slf4j
 public class BearerAuthFilter extends AbstractAuthenticationProcessingFilter {
+
   private final String authHeader;
 
   protected BearerAuthFilter(RequestMatcher requestMatcher, String authHeader) {
@@ -24,6 +27,12 @@ public class BearerAuthFilter extends AbstractAuthenticationProcessingFilter {
   public Authentication attemptAuthentication(
       HttpServletRequest request, HttpServletResponse response) {
     String bearer = request.getHeader(authHeader);
+    String apiKey = request.getHeader(API_KEY_HEADER_NAME);
+    if (bearer == null && apiKey != null) {
+      return getAuthenticationManager().authenticate(
+          new UsernamePasswordAuthenticationToken(API_KEY_HEADER_NAME, apiKey)
+      );
+    }
     return getAuthenticationManager()
         .authenticate(new UsernamePasswordAuthenticationToken(bearer, bearer));
   }
