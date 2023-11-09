@@ -1,0 +1,43 @@
+package api.bpartners.annotator.repository.model;
+
+import api.bpartners.annotator.endpoint.rest.security.model.Role;
+import api.bpartners.annotator.repository.model.types.PostgresEnumType;
+import io.hypersistence.utils.hibernate.type.array.EnumArrayType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
+import org.hibernate.annotations.TypeDefs;
+
+import static javax.persistence.GenerationType.IDENTITY;
+
+@Entity
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+@TypeDefs({
+    @TypeDef(name = "pgsql_enum", typeClass = PostgresEnumType.class),
+    @TypeDef(name = "user_roles", typeClass = EnumArrayType.class, defaultForType = Enum[].class)
+})
+@Table(name = "\"user\"")
+public class User {
+  @Id
+  @GeneratedValue(strategy = IDENTITY)
+  private String id;
+  @ManyToOne
+  @JoinColumn(name = "team_id", insertable = true, updatable = false)
+  private Team team;
+  @Type(type = "user_roles")
+  @Column(name = "roles", columnDefinition = "user_role[]")
+  private Role[] roles;
+}
