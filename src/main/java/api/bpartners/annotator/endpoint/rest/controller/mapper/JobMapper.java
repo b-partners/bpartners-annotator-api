@@ -14,7 +14,7 @@ public class JobMapper {
   private final LabelMapper labelMapper;
   private final JobValidator validator;
 
-  public Job toRest(api.bpartners.annotator.repository.jpa.model.Job domain) {
+  public Job toRest(api.bpartners.annotator.repository.model.Job domain) {
     return new Job()
         .id(domain.getId())
         .remainingTasks(domain.getTasks().size())
@@ -26,9 +26,9 @@ public class JobMapper {
         .teamId(domain.getTeamId());
   }
 
-  public api.bpartners.annotator.repository.jpa.model.Job toDomain(CrupdateJob rest) {
+  public api.bpartners.annotator.repository.model.Job toDomain(CrupdateJob rest) {
     validator.accept(rest);
-    return api.bpartners.annotator.repository.jpa.model.Job.builder()
+    return api.bpartners.annotator.repository.model.Job.builder()
         .id(rest.getId())
         .tasks(List.of())
         .status(statusMapper.toDomain(rest.getStatus()))

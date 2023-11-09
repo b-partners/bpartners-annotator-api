@@ -1,6 +1,6 @@
 package api.bpartners.annotator.endpoint.event.gen;
 
-import api.bpartners.annotator.repository.jpa.model.Job;
+import api.bpartners.annotator.repository.model.Job;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.io.Serializable;
 import javax.annotation.processing.Generated;

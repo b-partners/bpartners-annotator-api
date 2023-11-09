@@ -1,0 +1,9 @@
+implementation 'org.thymeleaf:thymeleaf:3.1.2.RELEASE'
+
+implementation 'software.amazon.awssdk:s3:2.21.6'
+
+implementation 'software.amazon.awssdk:ses:2.21.12'
+
+implementation 'api.bpartners.annotator:api-rest:latest'
+
+implementation 'org.springframework.boot:spring-boot-starter-validation'

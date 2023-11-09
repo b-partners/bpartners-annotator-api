@@ -2,7 +2,7 @@ package api.bpartners.annotator.endpoint.rest.controller.mapper;
 
 import api.bpartners.annotator.endpoint.rest.model.Point;
 import api.bpartners.annotator.endpoint.rest.model.Polygon;
-import api.bpartners.annotator.repository.jpa.model.Annotation;
+import api.bpartners.annotator.repository.model.Annotation;
 import org.springframework.stereotype.Component;
 
 @Component

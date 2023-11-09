@@ -1,4 +1,4 @@
-package api.bpartners.annotator.repository.jpa.model;
+package api.bpartners.annotator.repository.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;

@@ -13,7 +13,7 @@ public class TaskMapper {
   private final TaskStatusMapper statusMapper;
   private final S3Service fileService;
 
-  public Task toRest(api.bpartners.annotator.repository.jpa.model.Task domain) {
+  public Task toRest(api.bpartners.annotator.repository.model.Task domain) {
     if (domain == null) {
       return null;
     }
@@ -29,8 +29,8 @@ public class TaskMapper {
         .userId(domain.getUserId());
   }
 
-  public api.bpartners.annotator.repository.jpa.model.Task toDomain(UpdateTask rest) {
-    return api.bpartners.annotator.repository.jpa.model.Task.builder()
+  public api.bpartners.annotator.repository.model.Task toDomain(UpdateTask rest) {
+    return api.bpartners.annotator.repository.model.Task.builder()
         .id(rest.getId())
         .userId(rest.getUserId())
         .job(null)

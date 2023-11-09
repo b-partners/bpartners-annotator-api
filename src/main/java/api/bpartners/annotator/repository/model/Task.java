@@ -1,6 +1,6 @@
-package api.bpartners.annotator.repository.jpa.model;
+package api.bpartners.annotator.repository.model;
 
-import api.bpartners.annotator.repository.jpa.model.enums.TaskStatus;
+import api.bpartners.annotator.repository.model.enums.TaskStatus;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Enumerated;

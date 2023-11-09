@@ -11,7 +11,7 @@ buildscript {
 
 plugins {
     id 'java'
-    id 'org.springframework.boot' version '3.1.4'
+    id 'org.springframework.boot' version '3.1.5'
     id 'io.spring.dependency-management' version '1.1.3'
 
     id 'org.openapi.generator' version '6.6.0'
@@ -120,59 +120,56 @@ ext {
 }
 
 test {
-    minHeapSize '4g' // won't change perf even if increase
-    maxHeapSize '200g'
     maxParallelForks = Runtime.runtime.availableProcessors().intdiv(2) ?: 1
     useJUnitPlatform()
-    finalizedBy jacocoTestReport
+    finalizedBy jacocoTestCoverageVerification
 }
 
-jacocoTestReport {
-    dependsOn test
-    reports {
-        xml.required = true
+jacocoTestCoverageVerification {
+    violationRules {
+        rule {
+            limit {
+                counter = "LINE"
+                minimum = 0.0
+            }
+        }
     }
 }
 
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
-//	    implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.flywaydb:flyway-core'
+    implementation 'org.postgresql:postgresql'
+
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
 
     implementation 'com.amazonaws.serverless:aws-serverless-java-container-springboot3:2.0.0-M2'
     implementation 'com.amazonaws:aws-lambda-java-core:1.2.3'
     implementation 'com.amazonaws:aws-lambda-java-events:3.11.3'
-
     implementation 'software.amazon.awssdk:sqs:2.21.7'
-    implementation 'software.amazon.awssdk:ses:2.21.12'
     implementation 'software.amazon.awssdk:eventbridge:2.21.7'
 
-    implementation 'api.bpartners.annotator:api-rest:latest'
-
-    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
-    implementation 'org.thymeleaf:thymeleaf:3.1.2.RELEASE'
-
-    implementation 'org.postgresql:postgresql'
-    implementation 'org.flywaydb:flyway-core'
-    implementation 'software.amazon.awssdk:s3:2.21.6'
-
+    implementation 'org.reflections:reflections:0.10.2'
 
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
     testCompileOnly 'org.projectlombok:lombok'
     testAnnotationProcessor 'org.projectlombok:lombok'
-    implementation 'org.flywaydb:flyway-core'
 
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testImplementation 'org.springframework.security:spring-security-test'
-
     testImplementation 'org.testcontainers:junit-jupiter'
-    testImplementation 'org.testcontainers:postgresql'
-}
 
-dependencyManagement {
-    imports {
-        mavenBom "org.testcontainers:testcontainers-bom:${testcontainersVersion}"
-    }
+    testImplementation 'org.testcontainers:postgresql'
+
+implementation 'org.thymeleaf:thymeleaf:3.1.2.RELEASE'
+
+implementation 'software.amazon.awssdk:s3:2.21.6'
+
+implementation 'software.amazon.awssdk:ses:2.21.12'
+
+implementation 'api.bpartners.annotator:api-rest:latest'
+
+implementation 'org.springframework.boot:spring-boot-starter-validation'
+
 }
