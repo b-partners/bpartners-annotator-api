@@ -5,10 +5,13 @@ info:
 
 servers:
   - url: 'https://annotator-api.preprod.bpartners.app'
-
+security:
+  - BearerAuth: [ ]
+  - apiKeyHeader: [ ]
 paths:
   '/ping':
     get:
+      security: [ ]
       tags:
         - Security
       summary: Check server health
@@ -25,6 +28,7 @@ paths:
           $ref: './api.yml#/components/responses/500'
   '/dummy':
     get:
+      security: [ ]
       tags:
         - Security
       summary: Check serverless database health
@@ -43,7 +47,9 @@ paths:
     get:
       tags:
         - Jobs
+        - Admin
       summary: Get all jobs
+      security: [ apiKeyHeader: [ ] ]
       operationId: getJobs
       responses:
         '200':
@@ -61,6 +67,8 @@ paths:
     get:
       tags:
         - Jobs
+        - Admin
+      security: [ apiKeyHeader: [ ] ]
       summary: get a job specified by its id
       operationId: getJob
       parameters:
@@ -79,6 +87,8 @@ paths:
     put:
       tags:
         - Jobs
+        - Admin
+      security: [ apiKeyHeader: [ ] ]
       summary: Create or update a job
       operationId: saveJob
       parameters:
@@ -221,6 +231,8 @@ paths:
     get:
       tags:
         - Tasks
+        - Admin
+      security: [ apiKeyHeader: [ ] ]
       summary: gets information about a task
       operationId: getJobTasks
       parameters:
@@ -251,6 +263,8 @@ paths:
     get:
       tags:
         - Tasks
+        - Admin
+      security: [ apiKeyHeader: [ ] ]
       summary: gets information about a task
       operationId: getJobTaskById
       parameters:
@@ -312,6 +326,14 @@ paths:
           $ref: '#/components/responses/500'
 
 components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+    apiKeyHeader:
+      type: apiKey
+      in: header
+      name: x-api-key
   responses:
     400:
       description: Bad request
