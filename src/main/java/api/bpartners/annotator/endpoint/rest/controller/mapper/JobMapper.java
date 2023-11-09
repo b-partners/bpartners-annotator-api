@@ -17,6 +17,7 @@ public class JobMapper {
   public Job toRest(api.bpartners.annotator.repository.model.Job domain) {
     return new Job()
         .id(domain.getId())
+        .name(domain.getName())
         .remainingTasks(domain.getTasks().size())
         .bucketName(domain.getBucketName())
         .folderPath(domain.getFolderPath())
@@ -30,6 +31,7 @@ public class JobMapper {
     validator.accept(rest);
     return api.bpartners.annotator.repository.model.Job.builder()
         .id(rest.getId())
+        .name(rest.getName())
         .tasks(List.of())
         .status(statusMapper.toDomain(rest.getStatus()))
         .bucketName(rest.getBucketName())
