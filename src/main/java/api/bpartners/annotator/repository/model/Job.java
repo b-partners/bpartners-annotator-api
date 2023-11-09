@@ -26,6 +26,7 @@ import static jakarta.persistence.EnumType.STRING;
 public class Job {
   @Id
   private String id;
+  private String name;
   private String bucketName;
   private String folderPath;
   private String ownerEmail;
