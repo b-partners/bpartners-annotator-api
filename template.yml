@@ -22,12 +22,14 @@ Globals:
         - !Sub '{{resolve:ssm:/bpartners/private/subnet2/id}}'
     Environment:
       Variables:
+        ENV: !Ref Env
+        AWS_SQS_QUEUE_URL: !Sub '{{resolve:ssm:/bpartners-annotator/${Env}/sqs/mailbox-queue-url}}'
+        AWS_EVENTBRIDGE_BUS: !Sub '{{resolve:ssm:/bpartners-annotator/${Env}/eventbridge/bus-name}}'
         DATABASE_URL: !Sub '{{resolve:ssm:/bpartners-annotator/${Env}/db/url}}'
         DATABASE_USERNAME: !Sub '{{resolve:ssm:/bpartners-annotator/${Env}/db/username}}'
         DATABASE_PASSWORD: !Sub '{{resolve:ssm:/bpartners-annotator/${Env}/db/password}}'
-        AWS_SQS_QUEUE_URL: !Sub '{{resolve:ssm:/bpartners-annotator/${Env}/sqs/mailbox-queue-url}}'
-        AWS_EVENTBRIDGE_BUS: !Sub '{{resolve:ssm:/bpartners-annotator/${Env}/eventbridge/bus-name}}'
         AWS_SES_SOURCE: !Sub '{{resolve:ssm:/bpartners-annotator/${Env}/ses/source}}'
+
 
 Parameters:
   Env:
