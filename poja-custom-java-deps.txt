@@ -1,7 +1,7 @@
 implementation 'org.thymeleaf:thymeleaf:3.1.2.RELEASE'
 implementation 'software.amazon.awssdk:s3:2.21.6'
 implementation 'software.amazon.awssdk:ses:2.21.12'
-implementation 'api.bpartners.annotator:api-rest:latest'
+implementation 'api.bpartners:bpartners-annotator-gen:latest'
 implementation 'org.springframework.boot:spring-boot-starter-validation'
 implementation 'com.vladmihalcea:hibernate-types-52:1.0.0'
 implementation 'io.hypersistence:hypersistence-utils-hibernate-55:3.5.1'
