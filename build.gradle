@@ -1,24 +1,22 @@
+import org.apache.tools.ant.taskdefs.condition.Os
+import org.openapitools.generator.gradle.plugin.tasks.GenerateTask
+
 buildscript {
     repositories {
         maven {
             url "https://plugins.gradle.org/m2/"
         }
     }
-    dependencies {
-        classpath "org.openapitools:openapi-generator-gradle-plugin:6.6.0"
-    }
 }
 
 plugins {
     id 'java'
-    id 'org.springframework.boot' version '3.1.5'
+    id 'org.springframework.boot' version '2.7.17'
     id 'io.spring.dependency-management' version '1.1.3'
 
-    id 'org.openapi.generator' version '6.6.0'
+    id 'org.openapi.generator' version '5.3.0'
 
-    id "org.sonarqube" version "4.4.1.3373"
     id 'jacoco'
-    id 'checkstyle'
 }
 
 java {
@@ -38,86 +36,45 @@ repositories {
     mavenCentral()
 }
 
-task generateJavaClient(type: org.openapitools.generator.gradle.plugin.tasks.GenerateTask) {
+task generateJavaClient(type: GenerateTask) {
     generatorName = "java"
     inputSpec = "$rootDir/doc/api.yml".toString()
-    outputDir = "$projectDir/build/gen".toString()
+    outputDir = "$buildDir/gen".toString()
     apiPackage = "api.bpartners.annotator.endpoint.rest.api"
     invokerPackage = "api.bpartners.annotator.endpoint.rest.client"
     modelPackage = "api.bpartners.annotator.endpoint.rest.model"
 
     configOptions = [
             serializationLibrary: "jackson",
-            dateLibrary         : "custom"
+            dateLibrary: "custom"
     ]
     typeMappings = [
             // What date-time type to use when? https://i.stack.imgur.com/QPhGW.png
-            Date    : "java.time.LocalDate",
+            Date: "java.time.LocalDate",
             DateTime: "java.time.Instant",
     ]
     library = "native"
 
-    groupId = 'api.bpartners.annotator'
-    id = 'api-rest'
+    groupId = 'api.bpartners'
+    id = 'bpartners-annotator-gen'
     skipValidateSpec = false
     logToStderr = true
     generateAliasAsModel = false
     enablePostProcessFile = false
-    version = 'latest'
 }
-
-task generateReactClient(type: org.openapitools.generator.gradle.plugin.tasks.GenerateTask) {
+task generateTsClient(type: org.openapitools.generator.gradle.plugin.tasks.GenerateTask) {
     generatorName = "typescript-axios"
     inputSpec = "$rootDir/doc/api.yml".toString()
-    outputDir = "$projectDir/build/gen-react-client".toString()
-    typeMappings = [
-            Date    : "Date",
-            DateTime: "Date",
-    ]
-    additionalProperties = [
-            /* // allOf is buggy when used withSeparateModelsAndApi
-               // https://github.com/OpenAPITools/openapi-generator/issues/9163
-            withSeparateModelsAndApi : true,
-            apiPackage : "api",
-            modelPackage : "models", */
-            enumPropertyNaming: "original",
-            npmName           : "bpartners-annotator-react-client",
-            npmVersion        : project.properties["args"] ?: "latest"
-    ]
+    outputDir = "$buildDir/gen-ts".toString()
 }
-
 task publishJavaClientToMavenLocal(type: Exec, dependsOn: generateJavaClient) {
-    if (org.apache.tools.ant.taskdefs.condition.Os.isFamily(org.apache.tools.ant.taskdefs.condition.Os.FAMILY_WINDOWS)) {
+    if (Os.isFamily(Os.FAMILY_WINDOWS)){
         commandLine './.shell/publish_gen_to_maven_local.bat'
     } else {
         commandLine './.shell/publish_gen_to_maven_local.sh'
     }
 }
 tasks.compileJava.dependsOn publishJavaClientToMavenLocal
-
-apply plugin: 'checkstyle'
-checkstyle {
-    toolVersion '10.3.3'
-    configFile file('config/checkstyle/google_checks_custom.xml')
-}
-
-checkstyleMain {
-    source = 'src/main/java'
-}
-
-checkstyleTest {
-    source = 'src/test/java'
-}
-
-tasks.withType(Checkstyle) {
-    reports {
-        xml.destination file("${projectDir}/build/reports/checkstyle/checkstyle.xml")
-    }
-}
-
-ext {
-    set('testcontainersVersion', "1.19.0")
-}
 
 test {
     maxParallelForks = Runtime.runtime.availableProcessors().intdiv(2) ?: 1
@@ -143,8 +100,11 @@ dependencies {
     implementation 'org.postgresql:postgresql'
 
     implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
+    implementation 'com.vladmihalcea:hibernate-types-52:1.0.0'
 
-    implementation 'com.amazonaws.serverless:aws-serverless-java-container-springboot3:2.0.0-M2'
+    implementation 'com.amazonaws.serverless:aws-serverless-java-container-springboot2:1.9.3'
+    implementation 'software.amazon.awssdk:aws-query-protocol:2.20.26'
+
     implementation 'com.amazonaws:aws-lambda-java-core:1.2.3'
     implementation 'com.amazonaws:aws-lambda-java-events:3.11.3'
     implementation 'software.amazon.awssdk:sqs:2.21.7'
@@ -157,19 +117,19 @@ dependencies {
     testCompileOnly 'org.projectlombok:lombok'
     testAnnotationProcessor 'org.projectlombok:lombok'
 
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-    testImplementation 'org.testcontainers:junit-jupiter'
+    implementation 'org.openapitools:jackson-databind-nullable:0.2.6'
+    implementation 'io.swagger:swagger-annotations:1.6.12'
 
-    testImplementation 'org.testcontainers:postgresql'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.testcontainers:junit-jupiter:1.19.1'
+
+    testImplementation 'org.testcontainers:postgresql:1.19.1'
 
 implementation 'org.thymeleaf:thymeleaf:3.1.2.RELEASE'
-
 implementation 'software.amazon.awssdk:s3:2.21.6'
-
 implementation 'software.amazon.awssdk:ses:2.21.12'
-
 implementation 'api.bpartners.annotator:api-rest:latest'
-
 implementation 'org.springframework.boot:spring-boot-starter-validation'
-
+implementation 'com.vladmihalcea:hibernate-types-52:1.0.0'
+implementation 'io.hypersistence:hypersistence-utils-hibernate-55:3.5.1'
 }

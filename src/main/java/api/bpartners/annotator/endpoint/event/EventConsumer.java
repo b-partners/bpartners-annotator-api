@@ -57,8 +57,7 @@ public class EventConsumer implements Consumer<List<EventConsumer.Acknowledgeabl
 
   @SneakyThrows
   private static TypedEvent toTypedEvent(SQSEvent.SQSMessage message) {
-    TypeReference<Map<String, Object>> typeRef = new TypeReference<>() {
-    };
+    TypeReference<Map<String, Object>> typeRef = new TypeReference<>() {};
     Map<String, Object> body = om.readValue(message.getBody(), typeRef);
     String typeName = body.get(DETAIL_TYPE_PROPERTY).toString();
     return new TypedEvent(
@@ -75,8 +74,7 @@ public class EventConsumer implements Consumer<List<EventConsumer.Acknowledgeabl
 
   @AllArgsConstructor
   public static class AcknowledgeableTypedEvent {
-    @Getter
-    private final TypedEvent event;
+    @Getter private final TypedEvent event;
     private final Runnable acknowledger;
 
     public void ack() {
@@ -84,6 +82,5 @@ public class EventConsumer implements Consumer<List<EventConsumer.Acknowledgeabl
     }
   }
 
-  public record TypedEvent(String typeName, Object payload) {
-  }
+  public record TypedEvent(String typeName, Object payload) {}
 }
