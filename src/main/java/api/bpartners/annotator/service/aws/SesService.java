@@ -1,6 +1,5 @@
 package api.bpartners.annotator.service.aws;
 
-import api.bpartners.annotator.endpoint.event.EventConf;
 import api.bpartners.annotator.model.exception.ApiException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,7 +18,7 @@ import static api.bpartners.annotator.model.exception.ApiException.ExceptionType
 @AllArgsConstructor
 public class SesService {
   private final SesClient client;
-  private final EventConf eventConf;
+  private final SesConf sesConf;
 
   public void sendEmail(String recipient, String subject, String htmlBody) {
     Message message = Message.builder()
@@ -33,7 +32,7 @@ public class SesService {
             .build())
         .build();
     SendEmailRequest emailRequest = SendEmailRequest.builder()
-        .source(eventConf.getSesSource())
+        .source(sesConf.getSesSource())
         .destination(destination -> destination.
             toAddresses(recipient))
         .message(message)
