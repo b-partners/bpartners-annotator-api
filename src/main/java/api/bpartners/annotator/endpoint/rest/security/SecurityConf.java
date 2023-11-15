@@ -1,5 +1,7 @@
 package api.bpartners.annotator.endpoint.rest.security;
 
+import api.bpartners.annotator.endpoint.rest.security.matcher.SelfTeamMatcher;
+import api.bpartners.annotator.endpoint.rest.security.matcher.SelfUserMatcher;
 import api.bpartners.annotator.model.exception.ForbiddenException;
 import javax.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -25,13 +27,16 @@ public class SecurityConf extends WebSecurityConfigurerAdapter {
   public static final String AUTHORIZATION_HEADER = "Authorization";
   private final AuthProvider authProvider;
   private final HandlerExceptionResolver exceptionResolver;
+  private final AuthenticatedResourceProvider resourceProvider;
 
   public SecurityConf(
       AuthProvider authProvider,
       // InternalToExternalErrorHandler behind
-      @Qualifier("handlerExceptionResolver") HandlerExceptionResolver exceptionResolver) {
+      @Qualifier("handlerExceptionResolver") HandlerExceptionResolver exceptionResolver,
+      AuthenticatedResourceProvider resourceProvider) {
     this.authProvider = authProvider;
     this.exceptionResolver = exceptionResolver;
+    this.resourceProvider = resourceProvider;
   }
 
   @Override
@@ -73,11 +78,25 @@ public class SecurityConf extends WebSecurityConfigurerAdapter {
         .antMatchers("/jobs/*").hasRole(ADMIN.getRole())
         .antMatchers("/jobs/*/tasks").hasRole(ADMIN.getRole())
         .antMatchers("/jobs/*/tasks/*").hasRole(ADMIN.getRole())
-        .antMatchers("/teams/*/jobs").hasAnyRole(ADMIN.getRole(), ANNOTATOR.getRole())
-        .antMatchers("/teams/*/jobs/*").hasAnyRole(ADMIN.getRole(), ANNOTATOR.getRole())
-        .antMatchers("/teams/*/jobs/*/task").hasAnyRole(ADMIN.getRole(), ANNOTATOR.getRole())
-        .antMatchers("/teams/*/jobs/*/tasks/*").hasAnyRole(ADMIN.getRole(), ANNOTATOR.getRole())
-        .antMatchers("/users/*/tasks/*/annotations").hasAnyRole(ADMIN.getRole(), ANNOTATOR.getRole())
+        .requestMatchers(
+            new SelfTeamMatcher(HttpMethod.GET, "/teams/*/jobs", resourceProvider)
+        ).hasAnyRole(ADMIN.getRole(), ANNOTATOR.getRole())
+        .requestMatchers(
+            new SelfTeamMatcher(HttpMethod.GET, "/teams/*/jobs/*", resourceProvider)
+        ).hasAnyRole(ADMIN.getRole(), ANNOTATOR.getRole())
+        .requestMatchers(
+            new SelfTeamMatcher(HttpMethod.GET, "/teams/*/jobs/*/task", resourceProvider)
+        ).hasAnyRole(ADMIN.getRole(), ANNOTATOR.getRole())
+        .requestMatchers(
+            new SelfTeamMatcher(
+                HttpMethod.GET, "/teams/*/jobs/*/tasks/*", resourceProvider
+            )
+        ).hasAnyRole(ADMIN.getRole(), ANNOTATOR.getRole())
+        .requestMatchers(
+            new SelfUserMatcher(
+                HttpMethod.GET, "/users/*/tasks/*/annotations", resourceProvider
+            )
+        ).hasAnyRole(ADMIN.getRole(), ANNOTATOR.getRole())
         .antMatchers("/**").denyAll()
 
         // disable superfluous protections
