@@ -7,7 +7,6 @@ import javax.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.web.authentication.AnonymousAuthenticationFilter;
@@ -19,6 +18,8 @@ import org.springframework.web.servlet.HandlerExceptionResolver;
 
 import static api.bpartners.annotator.endpoint.rest.security.model.Role.ADMIN;
 import static api.bpartners.annotator.endpoint.rest.security.model.Role.ANNOTATOR;
+import static org.springframework.http.HttpMethod.GET;
+import static org.springframework.http.HttpMethod.PUT;
 
 @Configuration
 @Slf4j
@@ -72,29 +73,30 @@ public class SecurityConf extends WebSecurityConfigurerAdapter {
         // authorize
         .and()
         .authorizeRequests()
-        .antMatchers(HttpMethod.GET, "/ping").permitAll()
+        .antMatchers(GET, "/ping").permitAll()
         .antMatchers("/dummy").permitAll()
-        .antMatchers("/jobs").hasRole(ADMIN.getRole())
-        .antMatchers("/jobs/*").hasRole(ADMIN.getRole())
-        .antMatchers("/jobs/*/tasks").hasRole(ADMIN.getRole())
-        .antMatchers("/jobs/*/tasks/*").hasRole(ADMIN.getRole())
+        .antMatchers(GET, "/jobs").hasRole(ADMIN.getRole())
+        .antMatchers(GET, "/jobs/*").hasRole(ADMIN.getRole())
+        .antMatchers(PUT, "/jobs/*").hasRole(ADMIN.getRole())
+        .antMatchers(GET, "/jobs/*/tasks").hasRole(ADMIN.getRole())
+        .antMatchers(GET, "/jobs/*/tasks/*").hasRole(ADMIN.getRole())
         .requestMatchers(
-            new SelfTeamMatcher(HttpMethod.GET, "/teams/*/jobs", resourceProvider)
+            new SelfTeamMatcher(GET, "/teams/*/jobs", resourceProvider)
         ).hasAnyRole(ADMIN.getRole(), ANNOTATOR.getRole())
         .requestMatchers(
-            new SelfTeamMatcher(HttpMethod.GET, "/teams/*/jobs/*", resourceProvider)
+            new SelfTeamMatcher(GET, "/teams/*/jobs/*", resourceProvider)
         ).hasAnyRole(ADMIN.getRole(), ANNOTATOR.getRole())
         .requestMatchers(
-            new SelfTeamMatcher(HttpMethod.GET, "/teams/*/jobs/*/task", resourceProvider)
+            new SelfTeamMatcher(GET, "/teams/*/jobs/*/task", resourceProvider)
         ).hasAnyRole(ADMIN.getRole(), ANNOTATOR.getRole())
         .requestMatchers(
             new SelfTeamMatcher(
-                HttpMethod.GET, "/teams/*/jobs/*/tasks/*", resourceProvider
+                PUT, "/teams/*/jobs/*/tasks/*", resourceProvider
             )
         ).hasAnyRole(ADMIN.getRole(), ANNOTATOR.getRole())
         .requestMatchers(
             new SelfUserMatcher(
-                HttpMethod.GET, "/users/*/tasks/*/annotations", resourceProvider
+                PUT, "/users/*/tasks/*/annotations", resourceProvider
             )
         ).hasAnyRole(ADMIN.getRole(), ANNOTATOR.getRole())
         .antMatchers("/**").denyAll()
