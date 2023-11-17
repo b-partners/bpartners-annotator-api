@@ -8,6 +8,7 @@ import api.bpartners.annotator.model.BoundedPageSize;
 import api.bpartners.annotator.model.PageFromOne;
 import api.bpartners.annotator.model.exception.NotFoundException;
 import api.bpartners.annotator.repository.jpa.UserRepository;
+import api.bpartners.annotator.repository.model.Team;
 import api.bpartners.annotator.repository.model.User;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -36,7 +37,7 @@ public class UserService {
         .id("f162d92b-1c76-4fad-ae3f-494b1759bc33")
         .email("contact@bpartners.app")
         .roles(new api.bpartners.annotator.endpoint.rest.security.model.Role[] {Role.ADMIN})
-        .team(null)
+        .team(new Team("f162d92b-1c76-4fad-ae3f-494b1759bc33", "admin"))
         .build();
   }
 
