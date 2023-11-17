@@ -1,5 +1,8 @@
 package api.bpartners.annotator.service;
 
+import api.bpartners.annotator.endpoint.event.EventConsumer;
+import api.bpartners.annotator.endpoint.event.EventProducer;
+import api.bpartners.annotator.endpoint.event.gen.UserUpserted;
 import api.bpartners.annotator.endpoint.rest.security.model.Role;
 import api.bpartners.annotator.model.BoundedPageSize;
 import api.bpartners.annotator.model.PageFromOne;
@@ -13,11 +16,14 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import static java.util.stream.Collectors.toList;
+
 @Service
 @AllArgsConstructor
 @Slf4j
 public class UserService {
   private final UserRepository repository;
+  private final EventProducer eventProducer;
 
   public User findByEmail(String email) {
     return repository
@@ -34,8 +40,28 @@ public class UserService {
         .build();
   }
 
-  public List<User> saveAll(List<User> users) {
-    return repository.saveAll(users);
+  public List<User> fireEvents(List<User> users) {
+    eventProducer.accept(
+        users.stream()
+            .map(this::toTypedUser)
+            .map(this::toTypedEvent)
+            .collect(toList())
+    );
+    return users;
+  }
+
+  public User save(User user) {
+    return repository.save(user);
+  }
+
+  private UserUpserted toTypedUser(User user) {
+    return UserUpserted.builder()
+        .user(user)
+        .build();
+  }
+
+  private EventConsumer.TypedEvent toTypedEvent(UserUpserted user) {
+    return new EventConsumer.TypedEvent(UserUpserted.class.getTypeName(), user);
   }
 
   public List<User> findAll(PageFromOne page, BoundedPageSize pageSize) {

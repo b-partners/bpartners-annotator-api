@@ -1,14 +1,11 @@
 package api.bpartners.annotator.repository.model;
 
-import static javax.persistence.GenerationType.IDENTITY;
-
 import api.bpartners.annotator.endpoint.rest.security.model.Role;
 import api.bpartners.annotator.repository.model.types.PostgresEnumType;
 import io.hypersistence.utils.hibernate.type.array.EnumArrayType;
 import io.hypersistence.utils.hibernate.type.array.internal.AbstractArrayType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -39,7 +36,6 @@ import org.hibernate.annotations.TypeDefs;
 @Table(name = "\"user\"")
 public class User {
   @Id
-  @GeneratedValue(strategy = IDENTITY)
   private String id;
 
   @ManyToOne
