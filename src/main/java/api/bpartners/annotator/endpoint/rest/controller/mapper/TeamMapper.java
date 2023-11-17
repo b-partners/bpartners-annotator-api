@@ -6,9 +6,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class TeamMapper {
   public Team toRest(api.bpartners.annotator.repository.model.Team domain) {
-    return new Team()
-        .id(domain.getId())
-        .name(domain.getName());
+    return new Team().id(domain.getId()).name(domain.getName());
   }
 
   public api.bpartners.annotator.repository.model.Team toDomain(Team rest) {
