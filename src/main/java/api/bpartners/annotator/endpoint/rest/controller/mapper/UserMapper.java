@@ -11,13 +11,14 @@ import org.springframework.stereotype.Component;
 public class UserMapper {
   private final UserRoleMapper roleMapper;
   private final UserValidator validator;
+  private final TeamMapper teamMapper;
 
   public User toRest(api.bpartners.annotator.repository.model.User domain) {
     return new User()
         .id(domain.getId())
         .email(domain.getEmail())
         .role(roleMapper.toRest(domain.getRoles()[0]))
-        .team(null);
+        .team(teamMapper.toRest(domain.getTeam()));
   }
 
   public api.bpartners.annotator.repository.model.User toDomain(User rest) {
@@ -26,7 +27,7 @@ public class UserMapper {
         .id(rest.getId())
         .email(rest.getEmail())
         .roles(new Role[] {roleMapper.toDomain(rest.getRole())})
-        .team(null)
+        .team(teamMapper.toDomain(rest.getTeam()))
         .build();
   }
 }
