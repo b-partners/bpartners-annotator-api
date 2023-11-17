@@ -2,7 +2,6 @@ package api.bpartners.annotator.service;
 
 import static java.util.stream.Collectors.toList;
 
-import api.bpartners.annotator.endpoint.event.EventConsumer;
 import api.bpartners.annotator.endpoint.event.EventProducer;
 import api.bpartners.annotator.endpoint.event.gen.UserUpserted;
 import api.bpartners.annotator.endpoint.rest.security.model.Role;
@@ -42,8 +41,7 @@ public class UserService {
   }
 
   public List<User> fireEvents(List<User> users) {
-    eventProducer.accept(
-        users.stream().map(this::toTypedUser).map(this::toTypedEvent).collect(toList()));
+    eventProducer.accept(users.stream().map(this::toTypedUser).collect(toList()));
     return users;
   }
 
@@ -53,10 +51,6 @@ public class UserService {
 
   private UserUpserted toTypedUser(User user) {
     return UserUpserted.builder().user(user).build();
-  }
-
-  private EventConsumer.TypedEvent toTypedEvent(UserUpserted user) {
-    return new EventConsumer.TypedEvent(UserUpserted.class.getTypeName(), user);
   }
 
   public List<User> findAll(PageFromOne page, BoundedPageSize pageSize) {
