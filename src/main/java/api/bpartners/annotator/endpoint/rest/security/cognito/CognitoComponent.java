@@ -56,6 +56,7 @@ public class CognitoComponent {
     if (response == null || response.group() == null || response.group().groupName() == null) {
       throw new ApiException(SERVER_EXCEPTION, "Cognito response was: " + response);
     }
+    log.info("Group with name {} is successfully created.", response.group().groupName());
     return response.group().groupName();
   }
 
