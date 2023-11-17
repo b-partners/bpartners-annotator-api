@@ -65,7 +65,7 @@ paths:
   '/whoami':
     get:
       tags:
-        - Securit
+        - Security
       description: tells you who you are
       operationId: whoami
       responses:
