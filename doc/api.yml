@@ -333,6 +333,15 @@ paths:
       security: [ apiKeyHeader: [ ] ]
       summary: Get the list of existing teams
       operationId: getTeams
+      parameters:
+        - in: query
+          name: page
+          schema:
+            $ref: '#/components/schemas/Page'
+        - in: query
+          name: pageSize
+          schema:
+            $ref: '#/components/schemas/PageSize'
       responses:
         '200':
           description: List of all existing teams
