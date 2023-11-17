@@ -325,6 +325,51 @@ paths:
         '500':
           $ref: '#/components/responses/500'
 
+  '/teams':
+    get:
+      tags:
+        - Admin
+        - Teams
+      security: [ apiKeyHeader: [ ] ]
+      summary: Get the list of existing teams
+      operationId: getTeams
+      responses:
+        '200':
+          description: List of all existing teams
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Team'
+        '500':
+          $ref: '#/components/responses/500'
+    put:
+      tags:
+        - Admin
+        - Teams
+      security: [ apiKeyHeader: [ ] ]
+      summary: Create or update a team
+      operationId: crupdateTeam
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Team'
+      responses:
+        '200':
+          description: The created or updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Team'
+        '400':
+          $ref: '#/components/responses/400'
+        403:
+          $ref: '#/components/responses/403'
+        '500':
+          $ref: '#/components/responses/500'
+
 components:
   securitySchemes:
     BearerAuth:
@@ -376,6 +421,13 @@ components:
       type: object
       properties:
         id:
+          type: string
+    Team:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
           type: string
     CrupdateJob:
       type: object
