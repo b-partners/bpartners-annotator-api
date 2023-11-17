@@ -2,12 +2,15 @@ package api.bpartners.annotator.endpoint.rest;
 
 import api.bpartners.annotator.endpoint.rest.model.Exception;
 import api.bpartners.annotator.model.exception.BadRequestException;
+import api.bpartners.annotator.model.exception.ForbiddenException;
 import api.bpartners.annotator.model.exception.NotFoundException;
 import api.bpartners.annotator.model.exception.TooManyRequestsException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -77,6 +80,23 @@ public class InternalToRestExceptionHandler {
     return new ResponseEntity<>(
         toRest(e, HttpStatus.INTERNAL_SERVER_ERROR),
         HttpStatus.INTERNAL_SERVER_ERROR);
+  }
+
+  @ExceptionHandler(value = {
+      AccessDeniedException.class,
+      BadCredentialsException.class,
+      ForbiddenException.class})
+  ResponseEntity<Exception> handleForbidden(
+      java.lang.Exception e) {
+    /* rest.model.Exception.Type.FORBIDDEN designates both authentication and authorization errors.
+     * Hence do _not_ HttpsStatus.UNAUTHORIZED because, counter-intuitively,
+     * it's just for authentication.
+     * https://stackoverflow.com/questions/3297048/403-forbidden-vs-401-unauthorized-http-responses */
+    log.info("Forbidden", e);
+    var restException = new Exception();
+    restException.setType(HttpStatus.FORBIDDEN.toString());
+    restException.setMessage(e.getMessage());
+    return new ResponseEntity<>(restException, HttpStatus.FORBIDDEN);
   }
 
   private Exception toRest(java.lang.Exception e, HttpStatus status) {
