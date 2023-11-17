@@ -382,6 +382,55 @@ paths:
           $ref: '#/components/responses/403'
         '500':
           $ref: '#/components/responses/500'
+  '/users':
+    get:
+      tags:
+        - Users
+        - Admin
+      security: [ apiKeyHeader: [ ] ]
+      description: get all users.
+      operationId: getUsers
+      parameters:
+        - in: query
+          name: page
+          schema:
+            $ref: '#/components/schemas/Page'
+        - in: query
+          name: pageSize
+          schema:
+            $ref: '#/components/schemas/PageSize'
+      responses:
+        "200":
+          description: paginated list of all existing users
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/User"
+    put:
+      tags:
+        - Users
+        - Admin
+      security: [ apiKeyHeader: [ ] ]
+      description: create users
+      operationId: create users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: "#/components/schemas/User"
+      responses:
+        "200":
+          description: successfully created users
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/User"
 
 components:
   securitySchemes:
@@ -424,6 +473,23 @@ components:
           schema:
             $ref: '#/components/schemas/InternalServerException'
   schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+        role:
+          $ref: "#/components/schemas/UserRole"
+        team:
+          $ref: "#/components/schemas/Team"
+        email:
+          type: string
+          format: email
+    UserRole:
+      type: string
+      enum:
+        - ANNOTATOR
+        - ADMIN
     Page:
       type: integer
       description: Start at `1`
