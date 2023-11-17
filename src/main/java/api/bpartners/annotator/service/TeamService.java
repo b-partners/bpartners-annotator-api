@@ -1,5 +1,7 @@
 package api.bpartners.annotator.service;
 
+import api.bpartners.annotator.endpoint.event.EventProducer;
+import api.bpartners.annotator.endpoint.event.gen.TeamUpserted;
 import api.bpartners.annotator.model.BoundedPageSize;
 import api.bpartners.annotator.model.PageFromOne;
 import api.bpartners.annotator.repository.jpa.TeamRepository;
@@ -11,10 +13,13 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import static java.util.stream.Collectors.toList;
+
 @Service
 @AllArgsConstructor
 public class TeamService {
   private final TeamRepository repository;
+  private final EventProducer eventProducer;
 
   public List<Team> getAll(PageFromOne page, BoundedPageSize pageSize) {
     int pageValue = page != null ? page.getValue() - 1 : 0;
@@ -24,7 +29,16 @@ public class TeamService {
     return responses.getContent();
   }
 
-  public List<Team> saveAll(List<Team> toSave) {
-    return repository.saveAll(toSave);
+  public List<Team> fireEvents(List<Team> toSave) {
+    eventProducer.accept(toSave.stream().map(this::toTypedTeam).collect(toList()));
+    return toSave;
+  }
+
+  private TeamUpserted toTypedTeam(Team team) {
+    return TeamUpserted.builder().team(team).build();
+  }
+
+  public Team save(Team team) {
+    return repository.save(team);
   }
 }
