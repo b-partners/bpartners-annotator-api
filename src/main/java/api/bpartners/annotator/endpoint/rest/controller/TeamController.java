@@ -2,12 +2,15 @@ package api.bpartners.annotator.endpoint.rest.controller;
 
 import api.bpartners.annotator.endpoint.rest.controller.mapper.TeamMapper;
 import api.bpartners.annotator.endpoint.rest.model.Team;
+import api.bpartners.annotator.endpoint.rest.validator.TeamValidator;
 import api.bpartners.annotator.model.BoundedPageSize;
 import api.bpartners.annotator.model.PageFromOne;
 import api.bpartners.annotator.service.TeamService;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -16,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class TeamController {
   private final TeamService service;
   private final TeamMapper mapper;
+  private final TeamValidator validator;
 
   @GetMapping("/teams")
   public List<Team> getTeams(@RequestParam(required = false) PageFromOne page,
@@ -23,5 +27,11 @@ public class TeamController {
     return service.getAll(page, pageSize).stream()
         .map(mapper::toRest)
         .toList();
+  }
+
+  @PostMapping("/teams")
+  public List<Team> createTeams(@RequestBody List<Team> teams) {
+    validator.accept(teams);
+    return service.saveAll(teams.stream().map(mapper::toDomain).toList()).stream().map(mapper::toRest).toList();
   }
 }
