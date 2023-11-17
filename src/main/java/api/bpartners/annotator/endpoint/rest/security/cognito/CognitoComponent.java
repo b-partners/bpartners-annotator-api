@@ -1,5 +1,6 @@
 package api.bpartners.annotator.endpoint.rest.security.cognito;
 
+import api.bpartners.annotator.model.exception.ApiException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.proc.BadJOSEException;
@@ -8,6 +9,10 @@ import java.text.ParseException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import software.amazon.awssdk.services.cognitoidentityprovider.CognitoIdentityProviderClient;
+import software.amazon.awssdk.services.cognitoidentityprovider.model.CreateGroupRequest;
+import software.amazon.awssdk.services.cognitoidentityprovider.model.CreateGroupResponse;
+
+import static api.bpartners.annotator.model.exception.ApiException.ExceptionType.SERVER_EXCEPTION;
 
 @Slf4j
 @Component
@@ -36,6 +41,19 @@ public class CognitoComponent {
     }
 
     return isClaimsSetValid(claims) ? getEmail(claims) : null;
+  }
+
+  public String createGroup(String groupName) {
+    CreateGroupRequest request = CreateGroupRequest.builder()
+        .groupName(groupName)
+        .userPoolId(cognitoConf.getUserPoolId())
+        .build();
+
+    CreateGroupResponse response = cognitoClient.createGroup(request);
+    if(response == null || response.group() == null || response.group().groupName() == null) {
+      throw new ApiException(SERVER_EXCEPTION, "Cognito response was: " + response);
+    }
+    return response.group().groupName();
   }
 
   private boolean isClaimsSetValid(JWTClaimsSet claims) {

@@ -23,4 +23,8 @@ public class TeamService {
     Page<Team> responses = repository.findAll(pageable);
     return responses.getContent();
   }
+
+  public List<Team> saveAll(List<Team> toSave) {
+    return repository.saveAll(toSave);
+  }
 }
