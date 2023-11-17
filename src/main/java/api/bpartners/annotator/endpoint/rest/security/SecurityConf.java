@@ -88,6 +88,8 @@ public class SecurityConf extends WebSecurityConfigurerAdapter {
         .hasRole(ADMIN.getRole())
         .antMatchers(GET, "/jobs/*/tasks/*")
         .hasRole(ADMIN.getRole())
+        .antMatchers(GET, "/teams")
+        .hasRole(ADMIN.getRole())
         .requestMatchers(new SelfTeamMatcher(GET, "/teams/*/jobs", resourceProvider))
         .hasAnyRole(ADMIN.getRole(), ANNOTATOR.getRole())
         .requestMatchers(new SelfTeamMatcher(GET, "/teams/*/jobs/*", resourceProvider))
