@@ -1,3 +1,18 @@
+# [0.4.0](https://github.com/b-partners/bpartners-annotator-api/compare/v0.3.0...v0.4.0) (2023-11-17)
+
+
+### Bug Fixes
+
+* allow flyway migration out of order ([98e4981](https://github.com/b-partners/bpartners-annotator-api/commit/98e498177ac6512cc8f059a094b9330f591b4afc))
+* refactor env vars ([13f3dd2](https://github.com/b-partners/bpartners-annotator-api/commit/13f3dd2d82acc8624670b8024e94ada2a8a6d972))
+
+
+### Features
+
+* spring security ([#38](https://github.com/b-partners/bpartners-annotator-api/issues/38)) ([28b1ac1](https://github.com/b-partners/bpartners-annotator-api/commit/28b1ac19158f20b610905384235b0350b886ac68))
+
+
+
 # [0.3.0](https://github.com/b-partners/bpartners-annotator-api/compare/v0.2.0...v0.3.0) (2023-11-17)
 
 
