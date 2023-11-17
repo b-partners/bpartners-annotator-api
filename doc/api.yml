@@ -64,6 +64,8 @@ paths:
           $ref: '#/components/responses/500'
   '/whoami':
     get:
+      tags:
+        - Securit
       description: tells you who you are
       operationId: whoami
       responses:
