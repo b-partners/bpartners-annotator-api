@@ -38,9 +38,6 @@ public abstract class SelfMatcher implements RequestMatcher {
         .contains(Role.ADMIN)) {
       return true;
     }
-    return Objects.equals(
-        getId(request),
-        getAccessibleProtectedResourceId()
-    );
+    return Objects.equals(getId(request), getAccessibleProtectedResourceId());
   }
 }

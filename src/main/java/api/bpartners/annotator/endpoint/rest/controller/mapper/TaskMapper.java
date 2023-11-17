@@ -20,8 +20,7 @@ public class TaskMapper {
     URL presignedUrl =
         fileService.getPresignedUrl(
             domain.getJob().getBucketName(),
-            domain.getJob().getFolderPath() + domain.getFilename()
-        );
+            domain.getJob().getFolderPath() + domain.getFilename());
     return new Task()
         .id(domain.getId())
         .status(statusMapper.toRest(domain.getStatus()))

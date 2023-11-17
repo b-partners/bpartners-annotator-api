@@ -27,8 +27,7 @@ public class JobValidator implements Consumer<CrupdateJob> {
           .append(".");
     }
     if (crupdateJob.getOwnerEmail() == null) {
-      exceptionMessageBuilder
-          .append("Owner Email is mandatory.");
+      exceptionMessageBuilder.append("Owner Email is mandatory.");
     } else if (!isValidEmailAddress(crupdateJob.getOwnerEmail())) {
       exceptionMessageBuilder
           .append("email address : ")

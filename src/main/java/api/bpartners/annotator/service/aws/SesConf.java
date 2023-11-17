@@ -13,16 +13,14 @@ public class SesConf {
   private final Region region;
   private final String sesSource;
 
-  public SesConf(@Value("${aws.region}") Region region,
-                 @Value("${aws.ses.source}") String sesSource) {
+  public SesConf(
+      @Value("${aws.region}") Region region, @Value("${aws.ses.source}") String sesSource) {
     this.region = region;
     this.sesSource = sesSource;
   }
 
   @Bean
   public SesClient getSesClient() {
-    return SesClient.builder()
-        .region(region)
-        .build();
+    return SesClient.builder().region(region).build();
   }
 }

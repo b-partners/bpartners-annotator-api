@@ -1,13 +1,13 @@
 package api.bpartners.annotator.endpoint.rest.controller.mapper;
 
-import api.bpartners.annotator.endpoint.rest.model.JobStatus;
-import org.springframework.stereotype.Component;
-
 import static api.bpartners.annotator.endpoint.rest.model.JobStatus.COMPLETED;
 import static api.bpartners.annotator.endpoint.rest.model.JobStatus.FAILED;
 import static api.bpartners.annotator.endpoint.rest.model.JobStatus.PENDING;
 import static api.bpartners.annotator.endpoint.rest.model.JobStatus.READY;
 import static api.bpartners.annotator.endpoint.rest.model.JobStatus.STARTED;
+
+import api.bpartners.annotator.endpoint.rest.model.JobStatus;
+import org.springframework.stereotype.Component;
 
 @Component
 public class JobStatusMapper {

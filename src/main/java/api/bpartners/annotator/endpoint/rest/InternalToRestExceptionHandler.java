@@ -17,59 +17,50 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
-
 @RestControllerAdvice
 @Slf4j
 public class InternalToRestExceptionHandler {
 
   @ExceptionHandler(value = {BadRequestException.class})
-  ResponseEntity<Exception> handleBadRequest(
-      BadRequestException e) {
+  ResponseEntity<Exception> handleBadRequest(BadRequestException e) {
     log.info("Bad request", e);
     return new ResponseEntity<>(toRest(e, HttpStatus.BAD_REQUEST), HttpStatus.BAD_REQUEST);
   }
 
   @ExceptionHandler(value = {MissingServletRequestParameterException.class})
-  ResponseEntity<Exception> handleBadRequest(
-      MissingServletRequestParameterException e) {
+  ResponseEntity<Exception> handleBadRequest(MissingServletRequestParameterException e) {
     log.info("Missing parameter", e);
     return handleBadRequest(new BadRequestException(e.getMessage()));
   }
 
   @ExceptionHandler(value = {HttpRequestMethodNotSupportedException.class})
-  ResponseEntity<Exception> handleBadRequest(
-      HttpRequestMethodNotSupportedException e) {
+  ResponseEntity<Exception> handleBadRequest(HttpRequestMethodNotSupportedException e) {
     log.info("Unsupported method for this endpoint", e);
     return handleBadRequest(new BadRequestException(e.getMessage()));
   }
 
   @ExceptionHandler(value = {HttpMessageNotReadableException.class})
-  ResponseEntity<Exception> handleBadRequest(
-      HttpMessageNotReadableException e) {
+  ResponseEntity<Exception> handleBadRequest(HttpMessageNotReadableException e) {
     log.info("Missing required body", e);
     return handleBadRequest(new BadRequestException(e.getMessage()));
   }
 
   @ExceptionHandler(value = {MethodArgumentTypeMismatchException.class})
-  ResponseEntity<Exception> handleConversionFailed(
-      MethodArgumentTypeMismatchException e) {
+  ResponseEntity<Exception> handleConversionFailed(MethodArgumentTypeMismatchException e) {
     log.info("Conversion failed", e);
     String message = e.getCause().getCause().getMessage();
     return handleBadRequest(new BadRequestException(message));
   }
 
   @ExceptionHandler(value = {TooManyRequestsException.class})
-  ResponseEntity<Exception> handleTooManyRequests(
-      TooManyRequestsException e) {
+  ResponseEntity<Exception> handleTooManyRequests(TooManyRequestsException e) {
     log.info("Too many requests", e);
     return new ResponseEntity<>(
-        toRest(e, HttpStatus.TOO_MANY_REQUESTS),
-        HttpStatus.TOO_MANY_REQUESTS);
+        toRest(e, HttpStatus.TOO_MANY_REQUESTS), HttpStatus.TOO_MANY_REQUESTS);
   }
 
   @ExceptionHandler(value = {NotFoundException.class})
-  ResponseEntity<Exception> handleNotFound(
-      NotFoundException e) {
+  ResponseEntity<Exception> handleNotFound(NotFoundException e) {
     log.info("Not found", e);
     return new ResponseEntity<>(toRest(e, HttpStatus.NOT_FOUND), HttpStatus.NOT_FOUND);
   }
@@ -78,16 +69,16 @@ public class InternalToRestExceptionHandler {
   ResponseEntity<Exception> handleDefault(java.lang.Exception e) {
     log.error("Internal error", e);
     return new ResponseEntity<>(
-        toRest(e, HttpStatus.INTERNAL_SERVER_ERROR),
-        HttpStatus.INTERNAL_SERVER_ERROR);
+        toRest(e, HttpStatus.INTERNAL_SERVER_ERROR), HttpStatus.INTERNAL_SERVER_ERROR);
   }
 
-  @ExceptionHandler(value = {
-      AccessDeniedException.class,
-      BadCredentialsException.class,
-      ForbiddenException.class})
-  ResponseEntity<Exception> handleForbidden(
-      java.lang.Exception e) {
+  @ExceptionHandler(
+      value = {
+        AccessDeniedException.class,
+        BadCredentialsException.class,
+        ForbiddenException.class
+      })
+  ResponseEntity<Exception> handleForbidden(java.lang.Exception e) {
     /* rest.model.Exception.Type.FORBIDDEN designates both authentication and authorization errors.
      * Hence do _not_ HttpsStatus.UNAUTHORIZED because, counter-intuitively,
      * it's just for authentication.

@@ -1,5 +1,8 @@
 package api.bpartners.annotator.endpoint.rest.security.cognito;
 
+import static api.bpartners.annotator.endpoint.rest.security.JWTConf.getContextConfigurableJWTProcessor;
+import static api.bpartners.annotator.model.exception.ApiException.ExceptionType.SERVER_EXCEPTION;
+
 import api.bpartners.annotator.endpoint.rest.security.JWTConf;
 import api.bpartners.annotator.model.exception.ApiException;
 import com.nimbusds.jose.proc.SecurityContext;
@@ -14,9 +17,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.cognitoidentityprovider.CognitoIdentityProviderClient;
-
-import static api.bpartners.annotator.endpoint.rest.security.JWTConf.getContextConfigurableJWTProcessor;
-import static api.bpartners.annotator.model.exception.ApiException.ExceptionType.SERVER_EXCEPTION;
 
 @Configuration
 @Getter
@@ -49,8 +49,7 @@ public class CognitoConf {
     ResourceRetriever resourceRetriever =
         new DefaultResourceRetriever(jwtConf.getConnectTimeout(), jwtConf.getReadTimeout());
     URL jwkUrl = getCognitoJwksUrlFormat();
-    return getContextConfigurableJWTProcessor(resourceRetriever, jwkUrl,
-        jwtConf.getRs256());
+    return getContextConfigurableJWTProcessor(resourceRetriever, jwkUrl, jwtConf.getRs256());
   }
 
   @Bean
@@ -74,4 +73,3 @@ public class CognitoConf {
     return domain + "/oauth2/token";
   }
 }
-

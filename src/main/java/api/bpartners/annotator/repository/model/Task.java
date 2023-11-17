@@ -1,7 +1,10 @@
 package api.bpartners.annotator.repository.model;
 
-import api.bpartners.annotator.repository.model.types.PostgresEnumType;
+import static javax.persistence.EnumType.STRING;
+import static javax.persistence.GenerationType.IDENTITY;
+
 import api.bpartners.annotator.repository.model.enums.TaskStatus;
+import api.bpartners.annotator.repository.model.types.PostgresEnumType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Enumerated;
@@ -16,9 +19,6 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 
-import static javax.persistence.EnumType.STRING;
-import static javax.persistence.GenerationType.IDENTITY;
-
 @Entity
 @Data
 @Builder
@@ -29,14 +29,18 @@ public class Task {
   @Id
   @GeneratedValue(strategy = IDENTITY)
   private String id;
+
   @ManyToOne
   @JoinColumn(name = "job_id", updatable = false, insertable = true)
   private Job job;
+
   @Column(name = "filename")
   private String filename;
+
   @Enumerated(STRING)
   @Column(name = "status")
   @Type(type = "pgsql_enum")
   private TaskStatus status;
+
   private String userId;
 }

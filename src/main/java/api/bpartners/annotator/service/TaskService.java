@@ -1,5 +1,8 @@
 package api.bpartners.annotator.service;
 
+import static api.bpartners.annotator.repository.model.enums.TaskStatus.PENDING;
+import static api.bpartners.annotator.repository.model.enums.TaskStatus.UNDER_COMPLETION;
+
 import api.bpartners.annotator.model.BoundedPageSize;
 import api.bpartners.annotator.model.PageFromOne;
 import api.bpartners.annotator.model.exception.NotFoundException;
@@ -10,9 +13,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import static api.bpartners.annotator.repository.model.enums.TaskStatus.PENDING;
-import static api.bpartners.annotator.repository.model.enums.TaskStatus.UNDER_COMPLETION;
 
 @Service
 @AllArgsConstructor
@@ -27,8 +27,12 @@ public class TaskService {
   }
 
   public Task getByJobIdAndId(String jobId, String id) {
-    return repository.findByJobIdAndId(jobId, id).orElseThrow(() -> new NotFoundException(
-        "Task identified by job.id = " + jobId + " and id = " + id + " not found"));
+    return repository
+        .findByJobIdAndId(jobId, id)
+        .orElseThrow(
+            () ->
+                new NotFoundException(
+                    "Task identified by job.id = " + jobId + " and id = " + id + " not found"));
   }
 
   public Task update(String jobId, String id, Task task) {

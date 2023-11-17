@@ -1,5 +1,7 @@
 package api.bpartners.annotator.repository.model;
 
+import static javax.persistence.GenerationType.IDENTITY;
+
 import api.bpartners.annotator.endpoint.rest.security.model.Role;
 import api.bpartners.annotator.repository.model.types.PostgresEnumType;
 import io.hypersistence.utils.hibernate.type.array.EnumArrayType;
@@ -20,36 +22,33 @@ import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 import org.hibernate.annotations.TypeDefs;
 
-import static javax.persistence.GenerationType.IDENTITY;
-
 @Entity
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @TypeDefs({
-    @TypeDef(name = "pgsql_enum", typeClass = PostgresEnumType.class),
-    @TypeDef(name = "user_roles", typeClass = EnumArrayType.class, defaultForType = Enum[].class),
-    @TypeDef(
-        name = "user_roles",
-        typeClass = EnumArrayType.class,
-        defaultForType = Role[].class,
-        parameters = @Parameter(
-            name = AbstractArrayType.SQL_ARRAY_TYPE,
-            value = "user_role"
-        )
-    )
+  @TypeDef(name = "pgsql_enum", typeClass = PostgresEnumType.class),
+  @TypeDef(name = "user_roles", typeClass = EnumArrayType.class, defaultForType = Enum[].class),
+  @TypeDef(
+      name = "user_roles",
+      typeClass = EnumArrayType.class,
+      defaultForType = Role[].class,
+      parameters = @Parameter(name = AbstractArrayType.SQL_ARRAY_TYPE, value = "user_role"))
 })
 @Table(name = "\"user\"")
 public class User {
   @Id
   @GeneratedValue(strategy = IDENTITY)
   private String id;
+
   @ManyToOne
   @JoinColumn(name = "team_id", insertable = true, updatable = false)
   private Team team;
+
   @Type(type = "user_roles")
   @Column(name = "roles", columnDefinition = "user_role[]")
   private Role[] roles;
+
   private String email;
 }

@@ -1,5 +1,7 @@
 package api.bpartners.annotator.repository.model;
 
+import static javax.persistence.EnumType.STRING;
+
 import api.bpartners.annotator.repository.model.enums.JobStatus;
 import api.bpartners.annotator.repository.model.types.PostgresEnumType;
 import java.util.List;
@@ -18,8 +20,6 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 
-import static javax.persistence.EnumType.STRING;
-
 @Entity
 @Data
 @Builder
@@ -27,22 +27,28 @@ import static javax.persistence.EnumType.STRING;
 @AllArgsConstructor
 @TypeDef(name = "pgsql_enum", typeClass = PostgresEnumType.class)
 public class Job {
-  @Id
-  private String id;
+  @Id private String id;
   private String name;
   private String bucketName;
   private String folderPath;
   private String ownerEmail;
+
   @Enumerated(STRING)
   @Column(name = "status")
   @Type(type = "pgsql_enum")
   private JobStatus status;
+
   private String teamId;
+
   @OneToMany()
   @JoinColumn(insertable = false, updatable = false, name = "job_id", referencedColumnName = "id")
   private List<Task> tasks;
+
   @ManyToMany()
-  @JoinTable(name = "has_label", joinColumns = @JoinColumn(name = "job_id"), inverseJoinColumns = @JoinColumn(name = "label_id"))
+  @JoinTable(
+      name = "has_label",
+      joinColumns = @JoinColumn(name = "job_id"),
+      inverseJoinColumns = @JoinColumn(name = "label_id"))
   private List<Label> labels;
 
   public String getFolderPath() {

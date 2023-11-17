@@ -4,8 +4,8 @@ import api.bpartners.annotator.endpoint.rest.security.AuthenticatedResourceProvi
 import org.springframework.http.HttpMethod;
 
 public class SelfUserMatcher extends SelfMatcher {
-  public SelfUserMatcher(HttpMethod method, String antPattern,
-                         AuthenticatedResourceProvider authResourceProvider) {
+  public SelfUserMatcher(
+      HttpMethod method, String antPattern, AuthenticatedResourceProvider authResourceProvider) {
     super(method, antPattern, authResourceProvider);
   }
 

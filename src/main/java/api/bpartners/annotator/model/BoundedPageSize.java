@@ -4,8 +4,7 @@ import api.bpartners.annotator.model.exception.BadRequestException;
 import lombok.Getter;
 
 public class BoundedPageSize {
-  @Getter
-  private final int value;
+  @Getter private final int value;
 
   public static final int MAX_SIZE = 500;
 

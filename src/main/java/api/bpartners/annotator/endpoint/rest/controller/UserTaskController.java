@@ -23,8 +23,11 @@ public class UserTaskController {
   }
 
   @PutMapping("/teams/{teamId}/jobs/{jobId}/tasks/{taskId}")
-  public Task updateTask(@PathVariable String teamId, @PathVariable String jobId,
-                         @PathVariable String taskId, @RequestBody UpdateTask task) {
+  public Task updateTask(
+      @PathVariable String teamId,
+      @PathVariable String jobId,
+      @PathVariable String taskId,
+      @RequestBody UpdateTask task) {
     return mapper.toRest(service.update(jobId, taskId, mapper.toDomain(task)));
   }
 }

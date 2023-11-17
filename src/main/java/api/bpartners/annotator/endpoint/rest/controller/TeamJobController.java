@@ -17,13 +17,11 @@ public class TeamJobController {
 
   @GetMapping("/teams/{teamId}/jobs")
   public List<Job> getTeamJobs(@PathVariable String teamId) {
-    return service.getAllByTeam(teamId)
-        .stream()
-        .map(mapper::toRest)
-        .toList();
+    return service.getAllByTeam(teamId).stream().map(mapper::toRest).toList();
   }
+
   @GetMapping("/teams/{teamId}/jobs/{jobId}")
-  public Job getTeamJob(@PathVariable String teamId, @PathVariable String jobId){
+  public Job getTeamJob(@PathVariable String teamId, @PathVariable String jobId) {
     return mapper.toRest(service.getByTeamAndId(teamId, jobId));
   }
 }

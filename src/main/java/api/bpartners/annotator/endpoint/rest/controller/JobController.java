@@ -20,10 +20,7 @@ public class JobController {
 
   @GetMapping("/jobs")
   public List<Job> getJobs() {
-    return service.getAll()
-        .stream()
-        .map(mapper::toRest)
-        .toList();
+    return service.getAll().stream().map(mapper::toRest).toList();
   }
 
   @GetMapping("/jobs/{jobId}")

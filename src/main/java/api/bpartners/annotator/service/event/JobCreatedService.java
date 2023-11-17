@@ -1,5 +1,9 @@
 package api.bpartners.annotator.service.event;
 
+import static api.bpartners.annotator.repository.model.enums.TaskStatus.PENDING;
+import static api.bpartners.annotator.service.JobService.toEventType;
+import static api.bpartners.annotator.service.utils.TemplateResolverUtils.parseTemplateResolver;
+
 import api.bpartners.annotator.endpoint.event.EventProducer;
 import api.bpartners.annotator.endpoint.event.gen.JobCreated;
 import api.bpartners.annotator.model.S3CustomObject;
@@ -16,10 +20,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.thymeleaf.context.Context;
-
-import static api.bpartners.annotator.repository.model.enums.TaskStatus.PENDING;
-import static api.bpartners.annotator.service.JobService.toEventType;
-import static api.bpartners.annotator.service.utils.TemplateResolverUtils.parseTemplateResolver;
 
 @Service
 @AllArgsConstructor
@@ -40,13 +40,16 @@ public class JobCreatedService implements Consumer<JobCreated> {
     String continuationToken = jobCreated.getNextContinuationToken();
     S3CustomObject response = s3Service.getObjectKeys(bucketName, prefix, continuationToken);
 
-    List<Task> tasksToCreate = response.getObjectsFilename().stream()
-        .map(objectKey -> Task.builder()
-            .job(jobCreated.getJob())
-            .status(PENDING)
-            .filename(objectKey)
-            .build())
-        .toList();
+    List<Task> tasksToCreate =
+        response.getObjectsFilename().stream()
+            .map(
+                objectKey ->
+                    Task.builder()
+                        .job(jobCreated.getJob())
+                        .status(PENDING)
+                        .filename(objectKey)
+                        .build())
+            .toList();
     log.info("{} tasks are to be created from bucket={}", tasksToCreate.size(), bucketName);
     taskService.createTasks(tasksToCreate);
     log.info("{} tasks created.", tasksToCreate.size());

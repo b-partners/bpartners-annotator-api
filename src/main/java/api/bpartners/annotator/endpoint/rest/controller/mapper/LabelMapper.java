@@ -6,9 +6,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class LabelMapper {
   public Label toRest(api.bpartners.annotator.repository.model.Label domain) {
-    return new Label()
-        .id(domain.getId())
-        .name(domain.getName());
+    return new Label().id(domain.getId()).name(domain.getName());
   }
 
   public api.bpartners.annotator.repository.model.Label toDomain(Label rest) {

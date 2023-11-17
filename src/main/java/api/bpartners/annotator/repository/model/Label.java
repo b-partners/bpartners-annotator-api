@@ -13,7 +13,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Label {
-  @Id
-  private String id;
+  @Id private String id;
   private String name;
 }

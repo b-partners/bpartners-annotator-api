@@ -2,9 +2,9 @@ package api.bpartners.annotator.service;
 
 import api.bpartners.annotator.repository.jpa.AnnotationRepository;
 import api.bpartners.annotator.repository.model.Annotation;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import java.util.List;
 
 @Service
 @AllArgsConstructor

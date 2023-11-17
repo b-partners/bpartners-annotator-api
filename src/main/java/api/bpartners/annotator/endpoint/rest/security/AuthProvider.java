@@ -25,10 +25,10 @@ public class AuthProvider extends AbstractUserDetailsAuthenticationProvider {
   private final UserService userService;
   private final String apiKey;
 
-  public AuthProvider(CognitoComponent cognitoComponent,
-                      UserService userService,
-                      @Value("${admin.api.key}")
-                      String apiKey) {
+  public AuthProvider(
+      CognitoComponent cognitoComponent,
+      UserService userService,
+      @Value("${admin.api.key}") String apiKey) {
     this.cognitoComponent = cognitoComponent;
     this.userService = userService;
     this.apiKey = apiKey;

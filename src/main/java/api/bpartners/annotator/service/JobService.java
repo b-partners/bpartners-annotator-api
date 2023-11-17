@@ -1,5 +1,7 @@
 package api.bpartners.annotator.service;
 
+import static api.bpartners.annotator.repository.model.enums.JobStatus.PENDING;
+
 import api.bpartners.annotator.endpoint.event.EventProducer;
 import api.bpartners.annotator.endpoint.event.gen.JobCreated;
 import api.bpartners.annotator.model.exception.NotFoundException;
@@ -12,8 +14,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static api.bpartners.annotator.repository.model.enums.JobStatus.PENDING;
-
 @Service
 @AllArgsConstructor
 public class JobService {
@@ -22,10 +22,7 @@ public class JobService {
   private final EventProducer eventProducer;
 
   public static JobCreated toEventType(Job job, String nextContinuationToken) {
-    return JobCreated.builder()
-            .nextContinuationToken(nextContinuationToken)
-            .job(job)
-            .build();
+    return JobCreated.builder().nextContinuationToken(nextContinuationToken).job(job).build();
   }
 
   public List<Job> getAllByTeam(String teamId) {
@@ -33,9 +30,12 @@ public class JobService {
   }
 
   public Job getByTeamAndId(String teamId, String id) {
-    return repository.findByTeamIdAndId(teamId, id)
-        .orElseThrow(() -> new NotFoundException(
-            "Job identified by team.id = " + teamId + " and id = " + id + " not found"));
+    return repository
+        .findByTeamIdAndId(teamId, id)
+        .orElseThrow(
+            () ->
+                new NotFoundException(
+                    "Job identified by team.id = " + teamId + " and id = " + id + " not found"));
   }
 
   public List<Job> getAll() {
@@ -43,7 +43,8 @@ public class JobService {
   }
 
   public Job getById(String id) {
-    return repository.findById(id)
+    return repository
+        .findById(id)
         .orElseThrow(() -> new NotFoundException("Job identified by id = " + id + " not found"));
   }
 

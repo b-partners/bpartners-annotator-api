@@ -9,7 +9,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import software.amazon.awssdk.services.cognitoidentityprovider.CognitoIdentityProviderClient;
 
-
 @Slf4j
 @Component
 public class CognitoComponent {
@@ -19,9 +18,7 @@ public class CognitoComponent {
   private final CognitoIdentityProviderClient cognitoClient;
   private final ObjectMapper objectMapper = new ObjectMapper().findAndRegisterModules();
 
-  public CognitoComponent(
-      CognitoConf cognitoConf,
-      CognitoIdentityProviderClient cognitoClient) {
+  public CognitoComponent(CognitoConf cognitoConf, CognitoIdentityProviderClient cognitoClient) {
     this.cognitoConf = cognitoConf;
     this.cognitoClient = cognitoClient;
   }
@@ -32,9 +29,9 @@ public class CognitoComponent {
       claims = cognitoConf.getCognitoJwtProcessor().process(idToken, null);
     } catch (ParseException | BadJOSEException | JOSEException e) {
       /* From Javadoc:
-         ParseException – If the string couldn't be parsed to a valid JWT.
-         BadJOSEException – If the JWT is rejected.
-         JOSEException – If an internal processing exception is encountered. */
+      ParseException – If the string couldn't be parsed to a valid JWT.
+      BadJOSEException – If the JWT is rejected.
+      JOSEException – If an internal processing exception is encountered. */
       return null;
     }
 

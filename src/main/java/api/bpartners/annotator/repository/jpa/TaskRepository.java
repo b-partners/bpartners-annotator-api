@@ -11,5 +11,6 @@ public interface TaskRepository extends JpaRepository<Task, String> {
   List<Task> findAllByJobId(String jobId, Pageable pageable);
 
   Optional<Task> findByJobIdAndId(String jobId, String id);
+
   Task findFirstByJobIdAndStatus(String jobId, TaskStatus status);
 }
