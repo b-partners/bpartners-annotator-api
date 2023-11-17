@@ -62,7 +62,17 @@ paths:
                   $ref: '#/components/schemas/Job'
         '500':
           $ref: '#/components/responses/500'
-
+  '/whoami':
+    get:
+      description: tells you who you are
+      operationId: whoami
+      responses:
+        "200":
+          description: your identity
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Whoami"
   '/jobs/{jobId}':
     get:
       tags:
@@ -490,6 +500,10 @@ components:
       enum:
         - ANNOTATOR
         - ADMIN
+    Whoami:
+      properties:
+        user:
+          $ref: '#/components/schemas/User'
     Page:
       type: integer
       description: Start at `1`
