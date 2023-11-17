@@ -30,8 +30,8 @@ public class TeamController {
 
   @PostMapping("/teams")
   public List<Team> createTeams(@RequestBody List<Team> teams) {
-    validator.accept(teams);
-    return service.saveAll(teams.stream().map(mapper::toDomain).toList()).stream()
+    teams.forEach(validator);
+    return service.fireEvents(teams.stream().map(mapper::toDomain).toList()).stream()
         .map(mapper::toRest)
         .toList();
   }

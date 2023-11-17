@@ -1,8 +1,8 @@
 package api.bpartners.annotator.endpoint.event.gen;
 
-import api.bpartners.annotator.endpoint.rest.model.Team;
+import api.bpartners.annotator.repository.model.Team;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.util.List;
+import java.io.Serializable;
 import javax.annotation.processing.Generated;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,7 +18,7 @@ import lombok.ToString;
 @Data
 @EqualsAndHashCode
 @ToString
-public class TeamsUpserted {
-  @JsonProperty("teams_to_create")
-  private List<Team> teamsToCreate;
+public class TeamUpserted implements Serializable {
+  @JsonProperty("team")
+  private Team team;
 }
