@@ -1,5 +1,11 @@
 package api.bpartners.annotator.endpoint.rest.security;
 
+import static api.bpartners.annotator.endpoint.rest.security.model.Role.ADMIN;
+import static api.bpartners.annotator.endpoint.rest.security.model.Role.ANNOTATOR;
+import static org.springframework.http.HttpMethod.GET;
+import static org.springframework.http.HttpMethod.POST;
+import static org.springframework.http.HttpMethod.PUT;
+
 import api.bpartners.annotator.endpoint.rest.security.matcher.SelfTeamMatcher;
 import api.bpartners.annotator.endpoint.rest.security.matcher.SelfUserMatcher;
 import api.bpartners.annotator.model.exception.ForbiddenException;
@@ -15,12 +21,6 @@ import org.springframework.security.web.util.matcher.NegatedRequestMatcher;
 import org.springframework.security.web.util.matcher.OrRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.web.servlet.HandlerExceptionResolver;
-
-import static api.bpartners.annotator.endpoint.rest.security.model.Role.ADMIN;
-import static api.bpartners.annotator.endpoint.rest.security.model.Role.ANNOTATOR;
-import static org.springframework.http.HttpMethod.GET;
-import static org.springframework.http.HttpMethod.POST;
-import static org.springframework.http.HttpMethod.PUT;
 
 @Configuration
 @Slf4j

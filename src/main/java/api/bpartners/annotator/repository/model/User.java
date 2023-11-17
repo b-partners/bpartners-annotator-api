@@ -35,8 +35,7 @@ import org.hibernate.annotations.TypeDefs;
 })
 @Table(name = "\"user\"")
 public class User {
-  @Id
-  private String id;
+  @Id private String id;
 
   @ManyToOne
   @JoinColumn(name = "team_id", insertable = true, updatable = false)

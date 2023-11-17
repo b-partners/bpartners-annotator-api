@@ -1,5 +1,7 @@
 package api.bpartners.annotator.service;
 
+import static java.util.stream.Collectors.toList;
+
 import api.bpartners.annotator.endpoint.event.EventConsumer;
 import api.bpartners.annotator.endpoint.event.EventProducer;
 import api.bpartners.annotator.endpoint.event.gen.UserUpserted;
@@ -16,8 +18,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import static java.util.stream.Collectors.toList;
 
 @Service
 @AllArgsConstructor
@@ -43,11 +43,7 @@ public class UserService {
 
   public List<User> fireEvents(List<User> users) {
     eventProducer.accept(
-        users.stream()
-            .map(this::toTypedUser)
-            .map(this::toTypedEvent)
-            .collect(toList())
-    );
+        users.stream().map(this::toTypedUser).map(this::toTypedEvent).collect(toList()));
     return users;
   }
 
@@ -56,9 +52,7 @@ public class UserService {
   }
 
   private UserUpserted toTypedUser(User user) {
-    return UserUpserted.builder()
-        .user(user)
-        .build();
+    return UserUpserted.builder().user(user).build();
   }
 
   private EventConsumer.TypedEvent toTypedEvent(UserUpserted user) {

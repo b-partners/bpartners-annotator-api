@@ -22,16 +22,17 @@ public class TeamController {
   private final TeamValidator validator;
 
   @GetMapping("/teams")
-  public List<Team> getTeams(@RequestParam(required = false) PageFromOne page,
-                             @RequestParam(required = false) BoundedPageSize pageSize) {
-    return service.getAll(page, pageSize).stream()
-        .map(mapper::toRest)
-        .toList();
+  public List<Team> getTeams(
+      @RequestParam(required = false) PageFromOne page,
+      @RequestParam(required = false) BoundedPageSize pageSize) {
+    return service.getAll(page, pageSize).stream().map(mapper::toRest).toList();
   }
 
   @PostMapping("/teams")
   public List<Team> createTeams(@RequestBody List<Team> teams) {
     validator.accept(teams);
-    return service.saveAll(teams.stream().map(mapper::toDomain).toList()).stream().map(mapper::toRest).toList();
+    return service.saveAll(teams.stream().map(mapper::toDomain).toList()).stream()
+        .map(mapper::toRest)
+        .toList();
   }
 }

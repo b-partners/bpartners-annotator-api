@@ -1,5 +1,7 @@
 package api.bpartners.annotator.endpoint.rest.security.cognito;
 
+import static api.bpartners.annotator.model.exception.ApiException.ExceptionType.SERVER_EXCEPTION;
+
 import api.bpartners.annotator.model.exception.ApiException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nimbusds.jose.JOSEException;
@@ -12,13 +14,8 @@ import software.amazon.awssdk.services.cognitoidentityprovider.CognitoIdentityPr
 import software.amazon.awssdk.services.cognitoidentityprovider.model.AdminCreateUserRequest;
 import software.amazon.awssdk.services.cognitoidentityprovider.model.AdminCreateUserResponse;
 import software.amazon.awssdk.services.cognitoidentityprovider.model.AttributeType;
-
-import static api.bpartners.annotator.model.exception.ApiException.ExceptionType.SERVER_EXCEPTION;
-
 import software.amazon.awssdk.services.cognitoidentityprovider.model.CreateGroupRequest;
 import software.amazon.awssdk.services.cognitoidentityprovider.model.CreateGroupResponse;
-
-import static api.bpartners.annotator.model.exception.ApiException.ExceptionType.SERVER_EXCEPTION;
 
 @Slf4j
 @Component
@@ -49,10 +46,11 @@ public class CognitoComponent {
   }
 
   public String createGroup(String groupName) {
-    CreateGroupRequest request = CreateGroupRequest.builder()
-        .groupName(groupName)
-        .userPoolId(cognitoConf.getUserPoolId())
-        .build();
+    CreateGroupRequest request =
+        CreateGroupRequest.builder()
+            .groupName(groupName)
+            .userPoolId(cognitoConf.getUserPoolId())
+            .build();
 
     CreateGroupResponse response = cognitoClient.createGroup(request);
     if (response == null || response.group() == null || response.group().groupName() == null) {
@@ -62,21 +60,15 @@ public class CognitoComponent {
   }
 
   public String createUser(String email) {
-    AdminCreateUserRequest createRequest = AdminCreateUserRequest.builder()
-        .userPoolId(cognitoConf.getUserPoolId())
-        .username(email)
-        // TODO: add test to ensure it has properly been set
-        .userAttributes(
-            AttributeType.builder()
-                .name("email")
-                .value(email)
-                .build(),
-            AttributeType.builder()
-                .name("email_verified")
-                .value("true")
-                .build()
-        )
-        .build();
+    AdminCreateUserRequest createRequest =
+        AdminCreateUserRequest.builder()
+            .userPoolId(cognitoConf.getUserPoolId())
+            .username(email)
+            // TODO: add test to ensure it has properly been set
+            .userAttributes(
+                AttributeType.builder().name("email").value(email).build(),
+                AttributeType.builder().name("email_verified").value("true").build())
+            .build();
 
     AdminCreateUserResponse createResponse = cognitoClient.adminCreateUser(createRequest);
     if (createResponse == null
