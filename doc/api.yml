@@ -353,25 +353,29 @@ paths:
                   $ref: '#/components/schemas/Team'
         '500':
           $ref: '#/components/responses/500'
-    put:
+    post:
       tags:
         - Admin
         - Teams
       security: [ apiKeyHeader: [ ] ]
-      summary: Create or update a team
-      operationId: crupdateTeam
+      summary: Create teams
+      operationId: createTeam
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Team'
+              type: array
+              items:
+                $ref: '#/components/schemas/Team'
       responses:
         '200':
-          description: The created or updated
+          description: The created teams
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Team'
+                type: array
+                items:
+                  $ref: '#/components/schemas/Team'
         '400':
           $ref: '#/components/responses/400'
         403:
