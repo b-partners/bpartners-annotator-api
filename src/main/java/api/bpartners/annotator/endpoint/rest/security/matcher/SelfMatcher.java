@@ -8,12 +8,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 
 @AllArgsConstructor
-@Slf4j
 public abstract class SelfMatcher implements RequestMatcher {
   private static final Pattern SELFABLE_URI_PATTERN =
       // /resourceType/id/...
@@ -32,8 +30,6 @@ public abstract class SelfMatcher implements RequestMatcher {
 
   @Override
   public boolean matches(HttpServletRequest request) {
-    log.info("requestAPR {}", getAccessibleProtectedResourceId());
-    log.info("requestID = {}", getId(request));
     if (Arrays.asList(authResourceProvider.getAuthenticatedUser().getRoles())
         .contains(Role.ADMIN)) {
       return true;
