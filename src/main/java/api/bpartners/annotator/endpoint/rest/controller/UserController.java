@@ -28,7 +28,7 @@ public class UserController {
 
   @PutMapping("/users")
   public List<User> createUsers(@RequestBody List<User> users) {
-    return userService.saveAll(users.stream().map(mapper::toDomain).toList()).stream()
+    return userService.fireEvents(users.stream().map(mapper::toDomain).toList()).stream()
         .map(mapper::toRest)
         .toList();
   }
