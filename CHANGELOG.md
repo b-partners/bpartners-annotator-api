@@ -1,3 +1,13 @@
+# [0.5.0](https://github.com/b-partners/bpartners-annotator-api/compare/v0.4.0...v0.5.0) (2023-11-17)
+
+
+### Features
+
+* create teams ([140ae66](https://github.com/b-partners/bpartners-annotator-api/commit/140ae66b89278a260c2e04426193b7fbd863afad))
+* get teams ([b90c12c](https://github.com/b-partners/bpartners-annotator-api/commit/b90c12cd5bb8897918024a05dc757d8f315f156c))
+
+
+
 # [0.4.0](https://github.com/b-partners/bpartners-annotator-api/compare/v0.3.0...v0.4.0) (2023-11-17)
 
 
