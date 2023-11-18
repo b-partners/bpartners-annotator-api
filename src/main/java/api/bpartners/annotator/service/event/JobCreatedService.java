@@ -1,5 +1,6 @@
 package api.bpartners.annotator.service.event;
 
+import static api.bpartners.annotator.repository.model.enums.JobStatus.READY;
 import static api.bpartners.annotator.repository.model.enums.TaskStatus.PENDING;
 import static api.bpartners.annotator.service.JobService.toEventType;
 import static api.bpartners.annotator.service.utils.TemplateResolverUtils.parseTemplateResolver;
@@ -9,6 +10,7 @@ import api.bpartners.annotator.endpoint.event.gen.JobCreated;
 import api.bpartners.annotator.model.S3CustomObject;
 import api.bpartners.annotator.repository.model.Job;
 import api.bpartners.annotator.repository.model.Task;
+import api.bpartners.annotator.repository.model.enums.JobStatus;
 import api.bpartners.annotator.service.JobService;
 import api.bpartners.annotator.service.TaskService;
 import api.bpartners.annotator.service.aws.S3Service;
@@ -59,6 +61,8 @@ public class JobCreatedService implements Consumer<JobCreated> {
           List.of(toEventType(jobCreated.getJob(), response.getNextContinuationToken())));
     } else {
       Job createdJob = jobService.getById(jobCreated.getJob().getId());
+      createdJob.setStatus(READY);
+      jobService.save(createdJob);
       String subject = "[Bpartners-Annotator] Initialisation de job complète";
       String htmlBody =
           parseTemplateResolver(TASK_CREATION_FINISHED, configureCustomerContext(createdJob));
