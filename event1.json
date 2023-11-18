@@ -1,0 +1,42 @@
+{
+  "resource": "/dummy-table",
+  "path": "/dummy-table",
+  "httpMethod": "GET",
+  "headers": {
+    "Accept": "application/json",
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.87 Safari/537.36"
+  },
+  "multiValueHeaders": {
+    "Accept": ["application/json"],
+    "User-Agent": ["Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.87 Safari/537.36"]
+  },
+  "queryStringParameters": null,
+  "multiValueQueryStringParameters": null,
+  "pathParameters": null,
+  "stageVariables": null,
+  "requestContext": {
+    "path": "/dev/dummy-table",
+    "accountId": "123456789012",
+    "resourceId": "resource-id",
+    "stage": "dev",
+    "requestId": "c6af9ac6-7b61-11e6-9a41-93e8deadbeef",
+    "identity": {
+      "cognitoIdentityPoolId": null,
+      "accountId": null,
+      "cognitoIdentityId": null,
+      "caller": null,
+      "apiKey": null,
+      "sourceIp": "192.168.196.186",
+      "cognitoAuthenticationType": null,
+      "cognitoAuthenticationProvider": null,
+      "userArn": null,
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.87 Safari/537.36",
+      "user": null
+    },
+    "resourcePath": "/dummy-table",
+    "httpMethod": "GET",
+    "apiId": "api-id"
+  },
+  "body": null,
+  "isBase64Encoded": false
+}
