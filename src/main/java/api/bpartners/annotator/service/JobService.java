@@ -1,6 +1,8 @@
 package api.bpartners.annotator.service;
 
 import static api.bpartners.annotator.repository.model.enums.JobStatus.PENDING;
+import static api.bpartners.annotator.repository.model.enums.JobStatus.READY;
+import static api.bpartners.annotator.repository.model.enums.JobStatus.STARTED;
 
 import api.bpartners.annotator.endpoint.event.EventProducer;
 import api.bpartners.annotator.endpoint.event.gen.JobCreated;
@@ -26,7 +28,7 @@ public class JobService {
   }
 
   public List<Job> getAllByTeam(String teamId) {
-    return repository.findAllByTeamId(teamId);
+    return repository.findAllByTeamIdAndStatus(teamId, STARTED);
   }
 
   public Job getByTeamAndId(String teamId, String id) {
