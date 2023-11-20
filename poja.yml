@@ -2,7 +2,7 @@ app_name: bpartners-annotator
 cli_version: 3.0.6
 custom_java_deps: poja-custom-java-deps.txt
 custom_java_env_vars: poja-custom-java-env-vars.txt
-jacoco-min-coverage: '0.0'
+jacoco-min-coverage: '0.5'
 package_full_name: api.bpartners.annotator
 region: eu-west-3
 ssm_sg_id: /bpartners/sg/id

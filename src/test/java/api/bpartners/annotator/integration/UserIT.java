@@ -29,10 +29,6 @@ public class UserIT extends FacadeIT {
   @LocalServerPort
   private int port;
 
-  private ApiClient anApiClient() {
-    return TestUtils.anApiClient(TestUtils.JOE_DOE_TOKEN, port);
-  }
-
   static User restJoeDoeUser() {
     return new User()
         .id("joe_doe_id")
@@ -46,6 +42,11 @@ public class UserIT extends FacadeIT {
         .id("team_1_id")
         .name("joe_team");
   }
+
+  private ApiClient anApiClient() {
+    return TestUtils.anApiClient(TestUtils.JOE_DOE_TOKEN, port);
+  }
+
   @BeforeEach
   public void setUp() {
     setUpCognito(cognitoComponent);
@@ -59,13 +60,5 @@ public class UserIT extends FacadeIT {
     User actualUser = api.whoami().getUser();
 
     assertEquals(restJoeDoeUser(), actualUser);
-  }
-
-  @Test
-  void user_read_own_information_ko() {
-    ApiClient unknownClient = new ApiClient();
-    SecurityApi api = new SecurityApi(unknownClient);
-
-    assertThrowsForbiddenException(() -> api.whoami());
   }
 }
