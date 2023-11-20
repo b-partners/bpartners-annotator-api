@@ -1,6 +1,6 @@
 package api.bpartners.annotator.endpoint.rest.security;
 
-import static api.bpartners.annotator.endpoint.rest.security.AuthProvider.API_KEY_HEADER_NAME;
+import static api.bpartners.annotator.endpoint.rest.security.ApiKeyAuthenticator.API_KEY_HEADER;
 
 import java.io.IOException;
 import javax.servlet.FilterChain;
@@ -27,10 +27,10 @@ public class BearerAuthFilter extends AbstractAuthenticationProcessingFilter {
   public Authentication attemptAuthentication(
       HttpServletRequest request, HttpServletResponse response) {
     String bearer = request.getHeader(authHeader);
-    String apiKey = request.getHeader(API_KEY_HEADER_NAME);
+    String apiKey = request.getHeader(API_KEY_HEADER);
     if (bearer == null && apiKey != null) {
       return getAuthenticationManager()
-          .authenticate(new UsernamePasswordAuthenticationToken(API_KEY_HEADER_NAME, apiKey));
+          .authenticate(new UsernamePasswordAuthenticationToken(API_KEY_HEADER, apiKey));
     }
     return getAuthenticationManager()
         .authenticate(new UsernamePasswordAuthenticationToken(bearer, bearer));
