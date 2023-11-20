@@ -10,7 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -75,8 +75,8 @@ public class InternalToRestExceptionHandler {
   @ExceptionHandler(
       value = {
         AccessDeniedException.class,
-        BadCredentialsException.class,
-        ForbiddenException.class
+        ForbiddenException.class,
+        AuthenticationException.class
       })
   ResponseEntity<Exception> handleForbidden(java.lang.Exception e) {
     /* rest.model.Exception.Type.FORBIDDEN designates both authentication and authorization errors.
