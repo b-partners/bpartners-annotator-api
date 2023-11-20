@@ -1,11 +1,5 @@
 package api.bpartners.annotator.endpoint.rest.security;
 
-import static api.bpartners.annotator.endpoint.rest.security.model.Role.ADMIN;
-import static api.bpartners.annotator.endpoint.rest.security.model.Role.ANNOTATOR;
-import static org.springframework.http.HttpMethod.GET;
-import static org.springframework.http.HttpMethod.POST;
-import static org.springframework.http.HttpMethod.PUT;
-
 import api.bpartners.annotator.endpoint.rest.security.matcher.SelfTeamMatcher;
 import api.bpartners.annotator.endpoint.rest.security.matcher.SelfUserMatcher;
 import api.bpartners.annotator.model.exception.ForbiddenException;
@@ -21,6 +15,13 @@ import org.springframework.security.web.util.matcher.NegatedRequestMatcher;
 import org.springframework.security.web.util.matcher.OrRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.web.servlet.HandlerExceptionResolver;
+
+import static api.bpartners.annotator.endpoint.rest.security.model.Role.ADMIN;
+import static api.bpartners.annotator.endpoint.rest.security.model.Role.ANNOTATOR;
+import static org.springframework.http.HttpMethod.GET;
+import static org.springframework.http.HttpMethod.OPTIONS;
+import static org.springframework.http.HttpMethod.POST;
+import static org.springframework.http.HttpMethod.PUT;
 
 @Configuration
 @Slf4j
@@ -64,15 +65,18 @@ public class SecurityConf extends WebSecurityConfigurerAdapter {
             bearerFilter(
                 new NegatedRequestMatcher(
                     new OrRequestMatcher(
-                        new AntPathRequestMatcher("/ping"),
-                        new AntPathRequestMatcher("/dummy-table"),
-                        new AntPathRequestMatcher("/uuid-created")))),
+                        new AntPathRequestMatcher("/**", OPTIONS.toString()),
+                        new AntPathRequestMatcher("/ping", GET.name()),
+                        new AntPathRequestMatcher("/dummy-table", GET.name()),
+                        new AntPathRequestMatcher("/uuid-created", GET.name())))),
             AnonymousAuthenticationFilter.class)
         .anonymous()
 
         // authorize
         .and()
         .authorizeRequests()
+        .antMatchers(OPTIONS, "/**")
+        .permitAll()
         .antMatchers(GET, "/ping")
         .permitAll()
         .antMatchers("/dummy-table")
