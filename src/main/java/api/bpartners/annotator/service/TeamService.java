@@ -1,5 +1,7 @@
 package api.bpartners.annotator.service;
 
+import static java.util.stream.Collectors.toList;
+
 import api.bpartners.annotator.endpoint.event.EventProducer;
 import api.bpartners.annotator.endpoint.event.gen.TeamUpserted;
 import api.bpartners.annotator.model.BoundedPageSize;
@@ -12,8 +14,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import static java.util.stream.Collectors.toList;
 
 @Service
 @AllArgsConstructor

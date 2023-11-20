@@ -1,7 +1,6 @@
 package api.bpartners.annotator.service;
 
 import static api.bpartners.annotator.repository.model.enums.JobStatus.PENDING;
-import static api.bpartners.annotator.repository.model.enums.JobStatus.READY;
 import static api.bpartners.annotator.repository.model.enums.JobStatus.STARTED;
 
 import api.bpartners.annotator.endpoint.event.EventProducer;

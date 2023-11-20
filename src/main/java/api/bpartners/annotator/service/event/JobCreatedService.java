@@ -10,7 +10,6 @@ import api.bpartners.annotator.endpoint.event.gen.JobCreated;
 import api.bpartners.annotator.model.S3CustomObject;
 import api.bpartners.annotator.repository.model.Job;
 import api.bpartners.annotator.repository.model.Task;
-import api.bpartners.annotator.repository.model.enums.JobStatus;
 import api.bpartners.annotator.service.JobService;
 import api.bpartners.annotator.service.TaskService;
 import api.bpartners.annotator.service.aws.S3Service;
