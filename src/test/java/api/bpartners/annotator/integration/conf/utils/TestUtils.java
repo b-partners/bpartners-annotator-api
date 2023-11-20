@@ -50,4 +50,12 @@ public class TestUtils {
         + "\"type\":\"403 FORBIDDEN\","
         + "\"message\":\"Bad credentials\"}", responseBody);
   }
+
+  public static void assertThrowsBadRequestException(Executable executable, String message){
+    ApiException apiException = assertThrows(ApiException.class, executable);
+    String responseBody = apiException.getResponseBody();
+    assertEquals("{"
+            + "\"type\":\"400 BAD_REQUEST\","
+            + "\"message\":\""+message+"\"}", responseBody);
+  }
 }
