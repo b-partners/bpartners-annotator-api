@@ -16,7 +16,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
-import static api.bpartners.annotator.integration.conf.utils.TestUtils.assertThrowsForbiddenException;
 import static api.bpartners.annotator.integration.conf.utils.TestUtils.setUpCognito;
 import static org.junit.Assert.assertEquals;
 
@@ -44,7 +43,7 @@ public class UserIT extends FacadeIT {
   }
 
   private ApiClient anApiClient() {
-    return TestUtils.anApiClient(TestUtils.JOE_DOE_TOKEN, port);
+    return TestUtils.anApiClient(TestUtils.JOE_DOE_TOKEN, null, port);
   }
 
   @BeforeEach

@@ -12,16 +12,22 @@ import java.net.ServerSocket;
 import org.junit.jupiter.api.function.Executable;
 
 public class TestUtils {
+  public static final String ADMIN_API_KEY = "dummy";
   public static final String JOE_DOE_TOKEN = "joe_doe_token";
   public static final String JOE_DOE_EMAIL = "joe@email.com";
 
-  public static ApiClient anApiClient(String token, int serverPort) {
+  public static ApiClient anApiClient(String token, String apiKey, int serverPort) {
     ApiClient client = new ApiClient();
     client.setScheme("http");
     client.setHost("localhost");
     client.setPort(serverPort);
-    client.setRequestInterceptor(
-        httpRequestBuilder -> httpRequestBuilder.header("Authorization", "Bearer " + token));
+    if (apiKey == null) {
+      client.setRequestInterceptor(
+          httpRequestBuilder -> httpRequestBuilder.header("Authorization", "Bearer " + token));
+    } else {
+      client.setRequestInterceptor(
+          httpRequestBuilder -> httpRequestBuilder.header("x-api-key", "dummy"));
+    }
     return client;
   }
 
