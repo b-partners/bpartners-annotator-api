@@ -420,7 +420,7 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/User"
-    put:
+    post:
       tags:
         - Users
         - Admin
@@ -433,7 +433,7 @@ paths:
             schema:
               type: array
               items:
-                $ref: "#/components/schemas/User"
+                $ref: "#/components/schemas/CreateUser"
       responses:
         "200":
           description: successfully created users
@@ -494,6 +494,16 @@ components:
           $ref: "#/components/schemas/UserRole"
         team:
           $ref: "#/components/schemas/Team"
+        email:
+          type: string
+          format: email
+    CreateUser:
+      type: object
+      properties:
+        role:
+          $ref: "#/components/schemas/UserRole"
+        teamId:
+          type: string
         email:
           type: string
           format: email
