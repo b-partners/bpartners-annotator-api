@@ -396,6 +396,38 @@ paths:
           $ref: '#/components/responses/403'
         '500':
           $ref: '#/components/responses/500'
+  '/users/{userId}/team':
+    put:
+      tags:
+        - Admin
+        - Users
+      security: [ apiKeyHeader: [ ] ]
+      summary: Update team of an user
+      description: update user's team
+      parameters:
+        - name: userId
+          schema:
+            type: string
+          required: true
+          in: path
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TeamUser"
+      responses:
+        '200':
+          description: The user with updated team
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          $ref: '#/components/responses/400'
+        403:
+          $ref: '#/components/responses/403'
+        '500':
+          $ref: '#/components/responses/500'
   '/users':
     get:
       tags:
@@ -487,6 +519,13 @@ components:
           schema:
             $ref: '#/components/schemas/InternalServerException'
   schemas:
+    TeamUser:
+      type: object
+      properties:
+        userId:
+          type: string
+        teamId:
+          type: string
     User:
       type: object
       properties:
