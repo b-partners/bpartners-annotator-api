@@ -8,11 +8,7 @@ import api.bpartners.annotator.model.PageFromOne;
 import api.bpartners.annotator.service.UserService;
 import java.util.List;
 import lombok.AllArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @AllArgsConstructor
@@ -27,7 +23,7 @@ public class UserController {
     return userService.findAll(page, pageSize).stream().map(mapper::toRest).toList();
   }
 
-  @PutMapping("/users")
+  @PostMapping("/users")
   public List<User> createUsers(@RequestBody List<CreateUser> users) {
     return userService.fireEvents(users.stream().map(mapper::toDomain).toList()).stream()
         .map(mapper::toRest)

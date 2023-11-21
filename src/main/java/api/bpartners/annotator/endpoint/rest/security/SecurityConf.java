@@ -85,7 +85,7 @@ public class SecurityConf extends WebSecurityConfigurerAdapter {
         .permitAll()
         .antMatchers("/whoami")
         .hasAnyRole(ADMIN.getRole(), ANNOTATOR.getRole())
-        .antMatchers(PUT, "/users")
+        .antMatchers(POST, "/users")
         .hasRole(ADMIN.getRole())
         .antMatchers(GET, "/users")
         .hasRole(ADMIN.getRole())
