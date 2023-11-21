@@ -2,14 +2,13 @@ package api.bpartners.annotator.endpoint.rest.security;
 
 import api.bpartners.annotator.endpoint.rest.security.model.Principal;
 import api.bpartners.annotator.service.UserService;
+import java.util.Objects;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
-
-import java.util.Objects;
 
 @Component
 public class ApiKeyAuthenticator implements UsernamePasswordAuthenticator {

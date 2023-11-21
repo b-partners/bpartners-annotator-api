@@ -8,8 +8,10 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 
@@ -28,12 +30,12 @@ public class BearerAuthFilter extends AbstractAuthenticationProcessingFilter {
       HttpServletRequest request, HttpServletResponse response) {
     String bearer = request.getHeader(authHeader);
     String apiKey = request.getHeader(API_KEY_HEADER);
-    if (bearer == null && apiKey != null) {
-      return getAuthenticationManager()
-          .authenticate(new UsernamePasswordAuthenticationToken(API_KEY_HEADER, apiKey));
+    AuthenticationManager manager = getAuthenticationManager();
+    try {
+      return manager.authenticate(new UsernamePasswordAuthenticationToken(bearer, bearer));
+    } catch (AuthenticationException authenticationException) {
+      return manager.authenticate(new UsernamePasswordAuthenticationToken(API_KEY_HEADER, apiKey));
     }
-    return getAuthenticationManager()
-        .authenticate(new UsernamePasswordAuthenticationToken(bearer, bearer));
   }
 
   @Override
