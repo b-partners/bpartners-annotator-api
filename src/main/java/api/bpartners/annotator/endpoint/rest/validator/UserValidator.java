@@ -1,15 +1,15 @@
 package api.bpartners.annotator.endpoint.rest.validator;
 
-import api.bpartners.annotator.endpoint.rest.model.User;
+import api.bpartners.annotator.endpoint.rest.model.CreateUser;
 import api.bpartners.annotator.endpoint.rest.model.UserRole;
 import api.bpartners.annotator.model.exception.BadRequestException;
 import java.util.function.Consumer;
 import org.springframework.stereotype.Component;
 
 @Component
-public class UserValidator implements Consumer<User> {
+public class UserValidator implements Consumer<CreateUser> {
   @Override
-  public void accept(User user) {
+  public void accept(CreateUser user) {
     StringBuilder exceptionMessageBuilder = new StringBuilder();
     if (user.getEmail() == null) {
       exceptionMessageBuilder.append("email is mandatory");
