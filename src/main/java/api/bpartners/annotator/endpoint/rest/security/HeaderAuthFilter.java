@@ -16,11 +16,11 @@ import org.springframework.security.web.authentication.AbstractAuthenticationPro
 import org.springframework.security.web.util.matcher.RequestMatcher;
 
 @Slf4j
-public class BearerAuthFilter extends AbstractAuthenticationProcessingFilter {
+public class HeaderAuthFilter extends AbstractAuthenticationProcessingFilter {
 
   private final String authHeader;
 
-  protected BearerAuthFilter(RequestMatcher requestMatcher, String authHeader) {
+  protected HeaderAuthFilter(RequestMatcher requestMatcher, String authHeader) {
     super(requestMatcher);
     this.authHeader = authHeader;
   }

@@ -138,8 +138,8 @@ public class SecurityConf extends WebSecurityConfigurerAdapter {
     return new ForbiddenException(e.getMessage());
   }
 
-  private BearerAuthFilter bearerFilter(RequestMatcher requestMatcher) throws Exception {
-    BearerAuthFilter bearerFilter = new BearerAuthFilter(requestMatcher, AUTHORIZATION_HEADER);
+  private HeaderAuthFilter bearerFilter(RequestMatcher requestMatcher) throws Exception {
+    HeaderAuthFilter bearerFilter = new HeaderAuthFilter(requestMatcher, AUTHORIZATION_HEADER);
     bearerFilter.setAuthenticationManager(authenticationManager());
     bearerFilter.setAuthenticationSuccessHandler(
         (httpServletRequest, httpServletResponse, authentication) -> {});
