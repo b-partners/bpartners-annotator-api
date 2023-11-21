@@ -1,4 +1,4 @@
-package api.bpartners.annotator.endpoint.rest.security;
+package api.bpartners.annotator.endpoint.rest.security.authentication.authenticator;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;

@@ -1,5 +1,6 @@
 package api.bpartners.annotator.endpoint.rest.security;
 
+import api.bpartners.annotator.endpoint.rest.security.principal.PrincipalProvider;
 import api.bpartners.annotator.repository.model.User;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -8,6 +9,6 @@ import org.springframework.stereotype.Component;
 @AllArgsConstructor
 public class AuthenticatedResourceProvider {
   public User getAuthenticatedUser() {
-    return AuthProvider.getPrincipal().getUser();
+    return PrincipalProvider.getPrincipal().getUser();
   }
 }

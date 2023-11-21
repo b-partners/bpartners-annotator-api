@@ -5,7 +5,6 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class PrincipalProviderImpl implements PrincipalProvider {
-
   @Override
   public org.springframework.security.core.Authentication getAuthentication() {
     return SecurityContextHolder.getContext().getAuthentication();

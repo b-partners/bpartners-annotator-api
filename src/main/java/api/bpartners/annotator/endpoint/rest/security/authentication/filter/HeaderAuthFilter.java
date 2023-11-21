@@ -1,7 +1,8 @@
-package api.bpartners.annotator.endpoint.rest.security;
+package api.bpartners.annotator.endpoint.rest.security.authentication.filter;
 
-import static api.bpartners.annotator.endpoint.rest.security.ApiKeyAuthenticator.API_KEY_HEADER;
+import static api.bpartners.annotator.endpoint.rest.security.authentication.provider.ApiKeyAuthenticationProvider.API_KEY_HEADER;
 
+import api.bpartners.annotator.endpoint.rest.security.authentication.model.ApiKeyAuthenticationToken;
 import java.io.IOException;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -20,7 +21,7 @@ public class HeaderAuthFilter extends AbstractAuthenticationProcessingFilter {
 
   private final String authHeader;
 
-  protected HeaderAuthFilter(RequestMatcher requestMatcher, String authHeader) {
+  public HeaderAuthFilter(RequestMatcher requestMatcher, String authHeader) {
     super(requestMatcher);
     this.authHeader = authHeader;
   }
@@ -34,7 +35,7 @@ public class HeaderAuthFilter extends AbstractAuthenticationProcessingFilter {
     try {
       return manager.authenticate(new UsernamePasswordAuthenticationToken(bearer, bearer));
     } catch (AuthenticationException authenticationException) {
-      return manager.authenticate(new UsernamePasswordAuthenticationToken(API_KEY_HEADER, apiKey));
+      return manager.authenticate(new ApiKeyAuthenticationToken(apiKey, apiKey));
     }
   }
 

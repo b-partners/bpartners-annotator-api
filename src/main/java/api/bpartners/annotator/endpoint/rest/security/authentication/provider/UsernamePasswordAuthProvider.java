@@ -1,20 +1,17 @@
-package api.bpartners.annotator.endpoint.rest.security;
+package api.bpartners.annotator.endpoint.rest.security.authentication.provider;
 
-import api.bpartners.annotator.endpoint.rest.security.model.Principal;
+import api.bpartners.annotator.endpoint.rest.security.authentication.authenticator.UsernamePasswordAuthenticator;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.authentication.dao.AbstractUserDetailsAuthenticationProvider;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 @Component
 @Slf4j
 @AllArgsConstructor
-public class AuthProvider extends AbstractUserDetailsAuthenticationProvider {
+public class UsernamePasswordAuthProvider extends AbstractUserDetailsAuthenticationProvider {
   private final UsernamePasswordAuthenticator authenticator;
 
   @Override
@@ -28,11 +25,5 @@ public class AuthProvider extends AbstractUserDetailsAuthenticationProvider {
       String username, UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken) {
     log.info("retrieving user");
     return authenticator.retrieveUser(username, usernamePasswordAuthenticationToken);
-  }
-
-  public static Principal getPrincipal() {
-    SecurityContext context = SecurityContextHolder.getContext();
-    Authentication authentication = context.getAuthentication();
-    return (Principal) authentication.getPrincipal();
   }
 }

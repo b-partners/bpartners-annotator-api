@@ -2,11 +2,10 @@ package api.bpartners.annotator.endpoint.rest.security;
 
 import static api.bpartners.annotator.endpoint.rest.security.model.Role.ADMIN;
 import static api.bpartners.annotator.endpoint.rest.security.model.Role.ANNOTATOR;
-import static org.springframework.http.HttpMethod.GET;
-import static org.springframework.http.HttpMethod.OPTIONS;
-import static org.springframework.http.HttpMethod.POST;
-import static org.springframework.http.HttpMethod.PUT;
+import static org.springframework.http.HttpMethod.*;
 
+import api.bpartners.annotator.endpoint.rest.security.authentication.filter.HeaderAuthFilter;
+import api.bpartners.annotator.endpoint.rest.security.authentication.manager.AuthenticationManager;
 import api.bpartners.annotator.endpoint.rest.security.matcher.SelfTeamMatcher;
 import api.bpartners.annotator.endpoint.rest.security.matcher.SelfUserMatcher;
 import api.bpartners.annotator.model.exception.ForbiddenException;
@@ -26,18 +25,18 @@ import org.springframework.web.servlet.HandlerExceptionResolver;
 @Configuration
 @Slf4j
 public class SecurityConf extends WebSecurityConfigurerAdapter {
+  private final AuthenticationManager authenticationManager;
 
   public static final String AUTHORIZATION_HEADER = "Authorization";
-  private final AuthProvider authProvider;
   private final HandlerExceptionResolver exceptionResolver;
   private final AuthenticatedResourceProvider resourceProvider;
 
   public SecurityConf(
-      AuthProvider authProvider,
       // InternalToExternalErrorHandler behind
+      AuthenticationManager authenticationManager,
       @Qualifier("handlerExceptionResolver") HandlerExceptionResolver exceptionResolver,
       AuthenticatedResourceProvider resourceProvider) {
-    this.authProvider = authProvider;
+    this.authenticationManager = authenticationManager;
     this.exceptionResolver = exceptionResolver;
     this.resourceProvider = resourceProvider;
   }
@@ -60,7 +59,7 @@ public class SecurityConf extends WebSecurityConfigurerAdapter {
 
         // authenticate
         .and()
-        .authenticationProvider(authProvider)
+        .authenticationManager(authenticationManager)
         .addFilterBefore(
             bearerFilter(
                 new NegatedRequestMatcher(
