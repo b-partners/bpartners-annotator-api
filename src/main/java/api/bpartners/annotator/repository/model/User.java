@@ -38,7 +38,7 @@ public class User {
   @Id private String id;
 
   @ManyToOne
-  @JoinColumn(name = "team_id", insertable = true, updatable = false)
+  @JoinColumn(name = "team_id", insertable = false, updatable = false)
   private Team team;
 
   @Type(type = "user_roles")
