@@ -4,12 +4,7 @@ import api.bpartners.annotator.endpoint.rest.security.model.Role;
 import api.bpartners.annotator.repository.model.types.PostgresEnumType;
 import io.hypersistence.utils.hibernate.type.array.EnumArrayType;
 import io.hypersistence.utils.hibernate.type.array.internal.AbstractArrayType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -35,7 +30,7 @@ import org.hibernate.annotations.TypeDefs;
 })
 @Table(name = "\"user\"")
 public class User {
-  @Id private String id;
+  @GeneratedValue @Id private String id;
 
   @ManyToOne
   @JoinColumn(name = "team_id", insertable = false, updatable = false)

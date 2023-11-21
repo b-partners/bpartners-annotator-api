@@ -6,6 +6,7 @@ import api.bpartners.annotator.endpoint.event.EventProducer;
 import api.bpartners.annotator.endpoint.event.gen.TeamUpserted;
 import api.bpartners.annotator.model.BoundedPageSize;
 import api.bpartners.annotator.model.PageFromOne;
+import api.bpartners.annotator.model.exception.NotFoundException;
 import api.bpartners.annotator.repository.jpa.TeamRepository;
 import api.bpartners.annotator.repository.model.Team;
 import java.util.List;
@@ -27,6 +28,13 @@ public class TeamService {
     Pageable pageable = PageRequest.of(pageValue, pageSizeValue);
     Page<Team> responses = repository.findAll(pageable);
     return responses.getContent();
+  }
+
+  public Team getById(String id) {
+    return repository
+        .findById(id)
+        .orElseThrow(
+            () -> new NotFoundException("Team identified by Team.Id = " + id + " not found. "));
   }
 
   public List<Team> fireEvents(List<Team> toSave) {

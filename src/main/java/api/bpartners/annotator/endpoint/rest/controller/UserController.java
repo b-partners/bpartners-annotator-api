@@ -1,6 +1,7 @@
 package api.bpartners.annotator.endpoint.rest.controller;
 
 import api.bpartners.annotator.endpoint.rest.controller.mapper.UserMapper;
+import api.bpartners.annotator.endpoint.rest.model.CreateUser;
 import api.bpartners.annotator.endpoint.rest.model.User;
 import api.bpartners.annotator.model.BoundedPageSize;
 import api.bpartners.annotator.model.PageFromOne;
@@ -27,7 +28,7 @@ public class UserController {
   }
 
   @PutMapping("/users")
-  public List<User> createUsers(@RequestBody List<User> users) {
+  public List<User> createUsers(@RequestBody List<CreateUser> users) {
     return userService.fireEvents(users.stream().map(mapper::toDomain).toList()).stream()
         .map(mapper::toRest)
         .toList();
