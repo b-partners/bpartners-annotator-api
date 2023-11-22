@@ -426,7 +426,7 @@ paths:
         - Admin
       security: [ apiKeyHeader: [ ] ]
       description: create users
-      operationId: create users
+      operationId: createUsers
       requestBody:
         content:
           application/json:
@@ -443,6 +443,37 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/User"
+
+    put:
+      tags:
+        - Users
+        - Admin
+      security: [ apiKeyHeader: [ ] ]
+      summary: Update users group
+      description: Update user's group
+      operationId: updateUsersGroup
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: "#/components/schemas/UpdateUserGroup"
+      responses:
+        "200":
+          description: The updated users
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/User"
+        '400':
+          $ref: '#/components/responses/400'
+        403:
+          $ref: '#/components/responses/403'
+        '500':
+          $ref: '#/components/responses/500'
 
 components:
   securitySchemes:
@@ -512,6 +543,13 @@ components:
       enum:
         - ANNOTATOR
         - ADMIN
+    UpdateUserGroup:
+      type: object
+      properties:
+        userId:
+          type: string
+        groupID:
+          type: string
     Whoami:
       properties:
         user:
