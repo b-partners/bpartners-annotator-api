@@ -2,6 +2,8 @@ package api.bpartners.annotator.repository.model;
 
 import static api.bpartners.annotator.repository.model.types.PostgresTypes.JSONB;
 
+import io.hypersistence.utils.hibernate.type.json.JsonBinaryType;
+import java.io.Serializable;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -13,13 +15,15 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Type;
+import org.hibernate.annotations.TypeDef;
 
 @Entity
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Annotation {
+@TypeDef(name = JSONB, typeClass = JsonBinaryType.class)
+public class Annotation implements Serializable {
   @Id private String id;
   private String taskId;
 
@@ -35,13 +39,17 @@ public class Annotation {
 
   @Data
   @Builder
-  public static class Polygon {
+  @AllArgsConstructor
+  @NoArgsConstructor
+  public static class Polygon implements Serializable {
     private List<Point> points;
   }
 
   @Data
   @Builder
-  public static class Point {
+  @AllArgsConstructor
+  @NoArgsConstructor
+  public static class Point implements Serializable {
     private double x;
     private double y;
   }
