@@ -378,7 +378,7 @@ paths:
             schema:
               type: array
               items:
-                $ref: '#/components/schemas/Team'
+                $ref: '#/components/schemas/CreateTeam'
       responses:
         '200':
           description: The created teams
@@ -527,12 +527,17 @@ components:
       properties:
         id:
           type: string
-    Team:
+    CreateTeam:
       type: object
       properties:
-        id:
-          type: string
         name:
+          type: string
+    Team:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/CreateTeam'
+      properties:
+        id:
           type: string
     CrupdateJob:
       type: object
