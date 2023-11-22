@@ -77,6 +77,7 @@ public class CognitoComponent {
         || createResponse.user().username().isBlank()) {
       throw new ApiException(SERVER_EXCEPTION, "Cognito response: " + createResponse);
     }
+    log.info("User with name {} is successfully created.", createResponse.user().username());
     return createResponse.user().username();
   }
 
