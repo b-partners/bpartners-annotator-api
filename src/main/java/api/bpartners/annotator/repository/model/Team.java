@@ -2,6 +2,7 @@ package api.bpartners.annotator.repository.model;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -14,7 +15,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Team {
-  @GeneratedValue @Id private String id;
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Id
+  private String id;
 
   private String name;
 }
