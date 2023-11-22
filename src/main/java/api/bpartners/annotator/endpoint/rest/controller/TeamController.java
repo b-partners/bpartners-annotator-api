@@ -1,8 +1,9 @@
 package api.bpartners.annotator.endpoint.rest.controller;
 
 import api.bpartners.annotator.endpoint.rest.controller.mapper.TeamMapper;
+import api.bpartners.annotator.endpoint.rest.model.CreateTeam;
 import api.bpartners.annotator.endpoint.rest.model.Team;
-import api.bpartners.annotator.endpoint.rest.validator.TeamValidator;
+import api.bpartners.annotator.endpoint.rest.validator.CreateTeamValidator;
 import api.bpartners.annotator.model.BoundedPageSize;
 import api.bpartners.annotator.model.PageFromOne;
 import api.bpartners.annotator.service.TeamService;
@@ -19,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class TeamController {
   private final TeamService service;
   private final TeamMapper mapper;
-  private final TeamValidator validator;
+  private final CreateTeamValidator validator;
 
   @GetMapping("/teams")
   public List<Team> getTeams(
@@ -29,7 +30,7 @@ public class TeamController {
   }
 
   @PostMapping("/teams")
-  public List<Team> createTeams(@RequestBody List<Team> teams) {
+  public List<Team> createTeams(@RequestBody List<CreateTeam> teams) {
     teams.forEach(validator);
     return service.fireEvents(teams.stream().map(mapper::toDomain).toList()).stream()
         .map(mapper::toRest)

@@ -1,5 +1,6 @@
 package api.bpartners.annotator.endpoint.rest.controller.mapper;
 
+import api.bpartners.annotator.endpoint.rest.model.CreateTeam;
 import api.bpartners.annotator.endpoint.rest.model.Team;
 import org.springframework.stereotype.Component;
 
@@ -9,10 +10,7 @@ public class TeamMapper {
     return new Team().id(domain.getId()).name(domain.getName());
   }
 
-  public api.bpartners.annotator.repository.model.Team toDomain(Team rest) {
-    return api.bpartners.annotator.repository.model.Team.builder()
-        .id(rest.getId())
-        .name(rest.getName())
-        .build();
+  public api.bpartners.annotator.repository.model.Team toDomain(CreateTeam rest) {
+    return api.bpartners.annotator.repository.model.Team.builder().name(rest.getName()).build();
   }
 }
