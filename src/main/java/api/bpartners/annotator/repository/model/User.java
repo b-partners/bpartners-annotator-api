@@ -6,8 +6,6 @@ import io.hypersistence.utils.hibernate.type.array.EnumArrayType;
 import io.hypersistence.utils.hibernate.type.array.internal.AbstractArrayType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -37,12 +35,10 @@ import org.hibernate.annotations.TypeDefs;
 })
 @Table(name = "\"user\"")
 public class User {
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Id
-  private String id;
+  @Id private String id;
 
   @ManyToOne
-  @JoinColumn(name = "team_id", insertable = false, updatable = false)
+  @JoinColumn(name = "team_id", updatable = false)
   private Team team;
 
   @Type(type = "user_roles")

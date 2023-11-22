@@ -1,5 +1,7 @@
 package api.bpartners.annotator.endpoint.rest.controller.mapper;
 
+import static java.util.UUID.randomUUID;
+
 import api.bpartners.annotator.endpoint.rest.model.CreateUser;
 import api.bpartners.annotator.endpoint.rest.model.User;
 import api.bpartners.annotator.endpoint.rest.security.model.Role;
@@ -27,6 +29,7 @@ public class UserMapper {
   public api.bpartners.annotator.repository.model.User toDomain(CreateUser rest) {
     validator.accept(rest);
     return api.bpartners.annotator.repository.model.User.builder()
+        .id(randomUUID().toString())
         .email(rest.getEmail())
         .roles(new Role[] {roleMapper.toDomain(rest.getRole())})
         .team(teamService.getById(rest.getTeamId()))

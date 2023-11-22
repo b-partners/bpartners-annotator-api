@@ -1,5 +1,7 @@
 package api.bpartners.annotator.endpoint.rest.controller.mapper;
 
+import static java.util.UUID.randomUUID;
+
 import api.bpartners.annotator.endpoint.rest.model.CreateTeam;
 import api.bpartners.annotator.endpoint.rest.model.Team;
 import org.springframework.stereotype.Component;
@@ -11,6 +13,9 @@ public class TeamMapper {
   }
 
   public api.bpartners.annotator.repository.model.Team toDomain(CreateTeam rest) {
-    return api.bpartners.annotator.repository.model.Team.builder().name(rest.getName()).build();
+    return api.bpartners.annotator.repository.model.Team.builder()
+        .id(randomUUID().toString())
+        .name(rest.getName())
+        .build();
   }
 }
