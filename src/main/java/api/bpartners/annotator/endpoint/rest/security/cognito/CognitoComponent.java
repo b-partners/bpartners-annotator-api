@@ -11,6 +11,8 @@ import java.text.ParseException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import software.amazon.awssdk.services.cognitoidentityprovider.CognitoIdentityProviderClient;
+import software.amazon.awssdk.services.cognitoidentityprovider.model.AdminAddUserToGroupRequest;
+import software.amazon.awssdk.services.cognitoidentityprovider.model.AdminAddUserToGroupResponse;
 import software.amazon.awssdk.services.cognitoidentityprovider.model.AdminCreateUserRequest;
 import software.amazon.awssdk.services.cognitoidentityprovider.model.AdminCreateUserResponse;
 import software.amazon.awssdk.services.cognitoidentityprovider.model.AttributeType;
@@ -60,7 +62,22 @@ public class CognitoComponent {
     return response.group().groupName();
   }
 
-  public String createUser(String email) {
+  public void addUserToGroup(String groupName, String username) {
+    AdminAddUserToGroupRequest addUserToGroupRequest = AdminAddUserToGroupRequest.builder()
+        .userPoolId(cognitoConf.getUserPoolId())
+        .username(username)
+        .groupName(groupName)
+        .build();
+
+    AdminAddUserToGroupResponse response = cognitoClient.adminAddUserToGroup(addUserToGroupRequest);
+    if (response == null) {
+      throw new ApiException(SERVER_EXCEPTION,
+          "Error on adding user " + username + " to group " + groupName);
+    }
+    log.info("User {} successfully added to group {}.", username, groupName);
+  }
+
+  public String createUser(String email, String groupName) {
     AdminCreateUserRequest createRequest =
         AdminCreateUserRequest.builder()
             .userPoolId(cognitoConf.getUserPoolId())
@@ -77,8 +94,12 @@ public class CognitoComponent {
         || createResponse.user().username().isBlank()) {
       throw new ApiException(SERVER_EXCEPTION, "Cognito response: " + createResponse);
     }
-    log.info("User with name {} is successfully created.", createResponse.user().username());
-    return createResponse.user().username();
+    String createdUser = createResponse.user().username();
+    log.info("User with name {} is successfully created.", createdUser);
+    if (groupName != null && !groupName.isEmpty()) {
+      addUserToGroup(groupName, email);
+    }
+    return createdUser;
   }
 
   private boolean isClaimsSetValid(JWTClaimsSet claims) {
