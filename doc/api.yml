@@ -613,7 +613,7 @@ components:
       allOf:
         - $ref: "#/components/schemas/UpdateTask"
       properties:
-        imageURI:
+        imageUri:
           type: string
     TaskStatus:
       type: string
