@@ -1,10 +1,12 @@
 package api.bpartners.annotator.integration.conf.utils;
 
-import static api.bpartners.annotator.endpoint.rest.model.JobStatus.READY;
+import static api.bpartners.annotator.endpoint.rest.model.JobStatus.STARTED;
 
 import api.bpartners.annotator.endpoint.rest.model.Job;
+import api.bpartners.annotator.endpoint.rest.model.Label;
 import api.bpartners.annotator.endpoint.rest.model.TaskStatistics;
 import api.bpartners.annotator.endpoint.rest.model.Team;
+import java.util.List;
 
 public class TestMocks {
   public static final String ADMIN_API_KEY = "dummy";
@@ -24,11 +26,20 @@ public class TestMocks {
         .id(JOB_1_ID)
         .bucketName("bucket_1_name")
         .teamId(team1().getId())
-        .status(READY)
+        .status(STARTED)
         .folderPath("images/")
         .ownerEmail("admin@email.com")
         .name("job_1")
         .taskStatistics(
-            new TaskStatistics().completedTasksByUserId(0L).totalTasks(2L).remainingTasks(2L));
+            new TaskStatistics().remainingTasks(2L).totalTasks(2L).completedTasksByUserId(0L))
+        .labels(List.of(label1(), label2()));
+  }
+
+  public static Label label1() {
+    return new Label().id("label_1_id").name("POOL").color("#00ff00");
+  }
+
+  public static Label label2() {
+    return new Label().id("label_2_id").name("VELUX").color("#00ff00");
   }
 }
