@@ -636,6 +636,10 @@ components:
           type: string
         name:
           type: string
+        color:
+          type: string
+          description: The color to assign to the label into hexadecimal form
+          example: "#40D399"
     Exception:
       type: object
       properties:
