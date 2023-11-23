@@ -1,3 +1,17 @@
+# [0.9.0](https://github.com/b-partners/bpartners-annotator-api/compare/v0.8.1...v0.9.0) (2023-11-23)
+
+
+### Bug Fixes
+
+* map imageUri correctly ([dc3e324](https://github.com/b-partners/bpartners-annotator-api/commit/dc3e3245cf2d210cb788a6b1b9a60b4d6df66c83))
+
+
+### Features
+
+* job has TaskStatistics ([eddc2a9](https://github.com/b-partners/bpartners-annotator-api/commit/eddc2a90c92665b89456039f4a0a36ed7ed5df8e))
+
+
+
 ## [0.8.1](https://github.com/b-partners/bpartners-annotator-api/compare/v0.8.0...v0.8.1) (2023-11-23)
 
 
@@ -131,15 +145,6 @@
 * send email to job owner when job initialized ([408f454](https://github.com/b-partners/bpartners-annotator-api/commit/408f454a88526e41d22923cf59f25bbc803005f6))
 * update job attributes ([5dc01f5](https://github.com/b-partners/bpartners-annotator-api/commit/5dc01f567270aa393494823d2889129abe4baafb))
 * validate data on entry ([4d8cda2](https://github.com/b-partners/bpartners-annotator-api/commit/4d8cda26d4da222d0225956ed40caa328e3a40f1))
-
-
-
-## [0.1.1](https://github.com/b-partners/bpartners-annotator-api/compare/v0.1.0...v0.1.1) (2023-10-18)
-
-
-### Bug Fixes
-
-* npm install on react client ([218d4e8](https://github.com/b-partners/bpartners-annotator-api/commit/218d4e85c72b8359fd376e969412a92be9c73abb))
 
 
 
