@@ -1,5 +1,7 @@
 package api.bpartners.annotator.integration.conf.utils;
 
+import static api.bpartners.annotator.integration.conf.utils.TestMocks.JOE_DOE_EMAIL;
+import static api.bpartners.annotator.integration.conf.utils.TestMocks.JOE_DOE_TOKEN;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
@@ -12,10 +14,6 @@ import java.net.ServerSocket;
 import org.junit.jupiter.api.function.Executable;
 
 public class TestUtils {
-  public static final String ADMIN_API_KEY = "dummy";
-  public static final String JOE_DOE_TOKEN = "joe_doe_token";
-  public static final String JOE_DOE_EMAIL = "joe@email.com";
-
   public static ApiClient anApiClient(String token, String apiKey, int serverPort) {
     ApiClient client = new ApiClient();
     client.setScheme("http");
@@ -46,16 +44,14 @@ public class TestUtils {
   public static void assertThrowsForbiddenException(Executable executable) {
     ApiException apiException = assertThrows(ApiException.class, executable);
     String responseBody = apiException.getResponseBody();
-    assertEquals("{"
-        + "\"type\":\"403 FORBIDDEN\","
-        + "\"message\":\"Bad credentials\"}", responseBody);
+    assertEquals(
+        "{" + "\"type\":\"403 FORBIDDEN\"," + "\"message\":\"Bad credentials\"}", responseBody);
   }
 
-  public static void assertThrowsBadRequestException(Executable executable, String message){
+  public static void assertThrowsBadRequestException(Executable executable, String message) {
     ApiException apiException = assertThrows(ApiException.class, executable);
     String responseBody = apiException.getResponseBody();
-    assertEquals("{"
-            + "\"type\":\"400 BAD_REQUEST\","
-            + "\"message\":\""+message+"\"}", responseBody);
+    assertEquals(
+        "{" + "\"type\":\"400 BAD_REQUEST\"," + "\"message\":\"" + message + "\"}", responseBody);
   }
 }
