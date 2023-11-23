@@ -64,6 +64,7 @@ public class Job {
   }
 
   public long getTasksCompletedByUserId(String userId) {
-    return getTasks().stream().filter(task -> task.getUserId().equals(userId)).count();
+    assert (userId != null ): "UserId value missing.";
+    return getTasks().stream().filter(task -> userId.equals(task.getUserId())).count();
   }
 }
