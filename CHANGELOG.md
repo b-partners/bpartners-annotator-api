@@ -1,3 +1,12 @@
+## [0.7.1](https://github.com/b-partners/bpartners-annotator-api/compare/v0.7.0...v0.7.1) (2023-11-23)
+
+
+### Bug Fixes
+
+* add id generation strategy for user and team ([058440d](https://github.com/b-partners/bpartners-annotator-api/commit/058440d48b3d48913c410d969df48abb282318a7))
+
+
+
 # [0.7.0](https://github.com/b-partners/bpartners-annotator-api/compare/v0.6.0...v0.7.0) (2023-11-22)
 
 
