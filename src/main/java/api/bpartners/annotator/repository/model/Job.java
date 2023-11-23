@@ -1,5 +1,6 @@
 package api.bpartners.annotator.repository.model;
 
+import static api.bpartners.annotator.repository.model.enums.TaskStatus.PENDING;
 import static javax.persistence.EnumType.STRING;
 
 import api.bpartners.annotator.repository.model.enums.JobStatus;
@@ -56,5 +57,13 @@ public class Job {
       return "";
     }
     return folderPath;
+  }
+
+  public long getRemainingTasksNumber() {
+    return getTasks().stream().filter(task -> task.getStatus() == PENDING).count();
+  }
+
+  public long getTasksCompletedByUserId(String userId) {
+    return getTasks().stream().filter(task -> task.getUserId().equals(userId)).count();
   }
 }

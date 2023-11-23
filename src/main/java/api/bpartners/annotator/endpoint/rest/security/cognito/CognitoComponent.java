@@ -63,16 +63,17 @@ public class CognitoComponent {
   }
 
   public void addUserToGroup(String groupName, String username) {
-    AdminAddUserToGroupRequest addUserToGroupRequest = AdminAddUserToGroupRequest.builder()
-        .userPoolId(cognitoConf.getUserPoolId())
-        .username(username)
-        .groupName(groupName)
-        .build();
+    AdminAddUserToGroupRequest addUserToGroupRequest =
+        AdminAddUserToGroupRequest.builder()
+            .userPoolId(cognitoConf.getUserPoolId())
+            .username(username)
+            .groupName(groupName)
+            .build();
 
     AdminAddUserToGroupResponse response = cognitoClient.adminAddUserToGroup(addUserToGroupRequest);
     if (response == null) {
-      throw new ApiException(SERVER_EXCEPTION,
-          "Error on adding user " + username + " to group " + groupName);
+      throw new ApiException(
+          SERVER_EXCEPTION, "Error on adding user " + username + " to group " + groupName);
     }
     log.info("User {} successfully added to group {}.", username, groupName);
   }

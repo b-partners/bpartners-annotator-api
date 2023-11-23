@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class LabelValidator implements Consumer<Label> {
   private static final Pattern VALID_COLOR_PATTERN = Pattern.compile("^#[0-9a-fA-F]{6}$");
+
   @Override
   public void accept(Label label) {
     StringBuilder exceptionMessageBuilder = new StringBuilder();

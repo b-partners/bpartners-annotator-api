@@ -42,7 +42,7 @@ public class JobValidator implements Consumer<CrupdateJob> {
     if (crupdateJob.getLabels() == null || crupdateJob.getLabels().isEmpty()) {
       exceptionMessageBuilder.append("Labels are mandatory.");
     } else if (crupdateJob.getLabels() != null) {
-        labelValidator.accept(crupdateJob.getLabels());
+      labelValidator.accept(crupdateJob.getLabels());
     }
     String exceptionMessage = exceptionMessageBuilder.toString();
     if (!exceptionMessage.isBlank()) {
