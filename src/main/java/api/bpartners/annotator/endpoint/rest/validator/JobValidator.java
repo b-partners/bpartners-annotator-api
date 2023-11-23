@@ -4,10 +4,13 @@ import api.bpartners.annotator.endpoint.rest.model.CrupdateJob;
 import api.bpartners.annotator.model.exception.BadRequestException;
 import java.util.function.Consumer;
 import java.util.regex.Pattern;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
+@AllArgsConstructor
 public class JobValidator implements Consumer<CrupdateJob> {
+  private final LabelValidator labelValidator;
   private static final Pattern VALID_FOLDER_PATH_PATTERN = Pattern.compile("^(?!/).+/$");
   private static final Pattern VALID_EMAIL_PATTERN =
       Pattern.compile("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$");
@@ -35,6 +38,11 @@ public class JobValidator implements Consumer<CrupdateJob> {
           .append("does not follow regex ")
           .append(VALID_EMAIL_PATTERN.pattern())
           .append(".");
+    }
+    if (crupdateJob.getLabels() == null) {
+      exceptionMessageBuilder.append("Labels are mandatory.");
+    } else if (crupdateJob.getLabels() != null) {
+        labelValidator.accept(crupdateJob.getLabels());
     }
     String exceptionMessage = exceptionMessageBuilder.toString();
     if (!exceptionMessage.isBlank()) {
