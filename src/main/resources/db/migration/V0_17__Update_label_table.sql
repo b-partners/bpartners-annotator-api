@@ -1,0 +1,1 @@
+ALTER TABLE "label" ADD COLUMN color varchar not null default '#00ff00';

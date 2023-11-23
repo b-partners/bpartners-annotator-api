@@ -15,4 +15,5 @@ import lombok.NoArgsConstructor;
 public class Label {
   @Id private String id;
   private String name;
+  private String color;
 }
