@@ -198,7 +198,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Task'
+                $ref: '#/components/schemas/UserTask'
         '500':
           $ref: '#/components/responses/500'
   '/teams/{teamId}/jobs/{jobId}/tasks/{taskId}':
@@ -587,6 +587,27 @@ components:
           type: string
         status:
           $ref: "#/components/schemas/TaskStatus"
+    UserTask:
+      type: object
+      allOf:
+        - $ref: "#/components/schemas/UpdateTask"
+      properties:
+        imageUri:
+          type: string
+        statistics:
+          $ref: "#/components/schemas/TaskStatistics"
+    TaskStatistics:
+      type: object
+      properties:
+        remainingTasks:
+          type: integer
+          format: int64
+        completedTasksByUserId:
+          type: integer
+          format: int64
+        totalTasks:
+          type: integer
+          format: int64
     Task:
       type: object
       allOf:
