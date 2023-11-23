@@ -1,3 +1,17 @@
+# [0.8.0](https://github.com/b-partners/bpartners-annotator-api/compare/v0.7.1...v0.8.0) (2023-11-23)
+
+
+### Bug Fixes
+
+* userId is null when getting new task ([32e4aef](https://github.com/b-partners/bpartners-annotator-api/commit/32e4aefe6c5cb0045ac6b112647426a8837b65cd))
+
+
+### Features
+
+* add task statistics ([#65](https://github.com/b-partners/bpartners-annotator-api/issues/65)) ([8af1ecc](https://github.com/b-partners/bpartners-annotator-api/commit/8af1eccb02ebb207ba532823e8efb95af3bbfa22))
+
+
+
 ## [0.7.1](https://github.com/b-partners/bpartners-annotator-api/compare/v0.7.0...v0.7.1) (2023-11-23)
 
 
