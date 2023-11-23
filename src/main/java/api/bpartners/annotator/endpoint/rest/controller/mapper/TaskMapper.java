@@ -28,7 +28,7 @@ public class TaskMapper {
     return new Task()
         .id(domain.getId())
         .status(statusMapper.toRest(domain.getStatus()))
-        .imageURI(presignedUrl.toString())
+        .imageUri(presignedUrl.toString())
         .userId(domain.getUserId());
   }
 
