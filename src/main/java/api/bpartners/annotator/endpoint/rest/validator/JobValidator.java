@@ -39,7 +39,7 @@ public class JobValidator implements Consumer<CrupdateJob> {
           .append(VALID_EMAIL_PATTERN.pattern())
           .append(".");
     }
-    if (crupdateJob.getLabels() == null) {
+    if (crupdateJob.getLabels() == null || crupdateJob.getLabels().isEmpty()) {
       exceptionMessageBuilder.append("Labels are mandatory.");
     } else if (crupdateJob.getLabels() != null) {
         labelValidator.accept(crupdateJob.getLabels());
