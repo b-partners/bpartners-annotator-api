@@ -24,8 +24,8 @@ public class TeamController {
 
   @GetMapping("/teams")
   public List<Team> getTeams(
-      @RequestParam(required = false) PageFromOne page,
-      @RequestParam(required = false) BoundedPageSize pageSize) {
+      @RequestParam(required = false, defaultValue = "1") PageFromOne page,
+      @RequestParam(required = false, defaultValue = "30") BoundedPageSize pageSize) {
     return service.getAll(page, pageSize).stream().map(mapper::toRest).toList();
   }
 

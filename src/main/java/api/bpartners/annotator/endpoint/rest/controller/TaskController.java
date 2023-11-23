@@ -21,8 +21,8 @@ public class TaskController {
   @GetMapping("/jobs/{jobId}/tasks")
   public List<Task> getTasks(
       @PathVariable String jobId,
-      @RequestParam(required = false) PageFromOne page,
-      @RequestParam(required = false) BoundedPageSize pageSize) {
+      @RequestParam(required = false, defaultValue = "1") PageFromOne page,
+      @RequestParam(required = false, defaultValue = "30") BoundedPageSize pageSize) {
     return service.getAllByJob(jobId, page, pageSize).stream().map(mapper::toRest).toList();
   }
 

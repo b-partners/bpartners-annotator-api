@@ -22,8 +22,8 @@ public class UserController {
 
   @GetMapping("/users")
   public List<User> getUsers(
-      @RequestParam(required = false) PageFromOne page,
-      @RequestParam(required = false) BoundedPageSize pageSize) {
+      @RequestParam(required = false, defaultValue = "1") PageFromOne page,
+      @RequestParam(required = false, defaultValue = "30") BoundedPageSize pageSize) {
     return userService.findAll(page, pageSize).stream().map(mapper::toRest).toList();
   }
 

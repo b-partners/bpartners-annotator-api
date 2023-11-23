@@ -23,9 +23,7 @@ public class TeamService {
   private final EventProducer eventProducer;
 
   public List<Team> getAll(PageFromOne page, BoundedPageSize pageSize) {
-    int pageValue = page != null ? page.getValue() - 1 : 0;
-    int pageSizeValue = pageSize != null ? pageSize.getValue() : 30;
-    Pageable pageable = PageRequest.of(pageValue, pageSizeValue);
+    Pageable pageable = PageRequest.of(page.getValue() - 1, pageSize.getValue());
     Page<Team> responses = repository.findAll(pageable);
     return responses.getContent();
   }

@@ -20,9 +20,7 @@ public class TaskService {
   private final TaskRepository repository;
 
   public List<Task> getAllByJob(String jobId, PageFromOne page, BoundedPageSize pageSize) {
-    int pageValue = page != null ? page.getValue() - 1 : 0;
-    int pageSizeValue = pageSize != null ? pageSize.getValue() : 30;
-    Pageable pageable = PageRequest.of(pageValue, pageSizeValue);
+    Pageable pageable = PageRequest.of(page.getValue() - 1, pageSize.getValue());
     return repository.findAllByJobId(jobId, pageable);
   }
 

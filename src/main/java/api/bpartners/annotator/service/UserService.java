@@ -54,9 +54,7 @@ public class UserService {
   }
 
   public List<User> findAll(PageFromOne page, BoundedPageSize pageSize) {
-    int pageValue = page != null ? page.getValue() - 1 : 0;
-    int pageSizeValue = pageSize != null ? pageSize.getValue() : 30;
-    Pageable pageable = PageRequest.of(pageValue, pageSizeValue);
+    Pageable pageable = PageRequest.of(page.getValue() - 1, pageSize.getValue());
     return repository.findAll(pageable).toList();
   }
 }
