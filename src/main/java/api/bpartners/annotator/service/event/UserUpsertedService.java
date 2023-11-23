@@ -15,8 +15,8 @@ public class UserUpsertedService implements Consumer<UserUpserted> {
 
   @Override
   public void accept(UserUpserted userUpserted) {
-    cognitoComponent.createUser(userUpserted.getUser().getEmail(),
-        userUpserted.getUser().getTeam().getName());
+    cognitoComponent.createUser(
+        userUpserted.getUser().getEmail(), userUpserted.getUser().getTeam().getName());
     userService.save(userUpserted.getUser());
   }
 }
