@@ -21,6 +21,7 @@ public class TestMocks {
 
   public static final String TASK_1_ID = "task_1_id";
   public static final String MOCK_PRESIGNED_URL = "https://wwww.example.com";
+  public static final String TEAM_2_ID = "team_2_id";
 
   public static Team team1() {
     return new Team().id(TEAM_1_ID).name("joe_team");
@@ -50,5 +51,9 @@ public class TestMocks {
 
   public static Task task1() {
     return new Task().id(TASK_1_ID).status(PENDING).userId(null).imageUri(MOCK_PRESIGNED_URL);
+  }
+
+  public static Team team2() {
+    return new Team().id(TEAM_2_ID).name("jane_team");
   }
 }
