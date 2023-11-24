@@ -3,6 +3,7 @@ package api.bpartners.annotator.service;
 import static java.util.stream.Collectors.toList;
 
 import api.bpartners.annotator.endpoint.event.EventProducer;
+import api.bpartners.annotator.endpoint.event.gen.UserTeamUpdated;
 import api.bpartners.annotator.endpoint.event.gen.UserUpserted;
 import api.bpartners.annotator.endpoint.rest.security.model.Role;
 import api.bpartners.annotator.model.BoundedPageSize;
@@ -12,6 +13,7 @@ import api.bpartners.annotator.repository.jpa.UserRepository;
 import api.bpartners.annotator.repository.model.Team;
 import api.bpartners.annotator.repository.model.User;
 import java.util.List;
+import java.util.Optional;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
@@ -40,6 +42,14 @@ public class UserService {
         .build();
   }
 
+  public User getById(String id) {
+    Optional<User> actual = repository.findById(id);
+    if(actual.isPresent()) {
+      return actual.get();
+    }
+    throw new NotFoundException("User with id: " + id + ", is not found.");
+  }
+
   public List<User> fireEvents(List<User> users) {
     eventProducer.accept(users.stream().map(this::toTypedUser).collect(toList()));
     return users;
@@ -56,5 +66,17 @@ public class UserService {
   public List<User> findAll(PageFromOne page, BoundedPageSize pageSize) {
     Pageable pageable = PageRequest.of(page.getValue() - 1, pageSize.getValue());
     return repository.findAll(pageable).toList();
+  }
+
+  public User updateUserTeam(User toUpdate) {
+    eventProducer.accept(List.of(toUserTeamUpdatedType(toUpdate)));
+    return repository.save(toUpdate);
+  }
+
+  private UserTeamUpdated toUserTeamUpdatedType(User user) {
+    return UserTeamUpdated.builder()
+        .group(user.getTeam().getName())
+        .username(user.getEmail())
+        .build();
   }
 }
