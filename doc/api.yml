@@ -373,7 +373,7 @@ paths:
         - Teams
       security: [ apiKeyHeader: [ ] ]
       summary: Create teams
-      operationId: createTeam
+      operationId: createTeams
       requestBody:
         content:
           application/json:
