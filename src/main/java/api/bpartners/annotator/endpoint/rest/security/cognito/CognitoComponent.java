@@ -15,6 +15,10 @@ import software.amazon.awssdk.services.cognitoidentityprovider.model.AdminAddUse
 import software.amazon.awssdk.services.cognitoidentityprovider.model.AdminAddUserToGroupResponse;
 import software.amazon.awssdk.services.cognitoidentityprovider.model.AdminCreateUserRequest;
 import software.amazon.awssdk.services.cognitoidentityprovider.model.AdminCreateUserResponse;
+import software.amazon.awssdk.services.cognitoidentityprovider.model.AdminListGroupsForUserRequest;
+import software.amazon.awssdk.services.cognitoidentityprovider.model.AdminListGroupsForUserResponse;
+import software.amazon.awssdk.services.cognitoidentityprovider.model.AdminRemoveUserFromGroupRequest;
+import software.amazon.awssdk.services.cognitoidentityprovider.model.AdminRemoveUserFromGroupResponse;
 import software.amazon.awssdk.services.cognitoidentityprovider.model.AttributeType;
 import software.amazon.awssdk.services.cognitoidentityprovider.model.CreateGroupRequest;
 import software.amazon.awssdk.services.cognitoidentityprovider.model.CreateGroupResponse;
@@ -47,7 +51,7 @@ public class CognitoComponent {
     return isClaimsSetValid(claims) ? getEmail(claims) : null;
   }
 
-  public String createGroup(String groupName) {
+  public void createGroup(String groupName) {
     CreateGroupRequest request =
         CreateGroupRequest.builder()
             .groupName(groupName)
@@ -59,10 +63,13 @@ public class CognitoComponent {
       throw new ApiException(SERVER_EXCEPTION, "Cognito response was: " + response);
     }
     log.info("Group with name {} is successfully created.", response.group().groupName());
-    return response.group().groupName();
   }
 
   public void addUserToGroup(String groupName, String username) {
+    String actualUserGroup = getCognitoUserGroupByUsername(username);
+    if (actualUserGroup != null) {
+      removeUserFromGroup(username, groupName);
+    }
     AdminAddUserToGroupRequest addUserToGroupRequest =
         AdminAddUserToGroupRequest.builder()
             .userPoolId(cognitoConf.getUserPoolId())
@@ -78,7 +85,7 @@ public class CognitoComponent {
     log.info("User {} successfully added to group {}.", username, groupName);
   }
 
-  public String createUser(String email, String groupName) {
+  public void createUser(String email, String groupName) {
     AdminCreateUserRequest createRequest =
         AdminCreateUserRequest.builder()
             .userPoolId(cognitoConf.getUserPoolId())
@@ -100,7 +107,40 @@ public class CognitoComponent {
     if (groupName != null && !groupName.isEmpty()) {
       addUserToGroup(groupName, email);
     }
-    return createdUser;
+  }
+
+  public String getCognitoUserGroupByUsername(String username) {
+    AdminListGroupsForUserRequest request = AdminListGroupsForUserRequest.builder()
+        .userPoolId(cognitoConf.getUserPoolId())
+        .username(username)
+        .build();
+
+    AdminListGroupsForUserResponse response = cognitoClient.adminListGroupsForUser(request);
+    if( response == null || response.groups() == null) {
+      throw new ApiException(SERVER_EXCEPTION, "Cognito response: " + response);
+    }
+    // Get only the first because for us one user can only have one group
+    if (response.groups().isEmpty()) {
+      return null;
+    } else {
+      return response.groups().get(0).groupName();
+    }
+  }
+
+  public void removeUserFromGroup(String username, String groupName) {
+    AdminRemoveUserFromGroupRequest request = AdminRemoveUserFromGroupRequest.builder()
+        .userPoolId(cognitoConf.getUserPoolId())
+        .username(username)
+        .groupName(groupName)
+        .build();
+
+    AdminRemoveUserFromGroupResponse response = cognitoClient.adminRemoveUserFromGroup(request);
+    if(response.sdkHttpResponse().isSuccessful()) {
+      log.info("User with username {} has successfully been removed from group {}", username, groupName);
+    } else {
+      log.error("Removing user {} from group {} have failed.", username, groupName);
+      throw new ApiException(SERVER_EXCEPTION, "Cognito response: " + response);
+    }
   }
 
   private boolean isClaimsSetValid(JWTClaimsSet claims) {
