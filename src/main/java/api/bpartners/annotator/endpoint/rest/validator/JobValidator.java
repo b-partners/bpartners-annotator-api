@@ -25,7 +25,7 @@ public class JobValidator implements Consumer<CrupdateJob> {
       exceptionMessageBuilder
           .append("folder path: ")
           .append(crupdateJob.getFolderPath())
-          .append("does not follow regex ")
+          .append(" does not follow regex ")
           .append(VALID_FOLDER_PATH_PATTERN.pattern())
           .append(".");
     }

@@ -267,7 +267,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Task'
+                type: array
+                items:
+                  $ref: '#/components/schemas/Task'
         '500':
           $ref: '#/components/responses/500'
 
@@ -371,7 +373,7 @@ paths:
         - Teams
       security: [ apiKeyHeader: [ ] ]
       summary: Create teams
-      operationId: createTeam
+      operationId: createTeams
       requestBody:
         content:
           application/json:

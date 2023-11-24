@@ -1,18 +1,31 @@
 package api.bpartners.annotator.integration.conf.utils;
 
+import static api.bpartners.annotator.integration.conf.utils.TestMocks.JOE_DOE_EMAIL;
+import static api.bpartners.annotator.integration.conf.utils.TestMocks.JOE_DOE_TOKEN;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.when;
+
 import api.bpartners.annotator.endpoint.rest.client.ApiClient;
+import api.bpartners.annotator.endpoint.rest.client.ApiException;
+import api.bpartners.annotator.endpoint.rest.security.cognito.CognitoComponent;
 import java.io.IOException;
 import java.net.ServerSocket;
+import org.junit.jupiter.api.function.Executable;
 
 public class TestUtils {
-
-  public static ApiClient anApiClient(String token, int serverPort) {
+  public static ApiClient anApiClient(String token, String apiKey, int serverPort) {
     ApiClient client = new ApiClient();
     client.setScheme("http");
     client.setHost("localhost");
     client.setPort(serverPort);
-    client.setRequestInterceptor(
-        httpRequestBuilder -> httpRequestBuilder.header("Authorization", "Bearer " + token));
+    if (apiKey == null) {
+      client.setRequestInterceptor(
+          httpRequestBuilder -> httpRequestBuilder.header("Authorization", "Bearer " + token));
+    } else {
+      client.setRequestInterceptor(
+          httpRequestBuilder -> httpRequestBuilder.header("x-api-key", "dummy"));
+    }
     return client;
   }
 
@@ -22,5 +35,23 @@ public class TestUtils {
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
+  }
+
+  public static void setUpCognito(CognitoComponent cognitoComponent) {
+    when(cognitoComponent.getEmailByToken(JOE_DOE_TOKEN)).thenReturn(JOE_DOE_EMAIL);
+  }
+
+  public static void assertThrowsForbiddenException(Executable executable) {
+    ApiException apiException = assertThrows(ApiException.class, executable);
+    String responseBody = apiException.getResponseBody();
+    assertEquals(
+        "{" + "\"type\":\"403 FORBIDDEN\"," + "\"message\":\"Bad credentials\"}", responseBody);
+  }
+
+  public static void assertThrowsBadRequestException(Executable executable, String message) {
+    ApiException apiException = assertThrows(ApiException.class, executable);
+    String responseBody = apiException.getResponseBody();
+    assertEquals(
+        "{" + "\"type\":\"400 BAD_REQUEST\"," + "\"message\":\"" + message + "\"}", responseBody);
   }
 }
