@@ -68,7 +68,7 @@ public class CognitoComponent {
   public void addUserToGroup(String groupName, String username) {
     String actualUserGroup = getCognitoUserGroupByUsername(username);
     if (actualUserGroup != null) {
-      removeUserFromGroup(username, groupName);
+      removeUserFromGroup(username, actualUserGroup);
     }
     AdminAddUserToGroupRequest addUserToGroupRequest =
         AdminAddUserToGroupRequest.builder()
