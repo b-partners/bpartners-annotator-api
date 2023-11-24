@@ -16,6 +16,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
+import org.springframework.lang.Nullable;
 
 @Entity
 @Data
@@ -29,6 +30,7 @@ public class Annotation implements Serializable {
 
   @OneToOne
   @JoinColumn(name = "label_id", updatable = false)
+  @Nullable
   private Label label;
 
   private String userId;
