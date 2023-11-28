@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class PointMapper {
   public Point toRest(Annotation.Point domain) {
-    if (domain == null){
+    if (domain == null) {
       return null;
     }
     return new Point().x(domain.getX()).y(domain.getY());

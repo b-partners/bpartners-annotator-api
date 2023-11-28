@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 public class UserTeamUpdatedService implements Consumer<UserTeamUpdated> {
   private final CognitoComponent cognitoComponent;
+
   @Override
   public void accept(UserTeamUpdated userTeamUpdated) {
     cognitoComponent.addUserToGroup(userTeamUpdated.getGroup(), userTeamUpdated.getUsername());

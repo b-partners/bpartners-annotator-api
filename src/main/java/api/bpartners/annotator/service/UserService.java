@@ -44,7 +44,7 @@ public class UserService {
 
   public User getById(String id) {
     Optional<User> actual = repository.findById(id);
-    if(actual.isPresent()) {
+    if (actual.isPresent()) {
       return actual.get();
     }
     throw new NotFoundException("User with id: " + id + ", is not found.");

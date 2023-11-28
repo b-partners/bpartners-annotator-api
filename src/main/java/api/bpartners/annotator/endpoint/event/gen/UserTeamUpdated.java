@@ -20,6 +20,7 @@ import lombok.ToString;
 public class UserTeamUpdated implements Serializable {
   @JsonProperty("group")
   private String group;
+
   @JsonProperty("username")
   private String username;
 }

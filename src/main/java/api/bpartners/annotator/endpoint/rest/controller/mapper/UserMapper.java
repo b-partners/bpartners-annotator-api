@@ -44,7 +44,8 @@ public class UserMapper {
 
   public api.bpartners.annotator.repository.model.User toDomain(TeamUser rest) {
     teamUserValidator.accept(rest);
-    api.bpartners.annotator.repository.model.User actualUser = userService.getById(rest.getUserId());
+    api.bpartners.annotator.repository.model.User actualUser =
+        userService.getById(rest.getUserId());
     Team actualTeam = teamService.getById(rest.getTeamId());
     actualUser.setTeam(actualTeam);
     return actualUser;

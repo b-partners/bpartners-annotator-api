@@ -110,13 +110,14 @@ public class CognitoComponent {
   }
 
   public String getCognitoUserGroupByUsername(String username) {
-    AdminListGroupsForUserRequest request = AdminListGroupsForUserRequest.builder()
-        .userPoolId(cognitoConf.getUserPoolId())
-        .username(username)
-        .build();
+    AdminListGroupsForUserRequest request =
+        AdminListGroupsForUserRequest.builder()
+            .userPoolId(cognitoConf.getUserPoolId())
+            .username(username)
+            .build();
 
     AdminListGroupsForUserResponse response = cognitoClient.adminListGroupsForUser(request);
-    if( response == null || response.groups() == null) {
+    if (response == null || response.groups() == null) {
       throw new ApiException(SERVER_EXCEPTION, "Cognito response: " + response);
     }
     // Get only the first because for us one user can only have one group
@@ -128,15 +129,17 @@ public class CognitoComponent {
   }
 
   public void removeUserFromGroup(String username, String groupName) {
-    AdminRemoveUserFromGroupRequest request = AdminRemoveUserFromGroupRequest.builder()
-        .userPoolId(cognitoConf.getUserPoolId())
-        .username(username)
-        .groupName(groupName)
-        .build();
+    AdminRemoveUserFromGroupRequest request =
+        AdminRemoveUserFromGroupRequest.builder()
+            .userPoolId(cognitoConf.getUserPoolId())
+            .username(username)
+            .groupName(groupName)
+            .build();
 
     AdminRemoveUserFromGroupResponse response = cognitoClient.adminRemoveUserFromGroup(request);
-    if(response.sdkHttpResponse().isSuccessful()) {
-      log.info("User with username {} has successfully been removed from group {}", username, groupName);
+    if (response.sdkHttpResponse().isSuccessful()) {
+      log.info(
+          "User with username {} has successfully been removed from group {}", username, groupName);
     } else {
       log.error("Removing user {} from group {} have failed.", username, groupName);
       throw new ApiException(SERVER_EXCEPTION, "Cognito response: " + response);
