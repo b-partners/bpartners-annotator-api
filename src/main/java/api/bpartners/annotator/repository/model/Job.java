@@ -1,5 +1,6 @@
 package api.bpartners.annotator.repository.model;
 
+import static api.bpartners.annotator.repository.model.enums.TaskStatus.COMPLETED;
 import static api.bpartners.annotator.repository.model.enums.TaskStatus.PENDING;
 import static javax.persistence.EnumType.STRING;
 
@@ -60,11 +61,13 @@ public class Job {
   }
 
   public long getRemainingTasksNumber() {
-    return getTasks().stream().filter(task -> task.getStatus() == PENDING).count();
+    return getTasks().stream().filter(task -> !task.getStatus().equals(COMPLETED)).count();
   }
 
   public long getTasksCompletedByUserId(String userId) {
     assert (userId != null) : "UserId value missing.";
-    return getTasks().stream().filter(task -> userId.equals(task.getUserId())).count();
+    return getTasks().stream()
+        .filter(task -> userId.equals(task.getUserId()) && task.getStatus().equals(COMPLETED))
+        .count();
   }
 }
