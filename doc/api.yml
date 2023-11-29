@@ -301,10 +301,81 @@ paths:
                 $ref: '#/components/schemas/Task'
         '500':
           $ref: '#/components/responses/500'
-
+  '/jobs/{jobId}/tasks/{taskId}/annotations':
+    get:
+      tags:
+        - Annotations
+        - Admin
+      security: [ apiKeyHeader: [ ] ]
+      summary: gets annotations made on a task
+      operationId: getAnnotationsByJobTask
+      parameters:
+        - name: jobId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: taskId
+          in: path
+          required: true
+          schema:
+            type: string
+        - in: query
+          name: page
+          schema:
+            $ref: '#/components/schemas/Page'
+        - in: query
+          name: pageSize
+          schema:
+            $ref: '#/components/schemas/PageSize'
+      responses:
+        '200':
+          description: List of annotations
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Annotation'
+        '500':
+          $ref: '#/components/responses/500'
+  '/jobs/{jobId}/tasks/{taskId}/annotations/{annotationId}':
+    get:
+      tags:
+        - Annotations
+        - Admin
+      security: [ apiKeyHeader: [ ] ]
+      summary: get annotation made on a task
+      operationId: getAnnotationByJobTaskAndId
+      parameters:
+        - name: jobId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: taskId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: annotationId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: the annotation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Annotation'
+        '500':
+          $ref: '#/components/responses/500'
   '/users/{userId}/tasks/{taskId}/annotations':
     put:
       tags:
+        - Annotations
         - UserTasks
       summary: annotates a task
       operationId: annotateTask
