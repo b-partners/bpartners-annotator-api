@@ -373,6 +373,125 @@ paths:
                 $ref: '#/components/schemas/AnnotationBatch'
         '500':
           $ref: '#/components/responses/500'
+  '/jobs/{jobId}/tasks/{taskId}/annotations/{annotationBatchId}/reviews':
+    get:
+      security: [ apiKeyHeader: [ ] ]
+      tags:
+        - Annotations
+        - Admin
+      description: get all reviews of an annotation batch
+      operationId: getJobTaskAnnotationBatchReviews
+      parameters:
+        - name: jobId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: taskId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: annotationBatchId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description:
+            Reviews of the task
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AnnotationBatchReview'
+        '500':
+          $ref: '#/components/responses/500'
+    put:
+      security: [ apiKeyHeader: [ ] ]
+      tags:
+        - Annotations
+        - Admin
+      description: create or update(if id is given) reviews concerning an annotation
+      operationId: crupdateJobTaskAnnotationReviews
+      parameters:
+        - name: jobId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: taskId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: annotationBatchId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        description: a list of review
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: "#/components/schemas/AnnotationBatchReview"
+      responses:
+        '200':
+          description:
+            Crupdated review of the task
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AnnotationBatchReview'
+        '500':
+          $ref: '#/components/responses/500'
+  '/jobs/{jobId}/tasks/{taskId}/annotations/{annotationBatchId}/reviews/{reviewId}':
+    get:
+      security: [ apiKeyHeader: [ ] ]
+      tags:
+        - Annotations
+        - Admin
+      description: get a specific review
+      operationId: getJobTaskAnnotationBatchReview
+      parameters:
+        - name: jobId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: taskId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: annotationBatchId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: reviewId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description:
+            the specified review of the task
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnnotationBatchReview'
+        '500':
+          $ref: '#/components/responses/500'
   '/users/{userId}/tasks/{taskId}/annotations/{annotationBatchId}':
     put:
       security: [ BearerAuth: [ ] ]
@@ -380,7 +499,6 @@ paths:
         - Annotations
         - UserTasks
       summary: annotates a task
-      security: [ BearerAuth: [ ] ]
       operationId: annotateTask
       parameters:
         - name: userId
@@ -777,6 +895,27 @@ components:
           type: string
           description: The color to assign to the label into hexadecimal form
           example: "#40D399"
+    ReviewStatus:
+      type: string
+      default: ACCEPTED
+      enum:
+        - ACCEPTED
+        - REJECTED
+    AnnotationBatchReview:
+      type: object
+      properties:
+        id:
+          type: string
+        annotationBatchId:
+          type: string
+        annotationId:
+          type: string
+          description: optional parameter if you want to add a review for a specific annotation and not for the whole batch
+        status:
+          $ref: "#/components/schemas/ReviewStatus"
+        comment:
+          description: optional if status is ACCEPTED
+          type: string
     Exception:
       type: object
       properties:
