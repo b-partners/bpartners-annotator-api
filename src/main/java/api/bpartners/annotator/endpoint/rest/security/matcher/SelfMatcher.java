@@ -1,8 +1,6 @@
 package api.bpartners.annotator.endpoint.rest.security.matcher;
 
 import api.bpartners.annotator.endpoint.rest.security.AuthenticatedResourceProvider;
-import api.bpartners.annotator.endpoint.rest.security.model.Role;
-import java.util.Arrays;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

@@ -3,8 +3,11 @@ package api.bpartners.annotator.integration.conf.utils;
 import static api.bpartners.annotator.endpoint.rest.model.JobStatus.STARTED;
 import static api.bpartners.annotator.endpoint.rest.model.TaskStatus.PENDING;
 
+import api.bpartners.annotator.endpoint.rest.model.Annotation;
 import api.bpartners.annotator.endpoint.rest.model.Job;
 import api.bpartners.annotator.endpoint.rest.model.Label;
+import api.bpartners.annotator.endpoint.rest.model.Point;
+import api.bpartners.annotator.endpoint.rest.model.Polygon;
 import api.bpartners.annotator.endpoint.rest.model.Task;
 import api.bpartners.annotator.endpoint.rest.model.TaskStatistics;
 import api.bpartners.annotator.endpoint.rest.model.Team;
@@ -22,6 +25,9 @@ public class TestMocks {
   public static final String TASK_1_ID = "task_1_id";
   public static final String MOCK_PRESIGNED_URL = "https://wwww.example.com";
   public static final String TEAM_2_ID = "team_2_id";
+  public static final String ANNOTATION_1_ID = "annotation_1_id";
+  public static final String ANNOTATION_2_ID = "annotation_2_id";
+  public static final String JOE_DOE_ID = "joe_doe_id";
 
   public static Team team1() {
     return new Team().id(TEAM_1_ID).name("joe_team");
@@ -55,5 +61,23 @@ public class TestMocks {
 
   public static Team team2() {
     return new Team().id(TEAM_2_ID).name("jane_team");
+  }
+
+  public static Annotation annotation1() {
+    return new Annotation()
+        .id(ANNOTATION_1_ID)
+        .taskId(TASK_1_ID)
+        .userId(JOE_DOE_ID)
+        .label(label1())
+        .polygon(new Polygon().points(List.of(new Point().x(1.0).y(1.0))));
+  }
+
+  public static Annotation annotation2() {
+    return new Annotation()
+        .id(ANNOTATION_2_ID)
+        .taskId(TASK_1_ID)
+        .userId(JOE_DOE_ID)
+        .label(label2())
+        .polygon(new Polygon().points(List.of()));
   }
 }

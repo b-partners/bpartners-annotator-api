@@ -1,7 +1,6 @@
 package api.bpartners.annotator.repository.model;
 
 import static api.bpartners.annotator.repository.model.enums.TaskStatus.COMPLETED;
-import static api.bpartners.annotator.repository.model.enums.TaskStatus.PENDING;
 import static javax.persistence.EnumType.STRING;
 
 import api.bpartners.annotator.repository.model.enums.JobStatus;
