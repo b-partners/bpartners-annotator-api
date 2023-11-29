@@ -40,6 +40,12 @@ public class TaskService {
                     "Task identified by job.id = " + jobId + " and id = " + id + " not found"));
   }
 
+  public Task getById(String id) {
+    return repository
+        .findById(id)
+        .orElseThrow(() -> new NotFoundException("Task identified by id = " + id + " not found."));
+  }
+
   public Task update(String jobId, String id, Task task) {
     Task entity = getByJobIdAndId(jobId, id);
     checkTaskStatusTransition(entity, task);
