@@ -28,10 +28,6 @@ public abstract class SelfMatcher implements RequestMatcher {
 
   @Override
   public boolean matches(HttpServletRequest request) {
-    if (Arrays.asList(authResourceProvider.getAuthenticatedUser().getRoles())
-        .contains(Role.ADMIN)) {
-      return true;
-    }
     return Objects.equals(getId(request), getAccessibleProtectedResourceId());
   }
 }
