@@ -1,3 +1,12 @@
+## [0.10.1](https://github.com/b-partners/bpartners-annotator-api/compare/v0.10.0...v0.10.1) (2023-11-29)
+
+
+### Bug Fixes
+
+* JobCreated ignores some properties inferred from getter ([833a109](https://github.com/b-partners/bpartners-annotator-api/commit/833a109645f01f1396e3430ac6edbc7715cc7842))
+
+
+
 # [0.10.0](https://github.com/b-partners/bpartners-annotator-api/compare/v0.9.0...v0.10.0) (2023-11-28)
 
 
@@ -107,30 +116,6 @@
 ### Features
 
 * spring security ([#38](https://github.com/b-partners/bpartners-annotator-api/issues/38)) ([28b1ac1](https://github.com/b-partners/bpartners-annotator-api/commit/28b1ac19158f20b610905384235b0350b886ac68))
-
-
-
-# [0.3.0](https://github.com/b-partners/bpartners-annotator-api/compare/v0.2.0...v0.3.0) (2023-11-17)
-
-
-### Bug Fixes
-
-* add converter for pagination parameters ([0991185](https://github.com/b-partners/bpartners-annotator-api/commit/09911858eaab24e1517b26d43d2a8f89b92144e1))
-* Annotation ID is not a generated value, set task job as the saved one before updating it ([082a8cf](https://github.com/b-partners/bpartners-annotator-api/commit/082a8cfb19a92882669987cdbb901f3800f2bd16))
-* java client deps version ([4c6a007](https://github.com/b-partners/bpartners-annotator-api/commit/4c6a007c64b223e2187a7c618ebb02a57ee656a9))
-* use javax instead of jakarta ([af5b7eb](https://github.com/b-partners/bpartners-annotator-api/commit/af5b7ebdc2a5fa4aaae9c7bda0330c050f9405e9))
-
-
-### Features
-
-* add name attribute to job ([2919a0a](https://github.com/b-partners/bpartners-annotator-api/commit/2919a0a0defb94c8891100606779ccbe48a1feb5))
-* manually update code version ([2aaa464](https://github.com/b-partners/bpartners-annotator-api/commit/2aaa464de4a839a5c9890d2bf8455b811fc0fd20))
-* paginate get all tasks ([213fd79](https://github.com/b-partners/bpartners-annotator-api/commit/213fd796aeca076147a2364ed6402375cc79a016))
-
-
-### Reverts
-
-* Revert "chore(release): rename react_app env to next_public env" ([197a58d](https://github.com/b-partners/bpartners-annotator-api/commit/197a58d8e820a70155ae3913097c86b6c72b1f28))
 
 
 
