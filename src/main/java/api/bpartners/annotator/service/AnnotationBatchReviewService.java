@@ -37,6 +37,30 @@ public class AnnotationBatchReviewService {
                         + " not found"));
   }
 
+  public List<AnnotationBatchReview> findAllByUserTaskAndAnnotation(
+      String userId, String taskId, String annotationId) {
+    return repository.findAllByJobTaskAndAnnotation(
+        userId, taskId, annotationId, Sort.by("creationDatetime"));
+  }
+
+  public AnnotationBatchReview findByUserTaskAndAnnotationAndId(
+      String userId, String taskId, String annotationId, String reviewId) {
+    return repository
+        .findByJobTaskAndAnnotationAndId(userId, taskId, annotationId, reviewId)
+        .orElseThrow(
+            () ->
+                new NotFoundException(
+                    "AnnotationBatchReview identified by id = "
+                        + reviewId
+                        + " annotation.id = "
+                        + annotationId
+                        + " task.id = "
+                        + taskId
+                        + " user.id = "
+                        + userId
+                        + " not found"));
+  }
+
   public List<AnnotationBatchReview> saveAll(
       String taskId, String annotationId, List<AnnotationBatchReview> annotationBatchReviews) {
     return repository.saveAll(annotationBatchReviews);
