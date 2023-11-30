@@ -1,13 +1,11 @@
 package api.bpartners.annotator.integration;
 
 import static api.bpartners.annotator.integration.conf.utils.TestMocks.JOB_1_ID;
-import static api.bpartners.annotator.integration.conf.utils.TestMocks.MOCK_PRESIGNED_URL;
 import static api.bpartners.annotator.integration.conf.utils.TestMocks.TASK_1_ID;
 import static api.bpartners.annotator.integration.conf.utils.TestMocks.task1;
+import static api.bpartners.annotator.integration.conf.utils.TestUtils.setUpS3Service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
 
 import api.bpartners.annotator.conf.FacadeIT;
 import api.bpartners.annotator.endpoint.rest.api.TasksApi;
@@ -18,7 +16,6 @@ import api.bpartners.annotator.integration.conf.utils.TestMocks;
 import api.bpartners.annotator.integration.conf.utils.TestUtils;
 import api.bpartners.annotator.service.aws.S3Service;
 import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -37,8 +34,7 @@ public class TaskIT extends FacadeIT {
 
   @BeforeEach
   void setUp() throws MalformedURLException {
-    when(fileService.getPresignedUrl(any(String.class), any(String.class)))
-        .thenReturn(new URL(MOCK_PRESIGNED_URL));
+    setUpS3Service(fileService);
   }
 
   @Test

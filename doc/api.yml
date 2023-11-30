@@ -177,6 +177,7 @@ paths:
 
   '/teams/{teamId}/jobs/{jobId}/task':
     get:
+      security: [ BearerAuth: [ ] ]
       tags:
         - UserTasks
       summary: get a job task
@@ -374,6 +375,7 @@ paths:
           $ref: '#/components/responses/500'
   '/users/{userId}/tasks/{taskId}/annotations':
     put:
+      security: [ BearerAuth: [ ] ]
       tags:
         - Annotations
         - UserTasks
