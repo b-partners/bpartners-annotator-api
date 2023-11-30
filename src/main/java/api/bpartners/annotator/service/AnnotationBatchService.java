@@ -46,9 +46,33 @@ public class AnnotationBatchService {
     return repository.findAllByTaskId(taskId, pageable);
   }
 
+  public List<AnnotationBatch> findAllByAnnotatorIdAndTask(
+      String annotatorId, String taskId, PageFromOne page, BoundedPageSize pageSize) {
+    Pageable pageable =
+        PageRequest.of(
+            page.getValue() - 1,
+            pageSize.getValue(),
+            Sort.by(Sort.Direction.DESC, "creationTimestamp"));
+    return repository.findAllByAnnotatorIdAndTaskId(annotatorId, taskId, pageable);
+  }
+
   public AnnotationBatch findByTaskIdAndId(String taskId, String id) {
     return repository
         .findByTaskIdAndId(taskId, id)
+        .orElseThrow(
+            () ->
+                new NotFoundException(
+                    "AnnotationBatch identified by id = "
+                        + id
+                        + " and taskId = "
+                        + taskId
+                        + " not found"));
+  }
+
+  public AnnotationBatch findByAnnotatorIdAndTaskIdAndId(
+      String annotatorId, String taskId, String id) {
+    return repository
+        .findByAnnotatorIdAndTaskIdAndId(annotatorId, taskId, id)
         .orElseThrow(
             () ->
                 new NotFoundException(

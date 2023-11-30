@@ -490,6 +490,41 @@ paths:
         '500':
           $ref: '#/components/responses/500'
   '/users/{userId}/tasks/{taskId}/annotations':
+    get:
+      tags:
+        - UserAnnotations
+      summary: gets annotations made on a task
+      operationId: getUserTaskAnnotationBatches
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: taskId
+          in: path
+          required: true
+          schema:
+            type: string
+        - in: query
+          name: page
+          schema:
+            $ref: '#/components/schemas/Page'
+        - in: query
+          name: pageSize
+          schema:
+            $ref: '#/components/schemas/PageSize'
+      responses:
+        '200':
+          description: List of annotation batches
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AnnotationBatch'
+        '500':
+          $ref: '#/components/responses/500'
     put:
       security: [ BearerAuth: [ ] ]
       tags:
@@ -517,6 +552,37 @@ paths:
         '200':
           description:
             Annotations on the task
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnnotationBatch'
+        '500':
+          $ref: '#/components/responses/500'
+  '/users/{userId}/tasks/{taskId}/annotations/{annotationBatchId}':
+    get:
+      tags:
+        - UserAnnotations
+      summary: get annotationBatch made on a task
+      operationId: getUserTaskAnnotationBatchById
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: taskId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: annotationBatchId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: the annotation batch
           content:
             application/json:
               schema:
