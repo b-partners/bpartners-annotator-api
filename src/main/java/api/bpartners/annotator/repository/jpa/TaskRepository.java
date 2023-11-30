@@ -17,5 +17,7 @@ public interface TaskRepository extends JpaRepository<Task, String> {
 
   Optional<Task> findFirstByJobIdAndStatus(String jobId, TaskStatus status);
 
+  Optional<Task> findFirstByJobIdAndStatusIn(String jobId, Collection<TaskStatus> status);
+
   boolean existsByJobIdAndStatusNotIn(String jobId, Collection<TaskStatus> taskStatuses);
 }

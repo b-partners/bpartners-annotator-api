@@ -58,12 +58,15 @@ public class TaskService {
   }
 
   public Task getAvailableTaskFromJob(String teamId, String jobId) {
-    Optional<Task> optionalTask = repository.findFirstByJobIdAndStatus(jobId, PENDING);
+    Optional<Task> optionalTask =
+        repository.findFirstByJobIdAndStatusIn(jobId, List.of(PENDING, TO_CORRECT));
     if (optionalTask.isEmpty()) {
       return null;
     }
     Task availableTask = optionalTask.get();
-    availableTask.setStatus(UNDER_COMPLETION);
+    if (availableTask.getStatus() == PENDING) {
+      availableTask.setStatus(UNDER_COMPLETION);
+    }
     return update(jobId, availableTask.getId(), availableTask);
   }
 
