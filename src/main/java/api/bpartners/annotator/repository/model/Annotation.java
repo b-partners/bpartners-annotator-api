@@ -39,6 +39,8 @@ public class Annotation implements Serializable {
   @Column(columnDefinition = JSONB)
   private Polygon polygon;
 
+  private String batchId;
+
   @Data
   @Builder
   @AllArgsConstructor

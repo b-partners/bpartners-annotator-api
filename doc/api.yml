@@ -308,7 +308,7 @@ paths:
         - Admin
       security: [ apiKeyHeader: [ ] ]
       summary: gets annotations made on a task
-      operationId: getAnnotationsByJobTask
+      operationId: getAnnotationBatchesByJobTask
       parameters:
         - name: jobId
           in: path
@@ -330,23 +330,23 @@ paths:
             $ref: '#/components/schemas/PageSize'
       responses:
         '200':
-          description: List of annotations
+          description: List of annotation batches
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Annotation'
+                  $ref: '#/components/schemas/AnnotationBatch'
         '500':
           $ref: '#/components/responses/500'
-  '/jobs/{jobId}/tasks/{taskId}/annotations/{annotationId}':
+  '/jobs/{jobId}/tasks/{taskId}/annotations/{annotationBatchId}':
     get:
       tags:
         - Annotations
         - Admin
       security: [ apiKeyHeader: [ ] ]
-      summary: get annotation made on a task
-      operationId: getAnnotationByJobTaskAndId
+      summary: get annotationBatch made on a task
+      operationId: getAnnotationBatchByJobTaskAndId
       parameters:
         - name: jobId
           in: path
@@ -358,26 +358,27 @@ paths:
           required: true
           schema:
             type: string
-        - name: annotationId
+        - name: annotationBatchId
           in: path
           required: true
           schema:
             type: string
       responses:
         '200':
-          description: the annotation
+          description: the annotation batch
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Annotation'
+                $ref: '#/components/schemas/AnnotationBatch'
         '500':
           $ref: '#/components/responses/500'
-  '/users/{userId}/tasks/{taskId}/annotations':
+  '/users/{userId}/tasks/{taskId}/annotations/{annotationBatchId}':
     put:
       tags:
         - Annotations
         - UserTasks
       summary: annotates a task
+      security: [ BearerAuth: [ ] ]
       operationId: annotateTask
       parameters:
         - name: userId
@@ -390,13 +391,16 @@ paths:
           required: true
           schema:
             type: string
+        - name: annotationBatchId
+          in: path
+          required: true
+          schema:
+            type: string
       requestBody:
         content:
           application/json:
             schema:
-              type: array
-              items:
-                $ref: '#/components/schemas/Annotation'
+              $ref: '#/components/schemas/AnnotationBatch'
       responses:
         '200':
           description:
@@ -404,9 +408,7 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Annotation'
+                $ref: '#/components/schemas/AnnotationBatch'
         '500':
           $ref: '#/components/responses/500'
 
@@ -737,6 +739,15 @@ components:
           $ref: '#/components/schemas/Label'
         polygon:
           $ref: '#/components/schemas/Polygon'
+    AnnotationBatch:
+      type: object
+      properties:
+        id:
+          type: string
+        annotations:
+          type: array
+          items:
+            $ref: "#/components/schemas/Annotation"
     Polygon:
       type: object
       properties:
