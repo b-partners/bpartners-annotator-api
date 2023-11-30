@@ -11,7 +11,7 @@ public class PolygonValidator implements Consumer<Polygon> {
   @Override
   public void accept(Polygon polygon) {
     StringBuilder exceptionMessageBuilder = new StringBuilder();
-    if (polygon.getPoints() == null) {
+    if (polygon.getPoints() == null || polygon.getPoints().isEmpty()) {
       exceptionMessageBuilder.append("polygon points attribute is mandatory");
     }
     String exceptionMessage = exceptionMessageBuilder.toString();
