@@ -308,7 +308,7 @@ paths:
         - Admin
       security: [ apiKeyHeader: [ ] ]
       summary: gets annotations made on a task
-      operationId: getAnnotationsByJobTask
+      operationId: getAnnotationBatchesByJobTask
       parameters:
         - name: jobId
           in: path
@@ -339,14 +339,14 @@ paths:
                   $ref: '#/components/schemas/Annotation'
         '500':
           $ref: '#/components/responses/500'
-  '/jobs/{jobId}/tasks/{taskId}/annotations/{annotationId}':
+  '/jobs/{jobId}/tasks/{taskId}/annotations/{annotationBatchId}':
     get:
       tags:
         - Annotations
         - Admin
       security: [ apiKeyHeader: [ ] ]
       summary: get annotation made on a task
-      operationId: getAnnotationByJobTaskAndId
+      operationId: getAnnotationBatchByJobTaskAndId
       parameters:
         - name: jobId
           in: path
@@ -358,7 +358,7 @@ paths:
           required: true
           schema:
             type: string
-        - name: annotationId
+        - name: annotationBatchId
           in: path
           required: true
           schema:
@@ -396,7 +396,7 @@ paths:
             schema:
               type: array
               items:
-                $ref: '#/components/schemas/Annotation'
+                $ref: '#/components/schemas/AnnotationBatch'
       responses:
         '200':
           description:
@@ -406,7 +406,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Annotation'
+                  $ref: '#/components/schemas/AnnotationBatch'
         '500':
           $ref: '#/components/responses/500'
 
@@ -735,6 +735,15 @@ components:
           $ref: '#/components/schemas/Label'
         polygon:
           $ref: '#/components/schemas/Polygon'
+    AnnotationBatch:
+      type: object
+      properties:
+        id:
+          type: string
+        annotations:
+          type: array
+          items:
+            $ref: "#/components/schemas/Annotation"
     Polygon:
       type: object
       properties:
