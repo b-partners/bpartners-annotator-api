@@ -4,6 +4,7 @@ import static api.bpartners.annotator.endpoint.rest.model.JobStatus.STARTED;
 import static api.bpartners.annotator.endpoint.rest.model.TaskStatus.PENDING;
 
 import api.bpartners.annotator.endpoint.rest.model.Annotation;
+import api.bpartners.annotator.endpoint.rest.model.AnnotationBatch;
 import api.bpartners.annotator.endpoint.rest.model.Job;
 import api.bpartners.annotator.endpoint.rest.model.Label;
 import api.bpartners.annotator.endpoint.rest.model.Point;
@@ -28,6 +29,7 @@ public class TestMocks {
   public static final String ANNOTATION_1_ID = "annotation_1_id";
   public static final String ANNOTATION_2_ID = "annotation_2_id";
   public static final String JOE_DOE_ID = "joe_doe_id";
+  public static final String BATCH_1_ID = "batch_1_id";
 
   public static Team team1() {
     return new Team().id(TEAM_1_ID).name("joe_team");
@@ -78,6 +80,15 @@ public class TestMocks {
         .taskId(TASK_1_ID)
         .userId(JOE_DOE_ID)
         .label(label2())
-        .polygon(new Polygon().points(List.of()));
+        .polygon(
+            new Polygon().points(List.of(new Point().x(1.0).y(1.0), new Point().x(1.0).y(2.0))));
+  }
+
+  public static AnnotationBatch annotationBatch1() {
+    return new AnnotationBatch().id(BATCH_1_ID).annotations(List.of(annotation1(), annotation2()));
+  }
+
+  public static AnnotationBatch annotationBatch2() {
+    return new AnnotationBatch().id("batch_2_id").annotations(List.of());
   }
 }
