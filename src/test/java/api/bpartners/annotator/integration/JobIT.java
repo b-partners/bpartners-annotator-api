@@ -1,6 +1,7 @@
 package api.bpartners.annotator.integration;
 
 import static api.bpartners.annotator.endpoint.rest.model.JobStatus.PENDING;
+import static api.bpartners.annotator.endpoint.rest.model.JobStatus.READY;
 import static api.bpartners.annotator.endpoint.rest.model.JobStatus.STARTED;
 import static api.bpartners.annotator.integration.conf.utils.TestMocks.job1;
 import static api.bpartners.annotator.integration.conf.utils.TestUtils.assertThrowsBadRequestException;
@@ -98,7 +99,7 @@ public class JobIT extends FacadeIT {
 
     // Update//
     CrupdateJob toUpdate =
-        toCreate.name("new name").status(STARTED).ownerEmail("newEmail@email.com");
+        toCreate.name("new name").status(READY).ownerEmail("newEmail@email.com");
 
     Job updated = api.saveJob(toUpdate.getId(), toUpdate);
 
