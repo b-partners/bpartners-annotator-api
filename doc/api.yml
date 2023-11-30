@@ -493,8 +493,8 @@ paths:
     put:
       security: [ BearerAuth: [ ] ]
       tags:
-        - Annotations
-        - UserTasks
+        - UserAnnotations
+        - UserTasks # deprecated
       summary: annotates a task
       operationId: annotateTask
       parameters:
@@ -523,7 +523,75 @@ paths:
                 $ref: '#/components/schemas/AnnotationBatch'
         '500':
           $ref: '#/components/responses/500'
-
+  '/users/{userId}/tasks/{taskId}/annotations/{annotationBatchId}/reviews':
+    get:
+      tags:
+        - UserAnnotations
+      operationId: getAnnotationReviewsByUserTaskAnnotationBatch
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: taskId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: annotationBatchId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description:
+            Reviews of the annotations on the task
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AnnotationBatchReview'
+        '500':
+          $ref: '#/components/responses/500'
+  '/users/{userId}/tasks/{taskId}/annotations/{annotationBatchId}/reviews/{reviewId}':
+    get:
+      tags:
+        - UserAnnotations
+      operationId: getAnnotationReviewByUserTaskAnnotationBatch
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: taskId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: annotationBatchId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: reviewId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description:
+            A specific Review of the annotations on the task
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnnotationBatchReview'
+        '500':
+          $ref: '#/components/responses/500'
   '/teams':
     get:
       tags:
