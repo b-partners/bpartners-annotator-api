@@ -2,14 +2,17 @@ package api.bpartners.annotator.service;
 
 import static api.bpartners.annotator.repository.model.enums.JobStatus.PENDING;
 import static api.bpartners.annotator.repository.model.enums.JobStatus.STARTED;
+import static api.bpartners.annotator.repository.model.enums.JobStatus.TO_REVIEW;
 
 import api.bpartners.annotator.endpoint.event.EventProducer;
 import api.bpartners.annotator.endpoint.event.gen.JobCreated;
+import api.bpartners.annotator.model.exception.BadRequestException;
 import api.bpartners.annotator.model.exception.NotFoundException;
 import api.bpartners.annotator.repository.jpa.JobRepository;
 import api.bpartners.annotator.repository.jpa.LabelRepository;
 import api.bpartners.annotator.repository.model.Job;
 import api.bpartners.annotator.repository.model.Label;
+import api.bpartners.annotator.repository.model.enums.JobStatus;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -57,12 +60,60 @@ public class JobService {
       eventProducer.accept(List.of(toEventType(savedJob, null)));
       return savedJob;
     } else {
-      return saveJobAndLabels(job, labels);
+      return updateJob(job);
     }
   }
 
   private Job saveJobAndLabels(Job job, List<Label> labels) {
     labelRepository.saveAll(labels);
     return repository.save(job);
+  }
+
+  @Transactional
+  public Job updateJobStatus(String jobId, JobStatus status) {
+    Job persisted = getById(jobId);
+    persisted.setStatus(status);
+    return updateJob(persisted);
+  }
+
+  private Job updateJob(Job job) {
+    Job persisted = getById(job.getId());
+    checkJobStatusTransition(persisted, job);
+    job.setTasks(persisted.getTasks());
+    job.setLabels(persisted.getLabels());
+    job.setBucketName(persisted.getBucketName());
+    job.setFolderPath(persisted.getFolderPath());
+    return repository.save(job);
+  }
+
+  public JobStatus checkJobStatusTransition(Job currentJob, Job newJob) {
+    JobStatus current = currentJob.getStatus();
+    JobStatus next = newJob.getStatus();
+    BadRequestException exception =
+        new BadRequestException(String.format("illegal transition: %s -> %s", current, next));
+    return switch (current) {
+      case PENDING -> switch (next) {
+        case PENDING, READY, FAILED -> next;
+        case STARTED, TO_REVIEW, COMPLETED -> throw exception;
+      };
+      case READY -> switch (next) {
+        case READY, STARTED -> next;
+        case PENDING, FAILED, TO_REVIEW, COMPLETED -> throw exception;
+      };
+      case STARTED -> switch (next) {
+        case STARTED, TO_REVIEW -> next;
+        case PENDING, FAILED, READY, COMPLETED -> throw exception;
+      };
+      case TO_REVIEW -> switch (next) {
+        case TO_REVIEW, COMPLETED -> next;
+        case PENDING, READY, FAILED, STARTED -> throw exception;
+      };
+      case FAILED -> throw new BadRequestException(
+          "Failed Job cannot be changed, create new Job instead");
+      case COMPLETED -> switch (next) {
+        case TO_REVIEW -> next;
+        case PENDING, READY, STARTED, FAILED, COMPLETED -> throw exception;
+      };
+    };
   }
 }
