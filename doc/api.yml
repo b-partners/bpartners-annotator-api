@@ -686,6 +686,7 @@ components:
         - PENDING
         - READY
         - STARTED
+        - TO_REVIEW
         - FAILED
         - COMPLETED
     UpdateTask:
@@ -721,6 +722,7 @@ components:
       enum:
         - PENDING
         - UNDER_COMPLETION
+        - TO_CORRECT
         - COMPLETED
     Annotation:
       type: object

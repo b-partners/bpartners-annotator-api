@@ -5,8 +5,11 @@ import static api.bpartners.annotator.endpoint.rest.model.JobStatus.FAILED;
 import static api.bpartners.annotator.endpoint.rest.model.JobStatus.PENDING;
 import static api.bpartners.annotator.endpoint.rest.model.JobStatus.READY;
 import static api.bpartners.annotator.endpoint.rest.model.JobStatus.STARTED;
+import static api.bpartners.annotator.endpoint.rest.model.JobStatus.TO_REVIEW;
 
 import api.bpartners.annotator.endpoint.rest.model.JobStatus;
+import api.bpartners.annotator.model.exception.ApiException;
+import api.bpartners.annotator.model.exception.BadRequestException;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -16,8 +19,11 @@ public class JobStatusMapper {
       case PENDING -> PENDING;
       case READY -> READY;
       case STARTED -> STARTED;
+      case TO_REVIEW -> TO_REVIEW;
       case FAILED -> FAILED;
       case COMPLETED -> COMPLETED;
+      default -> throw new ApiException(
+          ApiException.ExceptionType.SERVER_EXCEPTION, "unknown JobStatus from server = " + domain);
     };
   }
 
@@ -26,8 +32,10 @@ public class JobStatusMapper {
       case PENDING -> api.bpartners.annotator.repository.model.enums.JobStatus.PENDING;
       case READY -> api.bpartners.annotator.repository.model.enums.JobStatus.READY;
       case STARTED -> api.bpartners.annotator.repository.model.enums.JobStatus.STARTED;
+      case TO_REVIEW -> api.bpartners.annotator.repository.model.enums.JobStatus.TO_REVIEW;
       case FAILED -> api.bpartners.annotator.repository.model.enums.JobStatus.FAILED;
       case COMPLETED -> api.bpartners.annotator.repository.model.enums.JobStatus.COMPLETED;
+      default -> throw new BadRequestException("unknown JobStatus = " + rest);
     };
   }
 }
