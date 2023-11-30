@@ -330,13 +330,13 @@ paths:
             $ref: '#/components/schemas/PageSize'
       responses:
         '200':
-          description: List of annotations
+          description: List of annotation batches
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Annotation'
+                  $ref: '#/components/schemas/AnnotationBatch'
         '500':
           $ref: '#/components/responses/500'
   '/jobs/{jobId}/tasks/{taskId}/annotations/{annotationBatchId}':
@@ -345,7 +345,7 @@ paths:
         - Annotations
         - Admin
       security: [ apiKeyHeader: [ ] ]
-      summary: get annotation made on a task
+      summary: get annotationBatch made on a task
       operationId: getAnnotationBatchByJobTaskAndId
       parameters:
         - name: jobId
@@ -365,11 +365,11 @@ paths:
             type: string
       responses:
         '200':
-          description: the annotation
+          description: the annotation batch
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Annotation'
+                $ref: '#/components/schemas/AnnotationBatch'
         '500':
           $ref: '#/components/responses/500'
   '/users/{userId}/tasks/{taskId}/annotations':
@@ -394,9 +394,7 @@ paths:
         content:
           application/json:
             schema:
-              type: array
-              items:
-                $ref: '#/components/schemas/AnnotationBatch'
+              $ref: '#/components/schemas/AnnotationBatch'
       responses:
         '200':
           description:
@@ -404,9 +402,7 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/AnnotationBatch'
+                $ref: '#/components/schemas/AnnotationBatch'
         '500':
           $ref: '#/components/responses/500'
 
