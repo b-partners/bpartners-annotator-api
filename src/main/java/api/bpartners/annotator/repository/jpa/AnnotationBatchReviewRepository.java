@@ -29,4 +29,25 @@ public interface AnnotationBatchReviewRepository
         """)
   Optional<AnnotationBatchReview> findByJobTaskAndAnnotationAndId(
       String jobId, String taskId, String annotationId, String reviewId);
+
+  @Query(
+      """
+        select ar from AnnotationBatchReview ar
+        inner join Annotation a on ar.annotationId = a.id
+        inner join Task t on t.id = a.taskId
+        where t.userId = ?1 and t.id = ?2 and ar.annotationBatchId = ?3
+        """)
+  List<AnnotationBatchReview> findAllByUserTaskAndAnnotation(
+      String userId, String taskId, String annotationId, Sort sort);
+
+  @Query(
+      """
+            select ar from AnnotationBatchReview ar
+            inner join Annotation a on ar.annotationId = a.id
+            inner join Task t on t.id = a.taskId
+            where t.userId = ?1 and t.id = ?2 and ar.annotationBatchId = ?3
+            and ar.id = ?4
+            """)
+  Optional<AnnotationBatchReview> findByUserTaskAndAnnotationAndId(
+      String userId, String taskId, String annotationId, String reviewId);
 }
