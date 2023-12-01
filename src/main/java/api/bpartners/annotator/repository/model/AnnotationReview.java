@@ -1,24 +1,16 @@
 package api.bpartners.annotator.repository.model;
 
-import static javax.persistence.EnumType.STRING;
-
-import api.bpartners.annotator.repository.model.enums.ReviewStatus;
 import api.bpartners.annotator.repository.model.types.PostgresEnumType;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.List;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.Enumerated;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 
 @Entity
@@ -27,14 +19,12 @@ import org.hibernate.annotations.TypeDef;
 @NoArgsConstructor
 @AllArgsConstructor
 @TypeDef(name = "pgsql_enum", typeClass = PostgresEnumType.class)
-public class AnnotationBatchReview {
+public class AnnotationReview {
   @Id private String id;
+  private String annotationBatchReviewId;
+  private String annotationId;
 
-  @Type(type = "pgsql_enum")
-  @Enumerated(STRING)
-  private ReviewStatus status;
-
-  private String annotationBatchId;
+  private String comment;
 
   @CreationTimestamp
   @Column(columnDefinition = "TIMESTAMP WITHOUT TIMEZONE")
@@ -43,7 +33,4 @@ public class AnnotationBatchReview {
   public Instant getCreationDatetime() {
     return creationDatetime.truncatedTo(ChronoUnit.MILLIS);
   }
-
-  @OneToMany(cascade = CascadeType.ALL, mappedBy = "annotationBatchReviewId")
-  private List<AnnotationReview> reviews;
 }

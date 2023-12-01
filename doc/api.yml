@@ -409,50 +409,6 @@ paths:
                   $ref: '#/components/schemas/AnnotationBatchReview'
         '500':
           $ref: '#/components/responses/500'
-    put:
-      security: [ apiKeyHeader: [ ] ]
-      tags:
-        - Annotations
-        - Admin
-      description: create or update(if id is given) reviews concerning an annotation
-      operationId: crupdateJobTaskAnnotationReviews
-      parameters:
-        - name: jobId
-          in: path
-          required: true
-          schema:
-            type: string
-        - name: taskId
-          in: path
-          required: true
-          schema:
-            type: string
-        - name: annotationBatchId
-          in: path
-          required: true
-          schema:
-            type: string
-      requestBody:
-        required: true
-        description: a list of review
-        content:
-          application/json:
-            schema:
-              type: array
-              items:
-                $ref: "#/components/schemas/AnnotationBatchReview"
-      responses:
-        '200':
-          description:
-            Crupdated review of the task
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/AnnotationBatchReview'
-        '500':
-          $ref: '#/components/responses/500'
   '/jobs/{jobId}/tasks/{taskId}/annotations/{annotationBatchId}/reviews/{reviewId}':
     get:
       security: [ apiKeyHeader: [ ] ]
@@ -486,6 +442,51 @@ paths:
         '200':
           description:
             the specified review of the task
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnnotationBatchReview'
+        '500':
+          $ref: '#/components/responses/500'
+    put:
+      security: [ apiKeyHeader: [ ] ]
+      tags:
+        - Annotations
+        - Admin
+      description: create or update(if id is given) review concerning an annotation
+      operationId: crupdateJobTaskAnnotationReview
+      parameters:
+        - name: jobId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: taskId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: annotationBatchId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: reviewId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        description: a review
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AnnotationBatchReview"
+      responses:
+        '200':
+          description:
+            Crupdated review of the task
           content:
             application/json:
               schema:
@@ -1036,6 +1037,17 @@ components:
       enum:
         - ACCEPTED
         - REJECTED
+    AnnotationReview:
+      type: object
+      properties:
+        id:
+          type: string
+        comment:
+          description: optional if status is ACCEPTED
+          type: string
+        annotationId:
+          type: string
+          description: optional parameter if you want to add a review for a specific annotation and not for the whole batch
     AnnotationBatchReview:
       type: object
       properties:
@@ -1043,14 +1055,12 @@ components:
           type: string
         annotationBatchId:
           type: string
-        annotationId:
-          type: string
-          description: optional parameter if you want to add a review for a specific annotation and not for the whole batch
+        reviews:
+          type: array
+          items:
+            $ref: "#/components/schemas/AnnotationReview"
         status:
           $ref: "#/components/schemas/ReviewStatus"
-        comment:
-          description: optional if status is ACCEPTED
-          type: string
     Exception:
       type: object
       properties:
