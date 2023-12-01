@@ -8,6 +8,7 @@ import static api.bpartners.annotator.endpoint.rest.model.TaskStatus.PENDING;
 import api.bpartners.annotator.endpoint.rest.model.Annotation;
 import api.bpartners.annotator.endpoint.rest.model.AnnotationBatch;
 import api.bpartners.annotator.endpoint.rest.model.AnnotationBatchReview;
+import api.bpartners.annotator.endpoint.rest.model.AnnotationReview;
 import api.bpartners.annotator.endpoint.rest.model.Job;
 import api.bpartners.annotator.endpoint.rest.model.Label;
 import api.bpartners.annotator.endpoint.rest.model.Point;
@@ -33,8 +34,9 @@ public class TestMocks {
   public static final String ANNOTATION_2_ID = "annotation_2_id";
   public static final String JOE_DOE_ID = "joe_doe_id";
   public static final String BATCH_1_ID = "batch_1_id";
-  public static final String REVIEW_2_ID = "review_2_id";
-  public static final String REVIEW_1_ID = "review_1_id";
+  public static final String BATCH_REVIEW_2_ID = "batch_review_2_id";
+  public static final String BATCH_REVIEW_1_ID = "batch_review_1_id";
+  public static final String BATCH_2_ID = "batch_2_id";
 
   public static Team team1() {
     return new Team().id(TEAM_1_ID).name("joe_team");
@@ -94,24 +96,29 @@ public class TestMocks {
   }
 
   public static AnnotationBatch annotationBatch2() {
-    return new AnnotationBatch().id("batch_2_id").annotations(List.of());
+    return new AnnotationBatch().id(BATCH_2_ID).annotations(List.of());
   }
 
-  public static AnnotationBatchReview annotationReview1() {
-    return new AnnotationBatchReview()
-        .id(REVIEW_1_ID)
-        .annotationBatchId(BATCH_1_ID)
+  public static AnnotationReview annotationReview1() {
+    return new AnnotationReview()
+        .id("review_1_id")
         .annotationId(ANNOTATION_1_ID)
-        .status(REJECTED)
         .comment("remove points");
   }
 
-  public static AnnotationBatchReview annotationReview2() {
+  public static AnnotationBatchReview batchReview1() {
     return new AnnotationBatchReview()
-        .id(REVIEW_2_ID)
+        .id(BATCH_REVIEW_1_ID)
         .annotationBatchId(BATCH_1_ID)
-        .annotationId(ANNOTATION_1_ID)
+        .status(REJECTED)
+        .reviews(List.of(annotationReview1()));
+  }
+
+  public static AnnotationBatchReview batchReview2() {
+    return new AnnotationBatchReview()
+        .id(BATCH_REVIEW_2_ID)
+        .annotationBatchId(BATCH_2_ID)
         .status(ACCEPTED)
-        .comment(null);
+        .reviews(List.of());
   }
 }

@@ -37,17 +37,14 @@ public class AnnotationBatchReviewController {
         service.findByJobTaskAndAnnotationAndId(jobId, taskId, annotationBatchId, reviewId));
   }
 
-  @PutMapping("/jobs/{jobId}/tasks/{taskId}/annotations/{annotationBatchId}/reviews/")
-  public List<AnnotationBatchReview> crupdateAnnotationReviews(
+  @PutMapping("/jobs/{jobId}/tasks/{taskId}/annotations/{annotationBatchId}/reviews/*")
+  public AnnotationBatchReview crupdateAnnotationReview(
       @PathVariable String jobId,
       @PathVariable String taskId,
       @PathVariable String annotationBatchId,
-      @RequestBody List<AnnotationBatchReview> annotationBatchReviews) {
-    List<api.bpartners.annotator.repository.model.AnnotationBatchReview> saved =
-        service.saveAll(
-            taskId,
-            annotationBatchId,
-            annotationBatchReviews.stream().map(mapper::toDomain).toList());
-    return saved.stream().map(mapper::toRest).toList();
+      @RequestBody AnnotationBatchReview annotationBatchReview) {
+    api.bpartners.annotator.repository.model.AnnotationBatchReview saved =
+        service.save(taskId, annotationBatchId, mapper.toDomain(annotationBatchReview));
+    return mapper.toRest(saved);
   }
 }
