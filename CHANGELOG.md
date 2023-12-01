@@ -1,3 +1,30 @@
+# [1.0.0](https://github.com/b-partners/bpartners-annotator-api/compare/v0.10.1...v1.0.0) (2023-12-01)
+
+
+### Bug Fixes
+
+* ADMIN can't annotate tasks or get random Task, it is reserved to annotators ([842d4c0](https://github.com/b-partners/bpartners-annotator-api/commit/842d4c07c4ef700c02207cb037faeb2e27312c60))
+* SelfMatcher DOES NOT handle ADMIN access ([e812d99](https://github.com/b-partners/bpartners-annotator-api/commit/e812d994a77f1d958372b2f4e95e36eea0675e5d))
+
+
+* feat!: group annotations by batch ([61cc339](https://github.com/b-partners/bpartners-annotator-api/commit/61cc339f35f6a9807ebc65012ff259047f2763c0))
+
+
+### Features
+
+* admin annotation batch review ([602a1d3](https://github.com/b-partners/bpartners-annotator-api/commit/602a1d39be412df24c1b0416ebb840d0c7505a28))
+* get annotations and annotation ([1ffd591](https://github.com/b-partners/bpartners-annotator-api/commit/1ffd5917613e4c33ecd05b62a369e32ecece021c))
+* let user see annotation batches ([4101bde](https://github.com/b-partners/bpartners-annotator-api/commit/4101bded5dcd68bbaa49a4ad47addba9309b8334))
+* upgrade poja to v4.0.0 ([1ed1c63](https://github.com/b-partners/bpartners-annotator-api/commit/1ed1c635aab19c9a8ea0bb0ac9afb5b8de2b94b2))
+* user get annotation batch reviews and annotation batch review ([af9bb62](https://github.com/b-partners/bpartners-annotator-api/commit/af9bb62058bc09890be850e7050d1e954dfc8279))
+
+
+### BREAKING CHANGES
+
+* annotations are now grouped in a batch
+
+
+
 ## [0.10.1](https://github.com/b-partners/bpartners-annotator-api/compare/v0.10.0...v0.10.1) (2023-11-29)
 
 
@@ -101,21 +128,6 @@
 
 * create teams ([140ae66](https://github.com/b-partners/bpartners-annotator-api/commit/140ae66b89278a260c2e04426193b7fbd863afad))
 * get teams ([b90c12c](https://github.com/b-partners/bpartners-annotator-api/commit/b90c12cd5bb8897918024a05dc757d8f315f156c))
-
-
-
-# [0.4.0](https://github.com/b-partners/bpartners-annotator-api/compare/v0.3.0...v0.4.0) (2023-11-17)
-
-
-### Bug Fixes
-
-* allow flyway migration out of order ([98e4981](https://github.com/b-partners/bpartners-annotator-api/commit/98e498177ac6512cc8f059a094b9330f591b4afc))
-* refactor env vars ([13f3dd2](https://github.com/b-partners/bpartners-annotator-api/commit/13f3dd2d82acc8624670b8024e94ada2a8a6d972))
-
-
-### Features
-
-* spring security ([#38](https://github.com/b-partners/bpartners-annotator-api/issues/38)) ([28b1ac1](https://github.com/b-partners/bpartners-annotator-api/commit/28b1ac19158f20b610905384235b0350b886ac68))
 
 
 
