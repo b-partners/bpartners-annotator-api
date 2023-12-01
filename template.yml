@@ -43,7 +43,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       Handler: api.bpartners.annotator.ApiEventHandler::handleRequest
-      MemorySize: 1024
+      MemorySize: 512
       Role: !Sub '{{resolve:ssm:/bpartners-annotator/${Env}/execution/role-arn}}'
       Events:
         ApiCall:
@@ -56,7 +56,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       Handler: api.bpartners.annotator.MailboxEventHandler::handleRequest
-      MemorySize: 2048
+      MemorySize: 1024
       Role: !Sub '{{resolve:ssm:/bpartners-annotator/${Env}/execution/role-arn}}'
       Events:
         AllEvents:
