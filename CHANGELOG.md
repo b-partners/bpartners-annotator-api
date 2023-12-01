@@ -1,3 +1,20 @@
+# [2.0.0](https://github.com/b-partners/bpartners-annotator-api/compare/v1.0.0...v2.0.0) (2023-12-01)
+
+
+### Bug Fixes
+
+* wrong value for isTaskAnnotable variable ([844d66b](https://github.com/b-partners/bpartners-annotator-api/commit/844d66bb21b82c0e1e24ab7053acc5a66ab21181))
+
+
+* feat!: annotation_batch_review reviews a batch ([3a7d16d](https://github.com/b-partners/bpartners-annotator-api/commit/3a7d16d5d90e190be98bf844baa283b5753f6824))
+
+
+### BREAKING CHANGES
+
+* annotation_reviews are grouped in a batch_review
+
+
+
 # [1.0.0](https://github.com/b-partners/bpartners-annotator-api/compare/v0.10.1...v1.0.0) (2023-12-01)
 
 
@@ -118,16 +135,6 @@
 
 * users ([2680fc4](https://github.com/b-partners/bpartners-annotator-api/commit/2680fc44b55f91b3990d1616682df2d1f69ad9b5))
 * whoami ([fe73e5d](https://github.com/b-partners/bpartners-annotator-api/commit/fe73e5dc207f51e77e5105f34cc9f1f06199c9fb))
-
-
-
-# [0.5.0](https://github.com/b-partners/bpartners-annotator-api/compare/v0.4.0...v0.5.0) (2023-11-17)
-
-
-### Features
-
-* create teams ([140ae66](https://github.com/b-partners/bpartners-annotator-api/commit/140ae66b89278a260c2e04426193b7fbd863afad))
-* get teams ([b90c12c](https://github.com/b-partners/bpartners-annotator-api/commit/b90c12cd5bb8897918024a05dc757d8f315f156c))
 
 
 
