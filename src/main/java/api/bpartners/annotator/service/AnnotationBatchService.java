@@ -25,13 +25,13 @@ public class AnnotationBatchService {
 
   @Transactional
   public AnnotationBatch save(AnnotationBatch annotationBatch) {
-    if (!isTaskAnnotable(annotationBatch.getTaskId())) {
+    if (isTaskNotAnnotable(annotationBatch.getTaskId())) {
       throw new BadRequestException("Task is already completed");
     }
     return repository.save(annotationBatch);
   }
 
-  private boolean isTaskAnnotable(String taskId) {
+  private boolean isTaskNotAnnotable(String taskId) {
     Task task = taskService.getById(taskId);
     return task.getStatus() == COMPLETED;
   }
