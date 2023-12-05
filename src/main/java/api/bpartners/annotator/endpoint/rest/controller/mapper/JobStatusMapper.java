@@ -5,6 +5,7 @@ import static api.bpartners.annotator.endpoint.rest.model.JobStatus.FAILED;
 import static api.bpartners.annotator.endpoint.rest.model.JobStatus.PENDING;
 import static api.bpartners.annotator.endpoint.rest.model.JobStatus.READY;
 import static api.bpartners.annotator.endpoint.rest.model.JobStatus.STARTED;
+import static api.bpartners.annotator.endpoint.rest.model.JobStatus.TO_CORRECT;
 import static api.bpartners.annotator.endpoint.rest.model.JobStatus.TO_REVIEW;
 
 import api.bpartners.annotator.endpoint.rest.model.JobStatus;
@@ -20,6 +21,7 @@ public class JobStatusMapper {
       case READY -> READY;
       case STARTED -> STARTED;
       case TO_REVIEW -> TO_REVIEW;
+      case TO_CORRECT -> TO_CORRECT;
       case FAILED -> FAILED;
       case COMPLETED -> COMPLETED;
       default -> throw new ApiException(
@@ -33,6 +35,7 @@ public class JobStatusMapper {
       case READY -> api.bpartners.annotator.repository.model.enums.JobStatus.READY;
       case STARTED -> api.bpartners.annotator.repository.model.enums.JobStatus.STARTED;
       case TO_REVIEW -> api.bpartners.annotator.repository.model.enums.JobStatus.TO_REVIEW;
+      case TO_CORRECT -> api.bpartners.annotator.repository.model.enums.JobStatus.TO_CORRECT;
       case FAILED -> api.bpartners.annotator.repository.model.enums.JobStatus.FAILED;
       case COMPLETED -> api.bpartners.annotator.repository.model.enums.JobStatus.COMPLETED;
       default -> throw new BadRequestException("unknown JobStatus = " + rest);

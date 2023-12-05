@@ -1,8 +1,6 @@
 package api.bpartners.annotator.service;
 
 import static api.bpartners.annotator.repository.model.enums.JobStatus.PENDING;
-import static api.bpartners.annotator.repository.model.enums.JobStatus.STARTED;
-import static api.bpartners.annotator.repository.model.enums.JobStatus.TO_REVIEW;
 
 import api.bpartners.annotator.endpoint.event.EventProducer;
 import api.bpartners.annotator.endpoint.event.gen.JobCreated;
@@ -13,6 +11,7 @@ import api.bpartners.annotator.repository.jpa.LabelRepository;
 import api.bpartners.annotator.repository.model.Job;
 import api.bpartners.annotator.repository.model.Label;
 import api.bpartners.annotator.repository.model.enums.JobStatus;
+import java.util.Collection;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -29,17 +28,23 @@ public class JobService {
     return JobCreated.builder().nextContinuationToken(nextContinuationToken).job(job).build();
   }
 
-  public List<Job> getAllByTeam(String teamId) {
-    return repository.findAllByTeamIdAndStatus(teamId, STARTED);
+  public List<Job> getAllByTeamAndStatuses(String teamId, Collection<JobStatus> statuses) {
+    return repository.findAllByTeamIdAndStatusIn(teamId, statuses);
   }
 
-  public Job getByTeamAndId(String teamId, String id) {
+  public Job getByTeamAndIdAndStatuses(String teamId, String id, Collection<JobStatus> statuses) {
     return repository
-        .findByTeamIdAndId(teamId, id)
+        .findByTeamIdAndIdAndStatusIn(teamId, id, statuses)
         .orElseThrow(
             () ->
                 new NotFoundException(
-                    "Job identified by team.id = " + teamId + " and id = " + id + " not found"));
+                    "Job identified by team.id = "
+                        + teamId
+                        + " and id = "
+                        + id
+                        + "with status = oneOf( "
+                        + statuses
+                        + " ) not found"));
   }
 
   public List<Job> getAll() {
@@ -94,24 +99,28 @@ public class JobService {
     return switch (current) {
       case PENDING -> switch (next) {
         case PENDING, READY, FAILED -> next;
-        case STARTED, TO_REVIEW, COMPLETED -> throw exception;
+        case STARTED, TO_REVIEW, TO_CORRECT, COMPLETED -> throw exception;
       };
       case READY -> switch (next) {
         case READY, STARTED -> next;
-        case PENDING, FAILED, TO_REVIEW, COMPLETED -> throw exception;
+        case PENDING, FAILED, TO_REVIEW, TO_CORRECT, COMPLETED -> throw exception;
       };
       case STARTED -> switch (next) {
-        case STARTED, TO_REVIEW -> next;
+        case STARTED, TO_REVIEW, TO_CORRECT -> next;
         case PENDING, FAILED, READY, COMPLETED -> throw exception;
       };
+      case TO_CORRECT -> switch (next) {
+        case TO_CORRECT, STARTED, TO_REVIEW, COMPLETED -> next;
+        case PENDING, READY, FAILED -> throw exception;
+      };
       case TO_REVIEW -> switch (next) {
-        case TO_REVIEW, COMPLETED -> next;
+        case TO_REVIEW, TO_CORRECT, COMPLETED -> next;
         case PENDING, READY, FAILED, STARTED -> throw exception;
       };
       case FAILED -> throw new BadRequestException(
           "Failed Job cannot be changed, create new Job instead");
       case COMPLETED -> switch (next) {
-        case TO_REVIEW -> next;
+        case TO_REVIEW, TO_CORRECT -> next;
         case PENDING, READY, STARTED, FAILED, COMPLETED -> throw exception;
       };
     };

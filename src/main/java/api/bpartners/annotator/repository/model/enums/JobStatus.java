@@ -5,6 +5,7 @@ public enum JobStatus {
   READY,
   STARTED,
   TO_REVIEW,
+  TO_CORRECT,
   FAILED,
   COMPLETED;
 }
