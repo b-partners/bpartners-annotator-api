@@ -1,6 +1,7 @@
 package api.bpartners.annotator.integration;
 
 import static api.bpartners.annotator.endpoint.rest.model.JobStatus.STARTED;
+import static api.bpartners.annotator.endpoint.rest.model.JobStatus.TO_CORRECT;
 import static api.bpartners.annotator.integration.conf.utils.TestMocks.JOB_1_ID;
 import static api.bpartners.annotator.integration.conf.utils.TestMocks.TEAM_1_ID;
 import static api.bpartners.annotator.integration.conf.utils.TestMocks.job1;
@@ -44,10 +45,10 @@ public class TeamJobsIT extends FacadeIT {
     ApiClient joeDoeClient = anApiClient();
     TeamJobsApi api = new TeamJobsApi(joeDoeClient);
 
-    List<Job> actual = api.getTeamJobs(TEAM_1_ID);
+    List<Job> actual = api.getAnnotatorReadableTeamJobs(TEAM_1_ID);
 
     assertTrue(actual.contains(job1()));
-    assertTrue(actual.stream().allMatch(job -> job.getStatus().equals(STARTED)));
+    assertTrue(actual.stream().allMatch(job -> job.getStatus().equals(STARTED) || job.getStatus().equals(TO_CORRECT)));
   }
 
   @Test
@@ -55,7 +56,7 @@ public class TeamJobsIT extends FacadeIT {
     ApiClient joeDoeClient = anApiClient();
     TeamJobsApi api = new TeamJobsApi(joeDoeClient);
 
-    Job actual = api.getTeamJobById(TEAM_1_ID, JOB_1_ID);
+    Job actual = api.getAnnotatorReadableTeamJobById(TEAM_1_ID, JOB_1_ID);
 
     assertEquals(job1(), actual);
   }

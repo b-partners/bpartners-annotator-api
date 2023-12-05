@@ -128,7 +128,7 @@ paths:
     get:
       tags:
         - TeamJobs
-      operationId: getTeamJobs
+      operationId: getAnnotatorReadableTeamJobs
       summary: get started team jobs
       parameters:
         - name: teamId
@@ -153,7 +153,7 @@ paths:
       tags:
         - TeamJobs
       summary: get a job specified by its id and the team owner
-      operationId: getTeamJobById
+      operationId: getAnnotatorReadableTeamJobById
       parameters:
         - name: teamId
           in: path
@@ -945,6 +945,7 @@ components:
         - READY
         - STARTED
         - TO_REVIEW
+        - TO_CORRECT
         - FAILED
         - COMPLETED
     UpdateTask:
