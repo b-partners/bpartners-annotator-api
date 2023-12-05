@@ -24,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @AllArgsConstructor
 public class TaskService {
+  public static final List<TaskStatus> NOT_COMPLETED_TASK_STATUSES = List.of(PENDING, UNDER_COMPLETION, TO_CORRECT);
   private final TaskRepository repository;
   private final JobService jobService;
 
@@ -54,11 +55,11 @@ public class TaskService {
     task.setJob(entity.getJob());
     Task saved = repository.save(task);
     if (saved.getStatus() == COMPLETED) {
-      boolean hasJobCompletedAllTasks =
-          repository.existsByJobIdAndStatusNotIn(
-              task.getJob().getId(), List.of(PENDING, UNDER_COMPLETION, TO_CORRECT));
-      if (hasJobCompletedAllTasks) {
-        jobService.updateJobStatus(task.getJob().getId(), TO_REVIEW);
+      boolean doesJobHaveNotCompletedTasks =
+          repository.existsByJobIdAndStatusIn(
+              task.getJob().getId(), NOT_COMPLETED_TASK_STATUSES);
+      if (!doesJobHaveNotCompletedTasks) {
+        task.setJob(jobService.updateJobStatus(task.getJob().getId(), TO_REVIEW));
       }
     }
     return saved;
