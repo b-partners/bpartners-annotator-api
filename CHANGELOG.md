@@ -1,3 +1,19 @@
+# [2.1.0](https://github.com/b-partners/bpartners-annotator-api/compare/v2.0.0...v2.1.0) (2023-12-07)
+
+
+### Bug Fixes
+
+* only complete job if it finishes all tasks ([bc10020](https://github.com/b-partners/bpartners-annotator-api/commit/bc10020fad15cbcafa618ae07d7beeb32e9b04a0))
+
+
+### Features
+
+* filter by status and paginate jobs ([1aefefa](https://github.com/b-partners/bpartners-annotator-api/commit/1aefefa292d9c2a8cb8a7ce3b51debebc4844605))
+* filter tasks by status and userId ([608ef02](https://github.com/b-partners/bpartners-annotator-api/commit/608ef021ad5dffb6e1d85410f874bc58f53efc53))
+* whenever reviewed, the annotation's task's job status will become TO_CORRECT ([e1f2aa8](https://github.com/b-partners/bpartners-annotator-api/commit/e1f2aa8b5bbbd3677bc4e612ce24c22616c73d23))
+
+
+
 # [2.0.0](https://github.com/b-partners/bpartners-annotator-api/compare/v1.0.0...v2.0.0) (2023-12-01)
 
 
@@ -119,22 +135,6 @@
 ### Features
 
 * create users with post method ([#58](https://github.com/b-partners/bpartners-annotator-api/issues/58)) ([77d1f35](https://github.com/b-partners/bpartners-annotator-api/commit/77d1f35cca5cf421a6b412e275852c697b104907))
-
-
-
-# [0.6.0](https://github.com/b-partners/bpartners-annotator-api/compare/v0.5.0...v0.6.0) (2023-11-17)
-
-
-### Bug Fixes
-
-* correct whoami authorization and tags in api doc ([449be1e](https://github.com/b-partners/bpartners-annotator-api/commit/449be1e054efa60d236fe379dd87a1fc5f0242d5))
-* mismapped team in UserMapper ([6db8905](https://github.com/b-partners/bpartners-annotator-api/commit/6db89051b7e28dc04d44a6a7ddf57b17fe0befc6))
-
-
-### Features
-
-* users ([2680fc4](https://github.com/b-partners/bpartners-annotator-api/commit/2680fc44b55f91b3990d1616682df2d1f69ad9b5))
-* whoami ([fe73e5d](https://github.com/b-partners/bpartners-annotator-api/commit/fe73e5dc207f51e77e5105f34cc9f1f06199c9fb))
 
 
 
