@@ -275,6 +275,14 @@ paths:
           name: pageSize
           schema:
             $ref: '#/components/schemas/PageSize'
+        - in: query
+          name: status
+          schema:
+            $ref: "#/components/schemas/TaskStatus"
+        - in: query
+          name: userId
+          schema:
+            type: string
       responses:
         '200':
           description: A task
