@@ -25,6 +25,9 @@ public class TaskStatusMapper {
   }
 
   public api.bpartners.annotator.repository.model.enums.TaskStatus toDomain(TaskStatus rest) {
+    if (rest == null) {
+      return null;
+    }
     return switch (rest) {
       case PENDING -> api.bpartners.annotator.repository.model.enums.TaskStatus.PENDING;
       case UNDER_COMPLETION -> api.bpartners.annotator.repository.model.enums.TaskStatus

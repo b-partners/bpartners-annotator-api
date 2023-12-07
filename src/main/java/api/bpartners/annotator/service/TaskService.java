@@ -10,6 +10,7 @@ import api.bpartners.annotator.model.BoundedPageSize;
 import api.bpartners.annotator.model.PageFromOne;
 import api.bpartners.annotator.model.exception.BadRequestException;
 import api.bpartners.annotator.model.exception.NotFoundException;
+import api.bpartners.annotator.repository.dao.TaskDao;
 import api.bpartners.annotator.repository.jpa.TaskRepository;
 import api.bpartners.annotator.repository.model.Task;
 import api.bpartners.annotator.repository.model.enums.TaskStatus;
@@ -28,10 +29,12 @@ public class TaskService {
       List.of(PENDING, UNDER_COMPLETION, TO_CORRECT);
   private final TaskRepository repository;
   private final JobService jobService;
+  private final TaskDao taskDao;
 
-  public List<Task> getAllByJob(String jobId, PageFromOne page, BoundedPageSize pageSize) {
+  public List<Task> getAllByJobAndStatus(
+      String jobId, TaskStatus status, String userId, PageFromOne page, BoundedPageSize pageSize) {
     Pageable pageable = PageRequest.of(page.getValue() - 1, pageSize.getValue());
-    return repository.findAllByJobId(jobId, pageable);
+    return taskDao.findAllByJobIdAndStatusAndUserId(jobId, status, userId, pageable);
   }
 
   public Task getByJobIdAndId(String jobId, String id) {
