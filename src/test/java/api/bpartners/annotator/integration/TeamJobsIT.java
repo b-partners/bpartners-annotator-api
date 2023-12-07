@@ -48,7 +48,10 @@ public class TeamJobsIT extends FacadeIT {
     List<Job> actual = api.getAnnotatorReadableTeamJobs(TEAM_1_ID);
 
     assertTrue(actual.contains(job1()));
-    assertTrue(actual.stream().allMatch(job -> job.getStatus().equals(STARTED) || job.getStatus().equals(TO_CORRECT)));
+    assertTrue(
+        actual.stream()
+            .allMatch(
+                job -> job.getStatus().equals(STARTED) || job.getStatus().equals(TO_CORRECT)));
   }
 
   @Test

@@ -30,6 +30,9 @@ public class JobStatusMapper {
   }
 
   public api.bpartners.annotator.repository.model.enums.JobStatus toDomain(JobStatus rest) {
+    if (rest == null) {
+      return null;
+    }
     return switch (rest) {
       case PENDING -> api.bpartners.annotator.repository.model.enums.JobStatus.PENDING;
       case READY -> api.bpartners.annotator.repository.model.enums.JobStatus.READY;
