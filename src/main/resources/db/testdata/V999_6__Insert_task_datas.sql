@@ -1,2 +1,15 @@
 INSERT INTO public.task (id, job_id, status, filename, user_id)
-VALUES ('task_1_id', 'job_1_id', 'PENDING', 'image_1', null), ('task_2_id', 'job_1_id', 'PENDING', 'image_2', null);
+VALUES ('task_1_id', 'job_1_id', 'PENDING', 'image_1', null),
+       ('task_2_id', 'job_1_id', 'PENDING', 'image_2', null),
+       ('task_3_id', 'job_1_id', 'PENDING', 'image_1', null),
+       ('task_4_id', 'job_1_id', 'PENDING', 'image_2', null),
+       ('task_5_id', 'job_1_id', 'PENDING', 'image_1', null),
+       ('task_6_id', 'job_1_id', 'PENDING', 'image_2', null),
+       ('task_7_id', 'job_1_id', 'UNDER_COMPLETION', 'image_1', 'jane_doe_id'),
+       ('task_8_id', 'job_1_id', 'PENDING', 'image_2', null),
+       ('task_9_id', 'job_1_id', 'UNDER_COMPLETION', 'image_1', 'jane_doe_id'),
+       ('task_10_id', 'job_1_id', 'PENDING', 'image_2', null),
+       ('task_11_id', 'job_1_id', 'TO_CORRECT', 'image_1', 'joe_doe_id'),
+       ('task_12_id', 'job_1_id', 'TO_CORRECT', 'image_2', 'joe_doe_id'),
+       ('task_13_id', 'job_1_id', 'COMPLETED', 'image_1', 'jane_doe_id'),
+       ('task_14_id', 'job_1_id', 'PENDING', 'image_2', null);
