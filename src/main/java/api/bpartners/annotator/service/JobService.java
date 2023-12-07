@@ -4,6 +4,8 @@ import static api.bpartners.annotator.repository.model.enums.JobStatus.PENDING;
 
 import api.bpartners.annotator.endpoint.event.EventProducer;
 import api.bpartners.annotator.endpoint.event.gen.JobCreated;
+import api.bpartners.annotator.model.BoundedPageSize;
+import api.bpartners.annotator.model.PageFromOne;
 import api.bpartners.annotator.model.exception.BadRequestException;
 import api.bpartners.annotator.model.exception.NotFoundException;
 import api.bpartners.annotator.repository.jpa.JobRepository;
@@ -14,6 +16,8 @@ import api.bpartners.annotator.repository.model.enums.JobStatus;
 import java.util.Collection;
 import java.util.List;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -47,8 +51,12 @@ public class JobService {
                         + " ) not found"));
   }
 
-  public List<Job> getAll() {
-    return repository.findAll();
+  public List<Job> getAllByStatus(PageFromOne page, BoundedPageSize pageSize, JobStatus status) {
+    Pageable pageable = PageRequest.of(page.getValue() - 1, pageSize.getValue());
+    if (status == null) {
+      return repository.findAll(pageable).toList();
+    }
+    return repository.findAllByStatus(status, pageable);
   }
 
   public Job getById(String id) {

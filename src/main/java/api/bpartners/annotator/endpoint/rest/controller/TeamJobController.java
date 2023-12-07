@@ -18,7 +18,8 @@ import org.springframework.web.bind.annotation.RestController;
 public class TeamJobController {
   private final JobService service;
   private final JobMapper mapper;
-  private static final List<JobStatus> ANNOTATOR_READABLE_JOB_STATUSES = List.of(STARTED, TO_CORRECT);
+  private static final List<JobStatus> ANNOTATOR_READABLE_JOB_STATUSES =
+      List.of(STARTED, TO_CORRECT);
 
   @GetMapping("/teams/{teamId}/jobs")
   public List<Job> getAnnotatorReadableTeamJobs(@PathVariable String teamId) {

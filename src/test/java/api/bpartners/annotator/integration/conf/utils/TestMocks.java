@@ -52,7 +52,7 @@ public class TestMocks {
         .ownerEmail("admin@email.com")
         .name("job_1")
         .taskStatistics(
-            new TaskStatistics().remainingTasks(2L).totalTasks(2L).completedTasksByUserId(0L))
+            new TaskStatistics().remainingTasks(13L).totalTasks(14L).completedTasksByUserId(0L))
         .labels(List.of(label1(), label2()));
   }
 

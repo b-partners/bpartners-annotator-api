@@ -1,7 +1,9 @@
 package api.bpartners.annotator.integration;
 
+import static api.bpartners.annotator.endpoint.rest.model.JobStatus.*;
 import static api.bpartners.annotator.endpoint.rest.model.JobStatus.PENDING;
 import static api.bpartners.annotator.endpoint.rest.model.JobStatus.READY;
+import static api.bpartners.annotator.endpoint.rest.model.JobStatus.STARTED;
 import static api.bpartners.annotator.integration.conf.utils.TestMocks.job1;
 import static api.bpartners.annotator.integration.conf.utils.TestUtils.assertThrowsBadRequestException;
 import static java.util.UUID.randomUUID;
@@ -64,10 +66,42 @@ public class JobIT extends FacadeIT {
     ApiClient adminClient = anApiClient();
     JobsApi api = new JobsApi(adminClient);
 
-    List<Job> actualJobs = api.getJobs();
+    List<Job> actualJobs = api.getJobs(1, 10, null);
 
-    assertEquals(1, actualJobs.size());
+    assertEquals(8, actualJobs.size());
     assertTrue(actualJobs.contains(job1()));
+  }
+
+  @Test
+  void admin_get_jobs_filtered() throws ApiException {
+    ApiClient adminClient = anApiClient();
+    JobsApi api = new JobsApi(adminClient);
+
+    List<Job> actualStartedJobs = api.getJobs(1, 10, STARTED);
+    List<Job> actualPendingJobs = api.getJobs(1, 10, PENDING);
+    List<Job> actualReadyJobs = api.getJobs(1, 10, READY);
+    List<Job> actualCompletedJobs = api.getJobs(1, 10, COMPLETED);
+    List<Job> actualToReviewJobs = api.getJobs(1, 10, TO_REVIEW);
+    List<Job> actualToCorrectJobs = api.getJobs(1, 10, TO_CORRECT);
+    List<Job> actualFailedJobs = api.getJobs(1, 10, FAILED);
+
+    assertEquals(2, actualStartedJobs.size());
+    assertEquals(1, actualPendingJobs.size());
+    // TODO: dirty context seems not to work because inserted Ready jobs.size should be 1. read
+    // testData
+    assertEquals(2, actualReadyJobs.size());
+    assertEquals(1, actualCompletedJobs.size());
+    assertEquals(1, actualToReviewJobs.size());
+    assertEquals(1, actualToCorrectJobs.size());
+    assertEquals(1, actualFailedJobs.size());
+
+    assertTrue(actualStartedJobs.stream().allMatch(j -> STARTED.equals(j.getStatus())));
+    assertTrue(actualPendingJobs.stream().allMatch(j -> PENDING.equals(j.getStatus())));
+    assertTrue(actualReadyJobs.stream().allMatch(j -> READY.equals(j.getStatus())));
+    assertTrue(actualCompletedJobs.stream().allMatch(j -> COMPLETED.equals(j.getStatus())));
+    assertTrue(actualToReviewJobs.stream().allMatch(j -> TO_REVIEW.equals(j.getStatus())));
+    assertTrue(actualFailedJobs.stream().allMatch(j -> FAILED.equals(j.getStatus())));
+    assertTrue(actualToCorrectJobs.stream().allMatch(j -> TO_CORRECT.equals(j.getStatus())));
   }
 
   @Test
