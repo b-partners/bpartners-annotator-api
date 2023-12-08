@@ -2,6 +2,7 @@ package api.bpartners.annotator.endpoint.rest.controller;
 
 import static api.bpartners.annotator.repository.model.enums.JobStatus.STARTED;
 import static api.bpartners.annotator.repository.model.enums.JobStatus.TO_CORRECT;
+import static api.bpartners.annotator.repository.model.enums.JobStatus.TO_REVIEW;
 
 import api.bpartners.annotator.endpoint.rest.controller.mapper.JobMapper;
 import api.bpartners.annotator.endpoint.rest.model.Job;
@@ -31,6 +32,6 @@ public class TeamJobController {
   @GetMapping("/teams/{teamId}/jobs/{jobId}")
   public Job getAnnotatorReadableTeamJob(@PathVariable String teamId, @PathVariable String jobId) {
     return mapper.toRest(
-        service.getByTeamAndIdAndStatuses(teamId, jobId, ANNOTATOR_READABLE_JOB_STATUSES));
+        service.getByTeamAndIdAndStatuses(teamId, jobId, List.of(STARTED, TO_CORRECT, TO_REVIEW)));
   }
 }
