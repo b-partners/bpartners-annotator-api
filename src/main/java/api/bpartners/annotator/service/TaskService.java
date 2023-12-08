@@ -6,7 +6,6 @@ import static api.bpartners.annotator.repository.model.enums.TaskStatus.PENDING;
 import static api.bpartners.annotator.repository.model.enums.TaskStatus.TO_CORRECT;
 import static api.bpartners.annotator.repository.model.enums.TaskStatus.UNDER_COMPLETION;
 
-import api.bpartners.annotator.endpoint.rest.security.AuthenticatedResourceProvider;
 import api.bpartners.annotator.model.BoundedPageSize;
 import api.bpartners.annotator.model.PageFromOne;
 import api.bpartners.annotator.model.exception.NotFoundException;
@@ -32,7 +31,6 @@ public class TaskService {
   private final JobService jobService;
   private final TaskDao taskDao;
   private final TaskUpdateValidator updateValidator;
-  private final AuthenticatedResourceProvider authResourceProvider;
 
   public List<Task> getAllByJobAndStatus(
       String jobId, TaskStatus status, String userId, PageFromOne page, BoundedPageSize pageSize) {
@@ -78,16 +76,15 @@ public class TaskService {
     return update(persisted.getJob().getId(), taskId, persisted);
   }
 
-  public Task getAvailableTaskFromJob(String teamId, String jobId) {
-    Optional<Task> optionalTask =
-        repository.findFirstByJobIdAndStatusIn(jobId, List.of(PENDING, TO_CORRECT));
+  public Task getAvailableTaskFromJobOrJobAndUserId(String teamId, String jobId, String userId) {
+    Optional<Task> optionalTask = taskDao.findAvailableTaskFromJobOrJobAndUserId(jobId, userId);
     if (optionalTask.isEmpty()) {
       return null;
     }
     Task availableTask = optionalTask.get();
     if (availableTask.getStatus() == PENDING) {
       availableTask.setStatus(UNDER_COMPLETION);
-      availableTask.setUserId(authResourceProvider.getAuthenticatedUser().getId());
+      availableTask.setUserId(userId);
     }
     return update(jobId, availableTask.getId(), availableTask);
   }
