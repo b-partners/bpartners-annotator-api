@@ -25,6 +25,10 @@ public class AnnotationBatchMapper {
     return api.bpartners.annotator.repository.model.AnnotationBatch.builder()
         .id(rest.getId())
         .annotatorId(userId)
+        .annotations(
+            rest.getAnnotations().stream()
+                .map(restAnnotation -> annotationMapper.toDomain(rest.getId(), restAnnotation))
+                .toList())
         .taskId(taskId)
         .build();
   }

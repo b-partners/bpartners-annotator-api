@@ -19,12 +19,14 @@ public class AnnotationMapper {
         .polygon(polygonMapper.toRest(domain.getPolygon()));
   }
 
-  public api.bpartners.annotator.repository.model.Annotation toDomain(Annotation rest) {
+  public api.bpartners.annotator.repository.model.Annotation toDomain(
+      String annotationBatchId, Annotation rest) {
     return api.bpartners.annotator.repository.model.Annotation.builder()
         .id(rest.getId())
         .label(labelMapper.toDomain(rest.getLabel()))
         .taskId(rest.getTaskId())
         .userId(rest.getUserId())
+        .batchId(annotationBatchId)
         .polygon(polygonMapper.toDomain(rest.getPolygon()))
         .build();
   }
