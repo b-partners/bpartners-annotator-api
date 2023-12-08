@@ -1,6 +1,7 @@
 package api.bpartners.annotator.endpoint.rest.controller.mapper;
 
 import api.bpartners.annotator.endpoint.rest.model.Annotation;
+import api.bpartners.annotator.endpoint.rest.validator.AnnotationValidator;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Component;
 public class AnnotationMapper {
   private final LabelMapper labelMapper;
   private final PolygonMapper polygonMapper;
+  private final AnnotationValidator validator;
 
   public Annotation toRest(api.bpartners.annotator.repository.model.Annotation domain) {
     return new Annotation()
@@ -21,6 +23,7 @@ public class AnnotationMapper {
 
   public api.bpartners.annotator.repository.model.Annotation toDomain(
       String annotationBatchId, Annotation rest) {
+    validator.accept(rest);
     return api.bpartners.annotator.repository.model.Annotation.builder()
         .id(rest.getId())
         .label(labelMapper.toDomain(rest.getLabel()))
