@@ -1,0 +1,67 @@
+package api.bpartners.annotator.service.validator;
+
+import static api.bpartners.annotator.repository.model.enums.TaskStatus.COMPLETED;
+import static api.bpartners.annotator.repository.model.enums.TaskStatus.PENDING;
+import static api.bpartners.annotator.repository.model.enums.TaskStatus.UNDER_COMPLETION;
+
+import api.bpartners.annotator.model.exception.BadRequestException;
+import api.bpartners.annotator.repository.model.Task;
+import api.bpartners.annotator.repository.model.enums.TaskStatus;
+import java.util.function.BiConsumer;
+import org.springframework.stereotype.Component;
+
+@Component
+public class TaskUpdateValidator implements BiConsumer<Task, Task> {
+  @Override
+  public void accept(Task entity, Task update) {
+    StringBuilder exceptionMessageBuilder = new StringBuilder();
+    if (UNDER_COMPLETION.equals(update.getStatus()) || COMPLETED.equals(update.getStatus())) {
+      if (update.getUserId() == null) {
+        exceptionMessageBuilder
+            .append("userId is mandatory in order to update a task status to ")
+            .append(update.getStatus());
+      }
+    }
+    if (PENDING.equals(update.getStatus())) {
+      if (update.getUserId() != null) {
+        exceptionMessageBuilder
+            .append("userId must be null in order to update a task status to ")
+            .append(update.getStatus());
+      }
+    }
+    try {
+      checkTaskStatusTransition(entity, update);
+    } catch (BadRequestException e) {
+      exceptionMessageBuilder.append(e.getMessage());
+    }
+    String exceptionMessage = exceptionMessageBuilder.toString();
+    if (!exceptionMessage.isBlank()) {
+      throw new BadRequestException(exceptionMessage);
+    }
+  }
+
+  public TaskStatus checkTaskStatusTransition(Task currentTask, Task newTask) {
+    TaskStatus current = currentTask.getStatus();
+    TaskStatus next = newTask.getStatus();
+    BadRequestException exception =
+        new BadRequestException(String.format("illegal transition: %s -> %s", current, next));
+    return switch (current) {
+      case PENDING -> switch (next) {
+        case PENDING, UNDER_COMPLETION -> next;
+        case TO_CORRECT, COMPLETED -> throw exception;
+      };
+      case UNDER_COMPLETION -> switch (next) {
+        case PENDING, UNDER_COMPLETION, COMPLETED -> next;
+        case TO_CORRECT -> throw exception;
+      };
+      case TO_CORRECT -> switch (next) {
+        case PENDING, UNDER_COMPLETION -> throw exception;
+        case TO_CORRECT, COMPLETED -> next;
+      };
+      case COMPLETED -> switch (next) {
+        case TO_CORRECT, COMPLETED -> next;
+        case PENDING, UNDER_COMPLETION -> throw exception;
+      };
+    };
+  }
+}

@@ -220,7 +220,13 @@ paths:
       tags:
         - UserTasks
       summary: updates a task
-      description: Updatable fields are status and userId
+      description: |
+        
+        Updatable fields are status and userId
+        
+        when updated task status is under completion or completed then there must be an userId
+        
+        when updated task status is pending, userId must be null
       operationId: updateTask
       parameters:
         - name: teamId

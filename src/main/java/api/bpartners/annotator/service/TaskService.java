@@ -6,14 +6,15 @@ import static api.bpartners.annotator.repository.model.enums.TaskStatus.PENDING;
 import static api.bpartners.annotator.repository.model.enums.TaskStatus.TO_CORRECT;
 import static api.bpartners.annotator.repository.model.enums.TaskStatus.UNDER_COMPLETION;
 
+import api.bpartners.annotator.endpoint.rest.security.AuthenticatedResourceProvider;
 import api.bpartners.annotator.model.BoundedPageSize;
 import api.bpartners.annotator.model.PageFromOne;
-import api.bpartners.annotator.model.exception.BadRequestException;
 import api.bpartners.annotator.model.exception.NotFoundException;
 import api.bpartners.annotator.repository.dao.TaskDao;
 import api.bpartners.annotator.repository.jpa.TaskRepository;
 import api.bpartners.annotator.repository.model.Task;
 import api.bpartners.annotator.repository.model.enums.TaskStatus;
+import api.bpartners.annotator.service.validator.TaskUpdateValidator;
 import java.util.List;
 import java.util.Optional;
 import lombok.AllArgsConstructor;
@@ -30,6 +31,8 @@ public class TaskService {
   private final TaskRepository repository;
   private final JobService jobService;
   private final TaskDao taskDao;
+  private final TaskUpdateValidator updateValidator;
+  private final AuthenticatedResourceProvider authResourceProvider;
 
   public List<Task> getAllByJobAndStatus(
       String jobId, TaskStatus status, String userId, PageFromOne page, BoundedPageSize pageSize) {
@@ -54,7 +57,7 @@ public class TaskService {
 
   public Task update(String jobId, String id, Task task) {
     Task entity = getByJobIdAndId(jobId, id);
-    checkTaskStatusTransition(entity, task);
+    updateValidator.accept(entity, task);
     task.setFilename(entity.getFilename());
     task.setJob(entity.getJob());
     Task saved = repository.save(task);
@@ -84,36 +87,12 @@ public class TaskService {
     Task availableTask = optionalTask.get();
     if (availableTask.getStatus() == PENDING) {
       availableTask.setStatus(UNDER_COMPLETION);
+      availableTask.setUserId(authResourceProvider.getAuthenticatedUser().getId());
     }
     return update(jobId, availableTask.getId(), availableTask);
   }
 
   public List<Task> createTasks(List<Task> tasks) {
     return repository.saveAll(tasks);
-  }
-
-  public TaskStatus checkTaskStatusTransition(Task currentTask, Task newTask) {
-    TaskStatus current = currentTask.getStatus();
-    TaskStatus next = newTask.getStatus();
-    BadRequestException exception =
-        new BadRequestException(String.format("illegal transition: %s -> %s", current, next));
-    return switch (current) {
-      case PENDING -> switch (next) {
-        case PENDING, UNDER_COMPLETION -> next;
-        case TO_CORRECT, COMPLETED -> throw exception;
-      };
-      case UNDER_COMPLETION -> switch (next) {
-        case PENDING, UNDER_COMPLETION, COMPLETED -> next;
-        case TO_CORRECT -> throw exception;
-      };
-      case TO_CORRECT -> switch (next) {
-        case PENDING, UNDER_COMPLETION -> throw exception;
-        case TO_CORRECT, COMPLETED -> next;
-      };
-      case COMPLETED -> switch (next) {
-        case TO_CORRECT, COMPLETED -> next;
-        case PENDING, UNDER_COMPLETION -> throw exception;
-      };
-    };
   }
 }

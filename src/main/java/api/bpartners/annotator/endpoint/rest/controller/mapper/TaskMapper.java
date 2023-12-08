@@ -2,6 +2,7 @@ package api.bpartners.annotator.endpoint.rest.controller.mapper;
 
 import api.bpartners.annotator.endpoint.rest.model.Task;
 import api.bpartners.annotator.endpoint.rest.model.UpdateTask;
+import api.bpartners.annotator.endpoint.rest.validator.UpdateTaskValidator;
 import api.bpartners.annotator.service.aws.S3Service;
 import java.net.URL;
 import lombok.AllArgsConstructor;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Component;
 public class TaskMapper {
   private final TaskStatusMapper statusMapper;
   private final S3Service fileService;
+  private final UpdateTaskValidator restValidator;
 
   public Task toRest(api.bpartners.annotator.repository.model.Task domain) {
     if (domain == null) {
@@ -29,6 +31,7 @@ public class TaskMapper {
   }
 
   public api.bpartners.annotator.repository.model.Task toDomain(UpdateTask rest) {
+    restValidator.accept(rest);
     return api.bpartners.annotator.repository.model.Task.builder()
         .id(rest.getId())
         .userId(rest.getUserId())

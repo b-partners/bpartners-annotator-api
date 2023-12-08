@@ -2,6 +2,7 @@ package api.bpartners.annotator.integration;
 
 import static api.bpartners.annotator.endpoint.rest.model.TaskStatus.UNDER_COMPLETION;
 import static api.bpartners.annotator.integration.conf.utils.TestMocks.JOB_1_ID;
+import static api.bpartners.annotator.integration.conf.utils.TestMocks.JOE_DOE_ID;
 import static api.bpartners.annotator.integration.conf.utils.TestMocks.TEAM_1_ID;
 import static api.bpartners.annotator.integration.conf.utils.TestMocks.task1;
 import static api.bpartners.annotator.integration.conf.utils.TestUtils.assertThrowsForbiddenException;
@@ -56,13 +57,12 @@ public class UserTasksIT extends FacadeIT {
   }
 
   @Test
-  @DirtiesContext
   void user_get_task_ok() throws ApiException {
     ApiClient joeDoeClient = joeDoeClient();
     UserTasksApi api = new UserTasksApi(joeDoeClient);
 
     Task actual = api.getUserTaskByJob(TEAM_1_ID, JOB_1_ID);
 
-    assertEquals(task1().status(UNDER_COMPLETION), actual);
+    assertEquals(task1().userId(JOE_DOE_ID).status(UNDER_COMPLETION), actual);
   }
 }
