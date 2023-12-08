@@ -1026,6 +1026,10 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/Annotation"
+        creationDatetime:
+          description: ignored in requestBody
+          type: string
+          format: date-time
     Polygon:
       type: object
       properties:

@@ -14,7 +14,10 @@ public class AnnotationBatchMapper {
   public AnnotationBatch toRest(api.bpartners.annotator.repository.model.AnnotationBatch domain) {
     List<Annotation> annotations =
         domain.getAnnotations().stream().map(annotationMapper::toRest).toList();
-    return new AnnotationBatch().id(domain.getId()).annotations(annotations);
+    return new AnnotationBatch()
+        .id(domain.getId())
+        .annotations(annotations)
+        .creationDatetime(domain.getCreationTimestamp());
   }
 
   public api.bpartners.annotator.repository.model.AnnotationBatch toDomain(

@@ -16,6 +16,8 @@ import api.bpartners.annotator.endpoint.rest.model.Polygon;
 import api.bpartners.annotator.endpoint.rest.model.Task;
 import api.bpartners.annotator.endpoint.rest.model.TaskStatistics;
 import api.bpartners.annotator.endpoint.rest.model.Team;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 public class TestMocks {
@@ -93,11 +95,19 @@ public class TestMocks {
   }
 
   public static AnnotationBatch annotationBatch1() {
-    return new AnnotationBatch().id(BATCH_1_ID).annotations(List.of(annotation1(), annotation2()));
+    return new AnnotationBatch()
+        .id(BATCH_1_ID)
+        .annotations(List.of(annotation1(), annotation2()))
+        .creationDatetime(
+            Instant.parse("2023-11-30T19:01:55.907261Z").truncatedTo(ChronoUnit.MILLIS));
   }
 
   public static AnnotationBatch annotationBatch2() {
-    return new AnnotationBatch().id(BATCH_2_ID).annotations(List.of());
+    return new AnnotationBatch()
+        .id(BATCH_2_ID)
+        .annotations(List.of())
+        .creationDatetime(
+            Instant.parse("2023-11-30T20:01:55.907261Z").truncatedTo(ChronoUnit.MILLIS));
   }
 
   public static AnnotationReview annotationReview1() {
