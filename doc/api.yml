@@ -758,6 +758,7 @@ paths:
         - Admin
         - Users
       security: [ apiKeyHeader: [ ] ]
+      operationId: updateUserTeam
       summary: Update team of an user
       description: update user's team
       parameters:
