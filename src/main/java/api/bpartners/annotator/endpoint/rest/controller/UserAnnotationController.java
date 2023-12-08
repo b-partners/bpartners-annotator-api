@@ -18,12 +18,13 @@ public class UserAnnotationController {
   private final AnnotationBatchIdValidator idValidator;
 
   @PutMapping("/users/{userId}/tasks/{taskId}/annotations/{annotationBatchId}")
-  public AnnotationBatch annotateTask(
+  public AnnotationBatch annotateAndCompleteTask(
       @PathVariable String userId,
       @PathVariable String taskId,
       @PathVariable String annotationBatchId,
       @RequestBody AnnotationBatch annotationBatch) {
     idValidator.accept(annotationBatch, annotationBatchId);
-    return mapper.toRest(service.save(mapper.toDomain(userId, taskId, annotationBatch)));
+    return mapper.toRest(
+        service.annotateAndCompleteTask(mapper.toDomain(userId, taskId, annotationBatch)));
   }
 }
