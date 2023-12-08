@@ -1,3 +1,12 @@
+# [2.2.0](https://github.com/b-partners/bpartners-annotator-api/compare/v2.1.0...v2.2.0) (2023-12-08)
+
+
+### Features
+
+* add creationDatetime to annotationBatch fields ([b33f9b7](https://github.com/b-partners/bpartners-annotator-api/commit/b33f9b7048350413ec092a4c2492ad4c18e4e713))
+
+
+
 # [2.1.0](https://github.com/b-partners/bpartners-annotator-api/compare/v2.0.0...v2.1.0) (2023-12-07)
 
 
@@ -119,22 +128,6 @@
 ### Bug Fixes
 
 * add id generation strategy for user and team ([058440d](https://github.com/b-partners/bpartners-annotator-api/commit/058440d48b3d48913c410d969df48abb282318a7))
-
-
-
-# [0.7.0](https://github.com/b-partners/bpartners-annotator-api/compare/v0.6.0...v0.7.0) (2023-11-22)
-
-
-### Bug Fixes
-
-* allow OPTIONS on all paths for CORS ([715b46f](https://github.com/b-partners/bpartners-annotator-api/commit/715b46fe97d4664b0ee7d9f5734ca79c62fae2b8))
-* team id is not a generated value ([09c7373](https://github.com/b-partners/bpartners-annotator-api/commit/09c7373f87f4899ad82e693fa6dab178d7d62250))
-* use post method for user creation ([36bb752](https://github.com/b-partners/bpartners-annotator-api/commit/36bb75225f915064e903949ae5152f78efba556b))
-
-
-### Features
-
-* create users with post method ([#58](https://github.com/b-partners/bpartners-annotator-api/issues/58)) ([77d1f35](https://github.com/b-partners/bpartners-annotator-api/commit/77d1f35cca5cf421a6b412e275852c697b104907))
 
 
 
