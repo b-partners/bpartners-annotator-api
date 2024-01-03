@@ -69,7 +69,7 @@ public class JobIT extends FacadeIT {
     List<Job> actualJobs = api.getJobs(1, 10, null);
 
     assertEquals(8, actualJobs.size());
-    assertTrue(actualJobs.contains(job1()));
+    assertTrue(actualJobs.contains(job1AsAdminView()));
   }
 
   @Test
@@ -111,7 +111,7 @@ public class JobIT extends FacadeIT {
 
     Job actual = api.getJob("job_1_id");
 
-    assertEquals(job1(), actual);
+    assertEquals(job1AsAdminView(), actual);
   }
 
   @Test
@@ -125,7 +125,7 @@ public class JobIT extends FacadeIT {
     Job expected =
         createJobFrom(
             toCreate,
-            new TaskStatistics().totalTasks(0L).remainingTasks(0L).completedTasksByUserId(0L));
+            new TaskStatistics().totalTasks(0L).remainingTasks(0L).completedTasksByUserId(0L).remainingTasksForUserId(0L));
 
     assertEquals(expected, actual);
     // Create//
@@ -138,7 +138,8 @@ public class JobIT extends FacadeIT {
     Job expectedAfterUpdate =
         createJobFrom(
             toUpdate,
-            new TaskStatistics().totalTasks(0L).remainingTasks(0L).completedTasksByUserId(0L));
+            new TaskStatistics().totalTasks(0L).remainingTasks(0L).completedTasksByUserId(0L)
+                    .remainingTasksForUserId(0L));
     assertEquals(toCreate.getId(), actual.getId());
     assertEquals(expectedAfterUpdate, updated);
     // Update//
@@ -157,5 +158,11 @@ public class JobIT extends FacadeIT {
             + "folder path: /a does not follow regex ^(?!/).+/$."
             + "Owner Email is mandatory."
             + "Labels are mandatory.");
+  }
+
+  Job job1AsAdminView(){
+    Job job1 = job1();
+    job1.setTaskStatistics(job1.getTaskStatistics().remainingTasksForUserId(9L));
+    return job1;
   }
 }

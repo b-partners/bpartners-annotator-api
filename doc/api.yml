@@ -988,6 +988,9 @@ components:
     TaskStatistics:
       type: object
       properties:
+        remainingTasksForUserId:
+          type: integer
+          format: int64
         remainingTasks:
           type: integer
           format: int64

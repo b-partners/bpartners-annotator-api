@@ -1,11 +1,14 @@
 package api.bpartners.annotator.repository.model;
 
 import static api.bpartners.annotator.repository.model.enums.TaskStatus.COMPLETED;
+import static api.bpartners.annotator.repository.model.enums.TaskStatus.PENDING;
 import static javax.persistence.EnumType.STRING;
 
 import api.bpartners.annotator.repository.model.enums.JobStatus;
 import api.bpartners.annotator.repository.model.types.PostgresEnumType;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.List;
+import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Enumerated;
@@ -61,6 +64,17 @@ public class Job {
 
   public long getRemainingTasksNumber() {
     return getTasks().stream().filter(task -> !task.getStatus().equals(COMPLETED)).count();
+  }
+
+  @JsonIgnore
+  public long getRemainingTasksForUserId(String userId) {
+    assert (userId != null) : "UserId value missing.";
+    return getTasks().stream()
+        .filter(task -> !task.getStatus().equals(COMPLETED)
+                  &&
+                (task.getUserId() == null || userId.equals(task.getUserId()))
+        )
+        .count();
   }
 
   public long getTasksCompletedByUserId(String userId) {

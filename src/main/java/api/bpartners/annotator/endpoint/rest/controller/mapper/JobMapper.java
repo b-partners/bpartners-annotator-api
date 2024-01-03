@@ -18,13 +18,13 @@ public class JobMapper {
   private final AuthenticatedResourceProvider authenticatedResourceProvider;
 
   public Job toRest(api.bpartners.annotator.repository.model.Job domain) {
+    String connectedUserId = authenticatedResourceProvider.getAuthenticatedUser().getId();
     TaskStatistics taskStatistics =
         new TaskStatistics()
-            .completedTasksByUserId(
-                domain.getTasksCompletedByUserId(
-                    authenticatedResourceProvider.getAuthenticatedUser().getId()))
+            .completedTasksByUserId(domain.getTasksCompletedByUserId(connectedUserId))
             .totalTasks((long) domain.getTasks().size())
-            .remainingTasks(domain.getRemainingTasksNumber());
+            .remainingTasks(domain.getRemainingTasksNumber())
+            .remainingTasksForUserId(domain.getRemainingTasksForUserId(connectedUserId));
     return new Job()
         .id(domain.getId())
         .name(domain.getName())
