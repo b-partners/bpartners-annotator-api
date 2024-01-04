@@ -125,7 +125,11 @@ public class JobIT extends FacadeIT {
     Job expected =
         createJobFrom(
             toCreate,
-            new TaskStatistics().totalTasks(0L).remainingTasks(0L).completedTasksByUserId(0L).remainingTasksForUserId(0L));
+            new TaskStatistics()
+                .totalTasks(0L)
+                .remainingTasks(0L)
+                .completedTasksByUserId(0L)
+                .remainingTasksForUserId(0L));
 
     assertEquals(expected, actual);
     // Create//
@@ -138,8 +142,11 @@ public class JobIT extends FacadeIT {
     Job expectedAfterUpdate =
         createJobFrom(
             toUpdate,
-            new TaskStatistics().totalTasks(0L).remainingTasks(0L).completedTasksByUserId(0L)
-                    .remainingTasksForUserId(0L));
+            new TaskStatistics()
+                .totalTasks(0L)
+                .remainingTasks(0L)
+                .completedTasksByUserId(0L)
+                .remainingTasksForUserId(0L));
     assertEquals(toCreate.getId(), actual.getId());
     assertEquals(expectedAfterUpdate, updated);
     // Update//
@@ -160,7 +167,7 @@ public class JobIT extends FacadeIT {
             + "Labels are mandatory.");
   }
 
-  Job job1AsAdminView(){
+  Job job1AsAdminView() {
     Job job1 = job1();
     job1.setTaskStatistics(job1.getTaskStatistics().remainingTasksForUserId(9L));
     return job1;

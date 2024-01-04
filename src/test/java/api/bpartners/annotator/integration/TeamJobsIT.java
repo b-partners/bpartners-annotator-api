@@ -32,8 +32,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 public class TeamJobsIT extends FacadeIT {
   @LocalServerPort private int port;
   @MockBean private CognitoComponent cognitoComponent;
-  @Autowired
-  TaskRepository taskRepository;
+  @Autowired TaskRepository taskRepository;
 
   private ApiClient anApiClient() {
     return TestUtils.anApiClient(TestMocks.JOE_DOE_TOKEN, null, port);
