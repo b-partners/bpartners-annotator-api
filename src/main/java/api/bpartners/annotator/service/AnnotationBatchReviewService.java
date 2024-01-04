@@ -21,23 +21,23 @@ public class AnnotationBatchReviewService {
   private final TaskService taskService;
   private final JobService jobService;
 
-  public List<AnnotationBatchReview> findAllByJobTaskAndAnnotation(
-      String jobId, String taskId, String annotationId) {
-    return repository.findAllByJobTaskAndAnnotation(
-        jobId, taskId, annotationId, Sort.by("creationDatetime"));
+  public List<AnnotationBatchReview> findAllByJobTaskAndAnnotationBatch(
+      String jobId, String taskId, String annotationBatchId) {
+    return repository.findAllByJobTaskAndAnnotationBatch(
+        jobId, taskId, annotationBatchId, Sort.by("creationDatetime"));
   }
 
   public AnnotationBatchReview findByJobTaskAndAnnotationAndId(
-      String jobId, String taskId, String annotationId, String reviewId) {
+      String jobId, String taskId, String annotationBatchId, String reviewId) {
     return repository
-        .findByJobTaskAndAnnotationAndId(jobId, taskId, annotationId, reviewId)
+        .findByJobTaskAndAnnotationBatchAndId(jobId, taskId, annotationBatchId, reviewId)
         .orElseThrow(
             () ->
                 new NotFoundException(
                     "AnnotationBatchReview identified by id = "
                         + reviewId
                         + " annotation.id = "
-                        + annotationId
+                        + annotationBatchId
                         + " task.id = "
                         + taskId
                         + " job.id = "
@@ -46,22 +46,22 @@ public class AnnotationBatchReviewService {
   }
 
   public List<AnnotationBatchReview> findAllByUserTaskAndAnnotation(
-      String userId, String taskId, String annotationId) {
-    return repository.findAllByUserTaskAndAnnotation(
-        userId, taskId, annotationId, Sort.by("creationDatetime"));
+      String userId, String taskId, String annotationBatchId) {
+    return repository.findAllByUserTaskAndAnnotationBatch(
+        userId, taskId, annotationBatchId, Sort.by("creationDatetime"));
   }
 
   public AnnotationBatchReview findByUserTaskAndAnnotationAndId(
-      String userId, String taskId, String annotationId, String reviewId) {
+      String userId, String taskId, String annotationBatchId, String reviewId) {
     return repository
-        .findByUserTaskAndAnnotationAndId(userId, taskId, annotationId, reviewId)
+        .findByUserTaskAndAnnotationBatchAndId(userId, taskId, annotationBatchId, reviewId)
         .orElseThrow(
             () ->
                 new NotFoundException(
                     "AnnotationBatchReview identified by id = "
                         + reviewId
                         + " annotation.id = "
-                        + annotationId
+                        + annotationBatchId
                         + " task.id = "
                         + taskId
                         + " user.id = "
@@ -70,7 +70,7 @@ public class AnnotationBatchReviewService {
   }
 
   public AnnotationBatchReview save(
-      String taskId, String annotationId, AnnotationBatchReview annotationBatchReview) {
+      String taskId, String annotationBatchId, AnnotationBatchReview annotationBatchReview) {
 
     AnnotationBatchReview saved = repository.save(annotationBatchReview);
 

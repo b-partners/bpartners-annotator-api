@@ -22,7 +22,7 @@ public class AnnotationBatchReviewController {
       @PathVariable String jobId,
       @PathVariable String taskId,
       @PathVariable String annotationBatchId) {
-    return service.findAllByJobTaskAndAnnotation(jobId, taskId, annotationBatchId).stream()
+    return service.findAllByJobTaskAndAnnotationBatch(jobId, taskId, annotationBatchId).stream()
         .map(mapper::toRest)
         .toList();
   }
