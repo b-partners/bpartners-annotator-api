@@ -16,6 +16,11 @@ import software.amazon.awssdk.services.s3.presigner.model.PresignedGetObjectRequ
 @Service
 @AllArgsConstructor
 public class S3Service {
+  /*
+  /!\ CANNOT USE POJA BucketComponent because this service's use-case is too specific.
+      URL Presigning might be do-able but we must let the user specify the bucketName in POJA IMPLEMENTATION
+  /!\
+   */
   private static final Integer MAX_KEYS = 1_000;
   private final S3Conf conf;
   private final S3Client client;
