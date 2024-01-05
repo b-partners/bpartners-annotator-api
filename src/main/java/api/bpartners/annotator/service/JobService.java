@@ -11,7 +11,6 @@ import api.bpartners.annotator.model.exception.NotFoundException;
 import api.bpartners.annotator.repository.jpa.JobRepository;
 import api.bpartners.annotator.repository.jpa.LabelRepository;
 import api.bpartners.annotator.repository.model.Job;
-import api.bpartners.annotator.repository.model.Label;
 import api.bpartners.annotator.repository.model.enums.JobStatus;
 import java.util.Collection;
 import java.util.List;
@@ -69,17 +68,11 @@ public class JobService {
   public Job save(Job job) {
     var labels = job.getLabels();
     if (!repository.existsById(job.getId()) && job.getStatus().equals(PENDING)) {
-      var savedJob = saveJobAndLabels(job, labels);
+      var savedJob = repository.save(job);
       eventProducer.accept(List.of(toEventType(savedJob, null)));
       return savedJob;
-    } else {
-      return updateJob(job);
     }
-  }
-
-  private Job saveJobAndLabels(Job job, List<Label> labels) {
-    labelRepository.saveAll(labels);
-    return repository.save(job);
+    return updateJob(job);
   }
 
   @Transactional
@@ -93,7 +86,6 @@ public class JobService {
     Job persisted = getById(job.getId());
     checkJobStatusTransition(persisted, job);
     job.setTasks(persisted.getTasks());
-    job.setLabels(persisted.getLabels());
     job.setBucketName(persisted.getBucketName());
     job.setFolderPath(persisted.getFolderPath());
     return repository.save(job);

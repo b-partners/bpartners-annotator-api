@@ -1,6 +1,7 @@
 package api.bpartners.annotator.repository.model;
 
 import static api.bpartners.annotator.repository.model.enums.TaskStatus.COMPLETED;
+import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.EnumType.STRING;
 
 import api.bpartners.annotator.repository.model.enums.JobStatus;
@@ -46,7 +47,7 @@ public class Job {
   @JoinColumn(insertable = false, updatable = false, name = "job_id", referencedColumnName = "id")
   private List<Task> tasks;
 
-  @ManyToMany()
+  @ManyToMany(cascade = ALL)
   @JoinTable(
       name = "has_label",
       joinColumns = @JoinColumn(name = "job_id"),
