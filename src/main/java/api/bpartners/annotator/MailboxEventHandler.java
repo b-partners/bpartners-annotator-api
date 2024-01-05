@@ -1,6 +1,5 @@
 package api.bpartners.annotator;
 
-import api.bpartners.annotator.endpoint.event.EventConf;
 import api.bpartners.annotator.endpoint.event.EventConsumer;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
@@ -10,7 +9,6 @@ import java.util.Map;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ConfigurableApplicationContext;
-import software.amazon.awssdk.services.sqs.SqsClient;
 
 @Slf4j
 @PojaGenerated
@@ -26,10 +24,10 @@ public class MailboxEventHandler implements RequestHandler<SQSEvent, String> {
 
     ConfigurableApplicationContext applicationContext = applicationContext();
     EventConsumer eventConsumer = applicationContext.getBean(EventConsumer.class);
-    EventConf eventConf = applicationContext.getBean(EventConf.class);
-    SqsClient sqsClient = applicationContext.getBean(SqsClient.class);
+    EventConsumer.SqsMessageAckTyper messageConverter =
+        applicationContext.getBean(EventConsumer.SqsMessageAckTyper.class);
 
-    eventConsumer.accept(EventConsumer.toAcknowledgeableEvent(eventConf, sqsClient, messages));
+    eventConsumer.accept(messageConverter.toAcknowledgeableEvent(messages));
 
     applicationContext.close();
     return "ok";
