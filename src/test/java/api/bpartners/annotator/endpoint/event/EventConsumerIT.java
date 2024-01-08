@@ -3,6 +3,7 @@ package api.bpartners.annotator.endpoint.event;
 import static java.util.UUID.randomUUID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import api.bpartners.annotator.PojaGenerated;
 import api.bpartners.annotator.conf.FacadeIT;
 import api.bpartners.annotator.endpoint.event.gen.UuidCreated;
 import api.bpartners.annotator.repository.DummyUuidRepository;
@@ -12,16 +13,17 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+@PojaGenerated
 class EventConsumerIT extends FacadeIT {
 
   @Autowired EventConsumer subject;
   @Autowired DummyUuidRepository dummyUuidRepository;
+  @Autowired ObjectMapper om;
 
   @Test
   void uuid_created_is_persisted() throws InterruptedException, JsonProcessingException {
     var uuid = randomUUID().toString();
     var uuidCreated = UuidCreated.builder().uuid(uuid).build();
-    var om = new ObjectMapper();
     var payloadReceived = om.readValue(om.writeValueAsString(uuidCreated), UuidCreated.class);
 
     subject.accept(

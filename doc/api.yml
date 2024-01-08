@@ -26,7 +26,7 @@ paths:
                 example: pong
         500:
           $ref: './api.yml#/components/responses/500'
-  '/dummy':
+  '/dummy-table':
     get:
       security: [ ]
       tags:

@@ -1,5 +1,6 @@
-package api.bpartners.annotator.service.aws;
+package api.bpartners.annotator.mail;
 
+import api.bpartners.annotator.PojaGenerated;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -7,16 +8,17 @@ import org.springframework.context.annotation.Configuration;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.ses.SesClient;
 
+@PojaGenerated
 @Configuration
-@Getter
-public class SesConf {
-  private final Region region;
-  private final String sesSource;
+public class EmailConf {
 
-  public SesConf(
-      @Value("${aws.region}") Region region, @Value("${aws.ses.source}") String sesSource) {
-    this.region = region;
+  @Getter private final String sesSource;
+  private final Region region;
+
+  public EmailConf(
+      @Value("${aws.ses.source}") String sesSource, @Value("eu-west-3") Region region) {
     this.sesSource = sesSource;
+    this.region = region;
   }
 
   @Bean
