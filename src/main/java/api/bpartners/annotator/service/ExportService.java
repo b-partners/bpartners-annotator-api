@@ -20,13 +20,14 @@ import org.springframework.transaction.annotation.Transactional;
 @AllArgsConstructor
 public class ExportService {
   private final AnnotationBatchService annotationBatchService;
+
   @Transactional(propagation = REQUIRED, readOnly = true, rollbackFor = Exception.class)
   public Object exportJob(String jobId, ExportFormat format) {
     if (ExportFormat.VGG.equals(format)) {
       return exportToVgg(jobId);
     }
-    if (ExportFormat.COCO.equals(format)){
-        throw new NotImplementedException("COCO format has not been implemented yet");
+    if (ExportFormat.COCO.equals(format)) {
+      throw new NotImplementedException("COCO format has not been implemented yet");
     }
     throw new BadRequestException("unknown export format " + format);
   }

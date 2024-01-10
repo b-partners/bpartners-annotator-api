@@ -63,7 +63,8 @@ public class JobController {
     var bytes = byteWriter.apply(result);
     HttpHeaders headers = new HttpHeaders();
     headers.setContentType(MediaType.APPLICATION_JSON);
-    headers.setContentDispositionFormData("attachment", String.format(EXPORTED_FILENAME_FORMAT, jobId, exportFormat));
+    headers.setContentDispositionFormData(
+        "attachment", String.format(EXPORTED_FILENAME_FORMAT, jobId, exportFormat));
     return new ResponseEntity<>(bytes, headers, HttpStatus.OK);
   }
 }

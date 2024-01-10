@@ -22,9 +22,11 @@ import org.hibernate.annotations.CreationTimestamp;
 @AllArgsConstructor
 public class AnnotationBatch {
   @Id private String id;
+
   @ManyToOne
   @JoinColumn(name = "task_id")
   private Task task;
+
   private String annotatorId;
 
   @OneToMany(mappedBy = "batchId", cascade = CascadeType.ALL)

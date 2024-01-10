@@ -3,6 +3,7 @@ package api.bpartners.annotator.service;
 import static api.bpartners.annotator.repository.model.enums.JobStatus.STARTED;
 import static api.bpartners.annotator.repository.model.enums.JobStatus.TO_CORRECT;
 import static api.bpartners.annotator.repository.model.enums.TaskStatus.COMPLETED;
+import static org.springframework.data.domain.Sort.Direction.DESC;
 
 import api.bpartners.annotator.model.BoundedPageSize;
 import api.bpartners.annotator.model.PageFromOne;
@@ -50,7 +51,7 @@ public class AnnotationBatchService {
         PageRequest.of(
             page.getValue() - 1,
             pageSize.getValue(),
-            Sort.by(Sort.Direction.DESC, "creationTimestamp"));
+            Sort.by(DESC, "creationTimestamp"));
     return repository.findAllByTaskId(taskId, pageable);
   }
 
@@ -60,7 +61,7 @@ public class AnnotationBatchService {
         PageRequest.of(
             page.getValue() - 1,
             pageSize.getValue(),
-            Sort.by(Sort.Direction.DESC, "creationTimestamp"));
+            Sort.by(DESC, "creationTimestamp"));
     return repository.findAllByAnnotatorIdAndTaskId(annotatorId, taskId, pageable);
   }
 
