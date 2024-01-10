@@ -1,7 +1,6 @@
 package api.bpartners.annotator.service;
 
 import static api.bpartners.annotator.repository.model.enums.ReviewStatus.REJECTED;
-import static api.bpartners.annotator.repository.model.enums.TaskStatus.TO_CORRECT;
 
 import api.bpartners.annotator.model.exception.BadRequestException;
 import api.bpartners.annotator.model.exception.NotFoundException;
@@ -79,7 +78,7 @@ public class AnnotationBatchReviewService {
           || annotationBatchReview.getReviews().isEmpty()) {
         throw new BadRequestException("Reviews are mandatory for rejected batch review");
       }
-      Task task = taskService.updateStatus(taskId, TO_CORRECT);
+      Task task = taskService.rejectTask(taskId);
       jobService.updateJobStatus(task.getJob().getId(), JobStatus.TO_CORRECT);
     }
     return saved;

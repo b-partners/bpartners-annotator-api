@@ -9,7 +9,6 @@ import api.bpartners.annotator.model.PageFromOne;
 import api.bpartners.annotator.model.exception.BadRequestException;
 import api.bpartners.annotator.model.exception.NotFoundException;
 import api.bpartners.annotator.repository.jpa.JobRepository;
-import api.bpartners.annotator.repository.jpa.LabelRepository;
 import api.bpartners.annotator.repository.model.Job;
 import api.bpartners.annotator.repository.model.enums.JobStatus;
 import java.util.Collection;
@@ -24,7 +23,6 @@ import org.springframework.transaction.annotation.Transactional;
 @AllArgsConstructor
 public class JobService {
   private final JobRepository repository;
-  private final LabelRepository labelRepository;
   private final EventProducer eventProducer;
 
   public static JobCreated toEventType(Job job, String nextContinuationToken) {
@@ -84,6 +82,11 @@ public class JobService {
 
   private Job updateJob(Job job) {
     Job persisted = getById(job.getId());
+    if (!PENDING.equals(persisted.getStatus())) {
+      if (!persisted.getLabels().equals(job.getLabels())) {
+        throw new BadRequestException("Labels cannot be updated on not pending job");
+      }
+    }
     checkJobStatusTransition(persisted, job);
     job.setTasks(persisted.getTasks());
     job.setBucketName(persisted.getBucketName());
