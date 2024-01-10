@@ -1,5 +1,7 @@
 package api.bpartners.annotator.service;
 
+import static api.bpartners.annotator.repository.model.enums.JobStatus.STARTED;
+import static api.bpartners.annotator.repository.model.enums.JobStatus.TO_CORRECT;
 import static api.bpartners.annotator.repository.model.enums.TaskStatus.COMPLETED;
 
 import api.bpartners.annotator.model.BoundedPageSize;
@@ -9,6 +11,7 @@ import api.bpartners.annotator.model.exception.NotFoundException;
 import api.bpartners.annotator.repository.jpa.AnnotationBatchRepository;
 import api.bpartners.annotator.repository.model.AnnotationBatch;
 import api.bpartners.annotator.repository.model.Task;
+import api.bpartners.annotator.repository.model.enums.JobStatus;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -25,10 +28,13 @@ public class AnnotationBatchService {
 
   @Transactional
   public AnnotationBatch annotateAndCompleteTask(AnnotationBatch annotationBatch) {
+    JobStatus currentJobStatus = annotationBatch.getTask().getJob().getStatus();
+    if (!STARTED.equals(currentJobStatus) && !TO_CORRECT.equals(currentJobStatus)) {
+      throw new BadRequestException("cannot annotate not started or to_correct job");
+    }
     if (isTaskNotAnnotable(annotationBatch.getTask().getId())) {
       throw new BadRequestException("Task is already completed");
     }
-    taskService.updateStatus(annotationBatch.getTask().getId(), COMPLETED);
     return repository.save(annotationBatch);
   }
 
