@@ -78,7 +78,7 @@ public class AnnotationBatchReviewService {
           || annotationBatchReview.getReviews().isEmpty()) {
         throw new BadRequestException("Reviews are mandatory for rejected batch review");
       }
-      Task task = taskService.rejectTask(taskId);
+      Task task = taskService.reject(taskId);
       jobService.updateJobStatus(task.getJob().getId(), JobStatus.TO_CORRECT);
     }
     return saved;

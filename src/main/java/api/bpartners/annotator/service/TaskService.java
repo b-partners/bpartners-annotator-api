@@ -20,7 +20,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @AllArgsConstructor
@@ -69,11 +68,18 @@ public class TaskService {
     return saved;
   }
 
-  @Transactional
-  public Task updateStatus(String taskId, TaskStatus taskStatus) {
+  private Task updateStatus(String taskId, TaskStatus taskStatus) {
     Task persisted = getById(taskId);
     persisted.setStatus(taskStatus);
     return update(persisted.getJob().getId(), taskId, persisted);
+  }
+
+  public Task complete(String taskId) {
+    return updateStatus(taskId, COMPLETED);
+  }
+
+  public Task reject(String taskId) {
+    return updateStatus(taskId, TO_CORRECT);
   }
 
   public Task getAvailableTaskFromJobOrJobAndUserId(String teamId, String jobId, String userId) {

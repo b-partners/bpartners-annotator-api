@@ -35,6 +35,7 @@ public class AnnotationBatchService {
     if (isTaskNotAnnotable(annotationBatch.getTask().getId())) {
       throw new BadRequestException("Task is already completed");
     }
+    taskService.complete(annotationBatch.getTask().getId());
     return repository.save(annotationBatch);
   }
 
