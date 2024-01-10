@@ -7,7 +7,6 @@ import api.bpartners.annotator.model.exception.NotFoundException;
 import api.bpartners.annotator.repository.jpa.AnnotationBatchReviewRepository;
 import api.bpartners.annotator.repository.model.AnnotationBatchReview;
 import api.bpartners.annotator.repository.model.Task;
-import api.bpartners.annotator.repository.model.enums.JobStatus;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Sort;
@@ -79,7 +78,7 @@ public class AnnotationBatchReviewService {
         throw new BadRequestException("Reviews are mandatory for rejected batch review");
       }
       Task task = taskService.reject(taskId);
-      jobService.updateJobStatus(task.getJob().getId(), JobStatus.TO_CORRECT);
+      jobService.rejectForCorrection(task.getJob().getId());
     }
     return saved;
   }

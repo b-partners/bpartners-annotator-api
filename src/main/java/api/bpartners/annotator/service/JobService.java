@@ -1,6 +1,9 @@
 package api.bpartners.annotator.service;
 
+import static api.bpartners.annotator.repository.model.enums.JobStatus.COMPLETED;
 import static api.bpartners.annotator.repository.model.enums.JobStatus.PENDING;
+import static api.bpartners.annotator.repository.model.enums.JobStatus.TO_CORRECT;
+import static api.bpartners.annotator.repository.model.enums.JobStatus.TO_REVIEW;
 
 import api.bpartners.annotator.endpoint.event.EventProducer;
 import api.bpartners.annotator.endpoint.event.gen.JobCreated;
@@ -72,14 +75,20 @@ public class JobService {
     }
     return updateJob(job);
   }
-
-  @Transactional
+  
   public Job updateJobStatus(String jobId, JobStatus status) {
     Job persisted = getById(jobId);
     persisted.setStatus(status);
     return updateJob(persisted);
   }
 
+  public Job setToReview(String jobId) {
+    return updateJobStatus(jobId, TO_REVIEW);
+  }
+  
+  public Job rejectForCorrection(String jobId) {
+    return updateJobStatus(jobId, TO_CORRECT);
+  }
   private Job updateJob(Job job) {
     Job persisted = getById(job.getId());
     if (!PENDING.equals(persisted.getStatus())) {

@@ -62,7 +62,7 @@ public class TaskService {
       boolean doesJobHaveNotCompletedTasks =
           repository.existsByJobIdAndStatusIn(task.getJob().getId(), NOT_COMPLETED_TASK_STATUSES);
       if (!doesJobHaveNotCompletedTasks) {
-        task.setJob(jobService.updateJobStatus(task.getJob().getId(), TO_REVIEW));
+        task.setJob(jobService.setToReview(jobId));
       }
     }
     return saved;
