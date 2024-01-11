@@ -91,12 +91,8 @@ public class JobService {
   }
   private Job updateJob(Job job) {
     Job persisted = getById(job.getId());
-    if (!PENDING.equals(persisted.getStatus())) {
-      if (!persisted.getLabels().equals(job.getLabels())) {
-        throw new BadRequestException("Labels cannot be updated on not pending job");
-      }
-    }
     checkJobStatusTransition(persisted, job);
+    job.setLabels(persisted.getLabels());
     job.setTasks(persisted.getTasks());
     job.setBucketName(persisted.getBucketName());
     job.setFolderPath(persisted.getFolderPath());
