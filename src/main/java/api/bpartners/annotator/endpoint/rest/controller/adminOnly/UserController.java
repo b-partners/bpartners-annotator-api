@@ -1,4 +1,4 @@
-package api.bpartners.annotator.endpoint.rest.controller;
+package api.bpartners.annotator.endpoint.rest.controller.adminOnly;
 
 import api.bpartners.annotator.endpoint.rest.controller.mapper.UserMapper;
 import api.bpartners.annotator.endpoint.rest.model.CreateUser;

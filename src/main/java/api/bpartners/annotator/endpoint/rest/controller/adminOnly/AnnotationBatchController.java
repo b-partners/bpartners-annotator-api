@@ -1,4 +1,4 @@
-package api.bpartners.annotator.endpoint.rest.controller;
+package api.bpartners.annotator.endpoint.rest.controller.adminOnly;
 
 import static java.util.stream.Collectors.toList;
 
