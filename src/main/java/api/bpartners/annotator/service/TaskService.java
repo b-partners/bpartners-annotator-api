@@ -1,6 +1,5 @@
 package api.bpartners.annotator.service;
 
-import static api.bpartners.annotator.repository.model.enums.JobStatus.TO_REVIEW;
 import static api.bpartners.annotator.repository.model.enums.TaskStatus.COMPLETED;
 import static api.bpartners.annotator.repository.model.enums.TaskStatus.PENDING;
 import static api.bpartners.annotator.repository.model.enums.TaskStatus.TO_CORRECT;

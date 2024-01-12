@@ -49,9 +49,7 @@ public class AnnotationBatchService {
       String taskId, PageFromOne page, BoundedPageSize pageSize) {
     Pageable pageable =
         PageRequest.of(
-            page.getValue() - 1,
-            pageSize.getValue(),
-            Sort.by(DESC, "creationTimestamp"));
+            page.getValue() - 1, pageSize.getValue(), Sort.by(DESC, "creationTimestamp"));
     return repository.findAllByTaskId(taskId, pageable);
   }
 
@@ -59,9 +57,7 @@ public class AnnotationBatchService {
       String annotatorId, String taskId, PageFromOne page, BoundedPageSize pageSize) {
     Pageable pageable =
         PageRequest.of(
-            page.getValue() - 1,
-            pageSize.getValue(),
-            Sort.by(DESC, "creationTimestamp"));
+            page.getValue() - 1, pageSize.getValue(), Sort.by(DESC, "creationTimestamp"));
     return repository.findAllByAnnotatorIdAndTaskId(annotatorId, taskId, pageable);
   }
 
