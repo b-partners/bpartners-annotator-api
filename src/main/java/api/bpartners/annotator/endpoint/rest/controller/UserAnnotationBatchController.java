@@ -52,6 +52,6 @@ public class UserAnnotationBatchController {
       @RequestBody AnnotationBatch annotationBatch) {
     idValidator.accept(annotationBatch, annotationBatchId);
     return mapper.toRest(
-        service.annotateAndCompleteTask(mapper.toDomain(userId, taskId, annotationBatch)));
+        service.annotateAndSetTaskToReview(mapper.toDomain(userId, taskId, annotationBatch)));
   }
 }
