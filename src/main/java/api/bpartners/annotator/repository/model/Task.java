@@ -1,10 +1,13 @@
 package api.bpartners.annotator.repository.model;
 
+import static api.bpartners.annotator.repository.model.enums.TaskStatus.COMPLETED;
+import static api.bpartners.annotator.repository.model.enums.TaskStatus.TO_REVIEW;
 import static javax.persistence.EnumType.STRING;
 import static javax.persistence.GenerationType.IDENTITY;
 
 import api.bpartners.annotator.repository.model.enums.TaskStatus;
 import api.bpartners.annotator.repository.model.types.PostgresEnumType;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Enumerated;
@@ -43,4 +46,14 @@ public class Task {
   private TaskStatus status;
 
   private String userId;
+
+  @JsonIgnore
+  public boolean isCompleted() {
+    return COMPLETED.equals(this.status);
+  }
+
+  @JsonIgnore
+  public boolean isToReview() {
+    return TO_REVIEW.equals(this.status);
+  }
 }
