@@ -15,7 +15,9 @@ public class TaskUpdateValidator implements BiConsumer<Task, Task> {
   @Override
   public void accept(Task entity, Task update) {
     StringBuilder exceptionMessageBuilder = new StringBuilder();
-    if (UNDER_COMPLETION.equals(update.getStatus()) || COMPLETED.equals(update.getStatus())) {
+    if (UNDER_COMPLETION.equals(update.getStatus())
+        || update.isCompleted()
+        || update.isToReview()) {
       if (update.getUserId() == null) {
         exceptionMessageBuilder
             .append("userId is mandatory in order to update a task status to ")
@@ -63,8 +65,8 @@ public class TaskUpdateValidator implements BiConsumer<Task, Task> {
         case PENDING, UNDER_COMPLETION -> throw exception;
       };
       case COMPLETED -> switch (next) {
-        case COMPLETED -> next;
-        case PENDING, UNDER_COMPLETION, TO_CORRECT, TO_REVIEW -> throw exception;
+        case COMPLETED, TO_CORRECT -> next;
+        case PENDING, UNDER_COMPLETION, TO_REVIEW -> throw exception;
       };
     };
   }

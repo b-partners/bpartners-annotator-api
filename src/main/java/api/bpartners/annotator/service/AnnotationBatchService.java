@@ -2,7 +2,6 @@ package api.bpartners.annotator.service;
 
 import static api.bpartners.annotator.repository.model.enums.JobStatus.STARTED;
 import static api.bpartners.annotator.repository.model.enums.JobStatus.TO_CORRECT;
-import static api.bpartners.annotator.repository.model.enums.TaskStatus.COMPLETED;
 import static org.springframework.data.domain.Sort.Direction.DESC;
 
 import api.bpartners.annotator.model.BoundedPageSize;
@@ -42,7 +41,7 @@ public class AnnotationBatchService {
 
   private boolean isTaskNotAnnotable(String taskId) {
     Task task = taskService.getById(taskId);
-    return task.getStatus() == COMPLETED;
+    return task.isCompleted() || task.isToReview();
   }
 
   public List<AnnotationBatch> findAllByTask(

@@ -13,6 +13,7 @@ import api.bpartners.annotator.model.exception.BadRequestException;
 import api.bpartners.annotator.model.exception.NotFoundException;
 import api.bpartners.annotator.repository.jpa.JobRepository;
 import api.bpartners.annotator.repository.model.Job;
+import api.bpartners.annotator.repository.model.Task;
 import api.bpartners.annotator.repository.model.enums.JobStatus;
 import java.util.Collection;
 import java.util.List;
@@ -67,7 +68,6 @@ public class JobService {
 
   @Transactional
   public Job save(Job job) {
-    var labels = job.getLabels();
     if (!repository.existsById(job.getId()) && job.getStatus().equals(PENDING)) {
       var savedJob = repository.save(job);
       eventProducer.accept(List.of(toEventType(savedJob, null)));
@@ -129,9 +129,27 @@ public class JobService {
       case FAILED -> throw new BadRequestException(
           "Failed Job cannot be changed, create new Job instead");
       case COMPLETED -> switch (next) {
-        case TO_REVIEW, TO_CORRECT -> next;
-        case PENDING, READY, STARTED, FAILED, COMPLETED -> throw exception;
+        case COMPLETED, TO_REVIEW, TO_CORRECT -> next;
+        case PENDING, READY, STARTED, FAILED -> throw exception;
       };
     };
+  }
+
+  @Transactional
+  public Job refresh(String jobId) {
+    Job persisted = getById(jobId);
+
+    if (persisted.isCompleted()) {
+      return persisted;
+    }
+    List<Task> tasks = persisted.getTasks();
+    if (tasks.stream().allMatch(Task::isToReview)) {
+      persisted.setStatus(TO_REVIEW);
+    }
+    if (tasks.stream().allMatch(Task::isCompleted)) {
+      persisted.setStatus(COMPLETED);
+    }
+
+    return save(persisted);
   }
 }

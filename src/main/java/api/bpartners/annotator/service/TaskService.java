@@ -11,6 +11,7 @@ import api.bpartners.annotator.model.PageFromOne;
 import api.bpartners.annotator.model.exception.NotFoundException;
 import api.bpartners.annotator.repository.dao.TaskDao;
 import api.bpartners.annotator.repository.jpa.TaskRepository;
+import api.bpartners.annotator.repository.model.Job;
 import api.bpartners.annotator.repository.model.Task;
 import api.bpartners.annotator.repository.model.enums.TaskStatus;
 import api.bpartners.annotator.service.validator.TaskUpdateValidator;
@@ -56,9 +57,9 @@ public class TaskService {
     Task entity = getByJobIdAndId(jobId, id);
     updateValidator.accept(entity, task);
     task.setFilename(entity.getFilename());
-    task.setJob(entity.getJob());
+    task.setJob(jobService.refresh(entity.getJob().getId()));
     Task saved = repository.save(task);
-    if (saved.getStatus() == COMPLETED) {
+    if (saved.isCompleted()) {
       boolean doesJobHaveNotCompletedTasks =
           repository.existsByJobIdAndStatusIn(task.getJob().getId(), NOT_COMPLETED_TASK_STATUSES);
       if (!doesJobHaveNotCompletedTasks) {
@@ -83,20 +84,32 @@ public class TaskService {
   }
 
   public Task reject(String taskId) {
-    return updateStatus(taskId, TO_CORRECT);
+    Task updated = updateStatus(taskId, TO_CORRECT);
+    Job refreshedJob = jobService.rejectForCorrection(updated.getJob().getId());
+    updated.setJob(refreshedJob);
+    return updated;
+  }
+
+  /*/!\ breaks the logic of Status update : not using updateStatus because it also needs userId*/
+  public Task setToUnderCompletionByUserId(String userId, String taskId) {
+    Task persisted = getById(taskId);
+    persisted.setUserId(userId);
+    persisted.setStatus(UNDER_COMPLETION);
+    return update(persisted.getJob().getId(), persisted.getId(), persisted);
   }
 
   public Task getAvailableTaskFromJobOrJobAndUserId(String teamId, String jobId, String userId) {
     Optional<Task> optionalTask = taskDao.findAvailableTaskFromJobOrJobAndUserId(jobId, userId);
+
     if (optionalTask.isEmpty()) {
       return null;
     }
     Task availableTask = optionalTask.get();
-    if (availableTask.getStatus() == PENDING) {
-      availableTask.setStatus(UNDER_COMPLETION);
-      availableTask.setUserId(userId);
+    if (PENDING.equals(availableTask.getStatus())) {
+      return setToUnderCompletionByUserId(userId, availableTask.getId());
     }
-    return update(jobId, availableTask.getId(), availableTask);
+
+    return availableTask;
   }
 
   public List<Task> createTasks(List<Task> tasks) {
