@@ -1,10 +1,12 @@
 package api.bpartners.annotator.repository.model;
 
 import static api.bpartners.annotator.repository.model.enums.TaskStatus.COMPLETED;
+import static api.bpartners.annotator.repository.model.enums.TaskStatus.TO_REVIEW;
 import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.EnumType.STRING;
 
 import api.bpartners.annotator.repository.model.enums.JobStatus;
+import api.bpartners.annotator.repository.model.enums.TaskStatus;
 import api.bpartners.annotator.repository.model.types.PostgresEnumType;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.List;
@@ -62,7 +64,13 @@ public class Job {
   }
 
   public long getRemainingTasksNumber() {
-    return getTasks().stream().filter(task -> !task.getStatus().equals(COMPLETED)).count();
+    return getTasks().stream()
+        .filter(
+            task -> {
+              TaskStatus status = task.getStatus();
+              return !COMPLETED.equals(status) && !TO_REVIEW.equals(status);
+            })
+        .count();
   }
 
   @JsonIgnore
@@ -70,16 +78,18 @@ public class Job {
     assert (userId != null) : "UserId value missing.";
     return getTasks().stream()
         .filter(
-            task ->
-                !task.getStatus().equals(COMPLETED)
-                    && (task.getUserId() == null || userId.equals(task.getUserId())))
+            task -> {
+              TaskStatus status = task.getStatus();
+              return (!COMPLETED.equals(status) && !TO_REVIEW.equals(status))
+                  && (task.getUserId() == null || userId.equals(task.getUserId()));
+            })
         .count();
   }
 
   public long getTasksCompletedByUserId(String userId) {
     assert (userId != null) : "UserId value missing.";
     return getTasks().stream()
-        .filter(task -> userId.equals(task.getUserId()) && task.getStatus().equals(COMPLETED))
+        .filter(task -> userId.equals(task.getUserId()) && COMPLETED.equals(task.getStatus()))
         .count();
   }
 }
