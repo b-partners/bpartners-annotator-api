@@ -48,19 +48,23 @@ public class TaskUpdateValidator implements BiConsumer<Task, Task> {
     return switch (current) {
       case PENDING -> switch (next) {
         case PENDING, UNDER_COMPLETION -> next;
-        case TO_CORRECT, COMPLETED -> throw exception;
+        case TO_CORRECT, TO_REVIEW, COMPLETED -> throw exception;
       };
       case UNDER_COMPLETION -> switch (next) {
-        case PENDING, UNDER_COMPLETION, COMPLETED -> next;
-        case TO_CORRECT -> throw exception;
+        case PENDING, UNDER_COMPLETION, TO_REVIEW -> next;
+        case TO_CORRECT, COMPLETED -> throw exception;
       };
       case TO_CORRECT -> switch (next) {
+        case PENDING, UNDER_COMPLETION, COMPLETED -> throw exception;
+        case TO_CORRECT, TO_REVIEW -> next;
+      };
+      case TO_REVIEW -> switch (next) {
+        case TO_CORRECT, TO_REVIEW, COMPLETED -> next;
         case PENDING, UNDER_COMPLETION -> throw exception;
-        case TO_CORRECT, COMPLETED -> next;
       };
       case COMPLETED -> switch (next) {
-        case TO_CORRECT, COMPLETED -> next;
-        case PENDING, UNDER_COMPLETION -> throw exception;
+        case COMPLETED -> next;
+        case PENDING, UNDER_COMPLETION, TO_CORRECT, TO_REVIEW -> throw exception;
       };
     };
   }

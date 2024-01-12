@@ -3,6 +3,7 @@ package api.bpartners.annotator.service;
 import static api.bpartners.annotator.repository.model.enums.TaskStatus.COMPLETED;
 import static api.bpartners.annotator.repository.model.enums.TaskStatus.PENDING;
 import static api.bpartners.annotator.repository.model.enums.TaskStatus.TO_CORRECT;
+import static api.bpartners.annotator.repository.model.enums.TaskStatus.TO_REVIEW;
 import static api.bpartners.annotator.repository.model.enums.TaskStatus.UNDER_COMPLETION;
 
 import api.bpartners.annotator.model.BoundedPageSize;
@@ -75,6 +76,10 @@ public class TaskService {
 
   public Task complete(String taskId) {
     return updateStatus(taskId, COMPLETED);
+  }
+
+  public Task setToReview(String taskId) {
+    return updateStatus(taskId, TO_REVIEW);
   }
 
   public Task reject(String taskId) {
