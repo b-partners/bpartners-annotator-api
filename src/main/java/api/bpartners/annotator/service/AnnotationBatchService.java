@@ -28,7 +28,7 @@ public class AnnotationBatchService {
   private final TaskService taskService;
 
   @Transactional
-  public AnnotationBatch annotateAndCompleteTask(AnnotationBatch annotationBatch) {
+  public AnnotationBatch annotateAndSetTaskToReview(AnnotationBatch annotationBatch) {
     JobStatus currentJobStatus = annotationBatch.getTask().getJob().getStatus();
     if (!STARTED.equals(currentJobStatus) && !TO_CORRECT.equals(currentJobStatus)) {
       throw new BadRequestException("cannot annotate not started or to_correct job");
@@ -36,7 +36,7 @@ public class AnnotationBatchService {
     if (isTaskNotAnnotable(annotationBatch.getTask().getId())) {
       throw new BadRequestException("Task is already completed");
     }
-    taskService.complete(annotationBatch.getTask().getId());
+    taskService.setToReview(annotationBatch.getTask().getId());
     return repository.save(annotationBatch);
   }
 
