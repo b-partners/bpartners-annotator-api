@@ -4,6 +4,7 @@ import static java.util.stream.Collectors.toList;
 
 import api.bpartners.annotator.endpoint.rest.controller.mapper.AnnotationBatchMapper;
 import api.bpartners.annotator.endpoint.rest.model.AnnotationBatch;
+import api.bpartners.annotator.endpoint.rest.validator.AnnotationBatchIdValidator;
 import api.bpartners.annotator.model.BoundedPageSize;
 import api.bpartners.annotator.model.PageFromOne;
 import api.bpartners.annotator.service.AnnotationBatchService;
@@ -11,6 +12,8 @@ import java.util.List;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -19,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserAnnotationBatchController {
   private final AnnotationBatchService service;
   private final AnnotationBatchMapper mapper;
+  private final AnnotationBatchIdValidator idValidator;
 
   @GetMapping("/users/{userId}/tasks/{taskId}/annotations")
   public List<AnnotationBatch> getAnnotationBatchesByJobTask(
@@ -38,5 +42,16 @@ public class UserAnnotationBatchController {
       @PathVariable String annotationBatchId) {
     return mapper.toRest(
         service.findByAnnotatorIdAndTaskIdAndId(userId, taskId, annotationBatchId));
+  }
+
+  @PutMapping("/users/{userId}/tasks/{taskId}/annotations/{annotationBatchId}")
+  public AnnotationBatch annotateAndCompleteTask(
+      @PathVariable String userId,
+      @PathVariable String taskId,
+      @PathVariable String annotationBatchId,
+      @RequestBody AnnotationBatch annotationBatch) {
+    idValidator.accept(annotationBatch, annotationBatchId);
+    return mapper.toRest(
+        service.annotateAndCompleteTask(mapper.toDomain(userId, taskId, annotationBatch)));
   }
 }
