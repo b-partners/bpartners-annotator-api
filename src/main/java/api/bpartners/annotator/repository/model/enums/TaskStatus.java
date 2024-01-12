@@ -4,5 +4,6 @@ public enum TaskStatus {
   PENDING,
   UNDER_COMPLETION,
   TO_CORRECT,
+  TO_REVIEW,
   COMPLETED
 }
