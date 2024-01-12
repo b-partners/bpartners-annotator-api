@@ -75,7 +75,7 @@ public class JobService {
     }
     return updateJob(job);
   }
-  
+
   public Job updateJobStatus(String jobId, JobStatus status) {
     Job persisted = getById(jobId);
     persisted.setStatus(status);
@@ -85,10 +85,11 @@ public class JobService {
   public Job setToReview(String jobId) {
     return updateJobStatus(jobId, TO_REVIEW);
   }
-  
+
   public Job rejectForCorrection(String jobId) {
     return updateJobStatus(jobId, TO_CORRECT);
   }
+
   private Job updateJob(Job job) {
     Job persisted = getById(job.getId());
     checkJobStatusTransition(persisted, job);
