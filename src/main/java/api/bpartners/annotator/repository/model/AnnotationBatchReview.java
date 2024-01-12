@@ -1,9 +1,12 @@
 package api.bpartners.annotator.repository.model;
 
+import static api.bpartners.annotator.repository.model.enums.ReviewStatus.ACCEPTED;
+import static api.bpartners.annotator.repository.model.enums.ReviewStatus.REJECTED;
 import static javax.persistence.EnumType.STRING;
 
 import api.bpartners.annotator.repository.model.enums.ReviewStatus;
 import api.bpartners.annotator.repository.model.types.PostgresEnumType;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -46,4 +49,14 @@ public class AnnotationBatchReview {
 
   @OneToMany(cascade = CascadeType.ALL, mappedBy = "annotationBatchReviewId")
   private List<AnnotationReview> reviews;
+
+  @JsonIgnore
+  public boolean isAccepted() {
+    return ACCEPTED.equals(this.status);
+  }
+
+  @JsonIgnore
+  public boolean isRejected() {
+    return REJECTED.equals(this.status);
+  }
 }
