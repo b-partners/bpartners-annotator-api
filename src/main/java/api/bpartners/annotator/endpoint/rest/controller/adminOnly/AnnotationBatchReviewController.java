@@ -37,7 +37,7 @@ public class AnnotationBatchReviewController {
         service.findByJobTaskAndAnnotationAndId(jobId, taskId, annotationBatchId, reviewId));
   }
 
-  @PutMapping("/jobs/{jobId}/tasks/{taskId}/annotations/{annotationBatchId}/reviews/*")
+  @PutMapping("/jobs/{jobId}/tasks/{taskId}/annotations/{annotationBatchId}/reviews/{reviewId}")
   public AnnotationBatchReview crupdateAnnotationReview(
       @PathVariable String jobId,
       @PathVariable String taskId,
