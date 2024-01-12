@@ -37,7 +37,7 @@ public class JobIT extends FacadeIT {
     return TestUtils.anApiClient(null, TestMocks.ADMIN_API_KEY, port);
   }
 
-  static CrupdateJob crupdateJob1() {
+  public static CrupdateJob crupdateJob1() {
     return new CrupdateJob()
         .id(randomUUID().toString())
         .status(PENDING)
