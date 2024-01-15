@@ -36,7 +36,7 @@ public class ExportService {
     List<AnnotationBatch> latestPerTaskByJobId =
         annotationBatchService.findLatestPerTaskByJobId(jobId);
     VGG vgg = new VGG();
-    latestPerTaskByJobId.forEach(batch -> vgg.put(batch.getTask().getId(), toVgg(batch)));
+    latestPerTaskByJobId.forEach(batch -> vgg.put(batch.getTask().getFilename(), toVgg(batch)));
     return vgg;
   }
 
