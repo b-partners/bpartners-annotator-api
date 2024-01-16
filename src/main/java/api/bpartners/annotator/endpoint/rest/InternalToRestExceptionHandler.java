@@ -6,6 +6,7 @@ import api.bpartners.annotator.model.exception.ForbiddenException;
 import api.bpartners.annotator.model.exception.NotFoundException;
 import api.bpartners.annotator.model.exception.TooManyRequestsException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -23,6 +24,13 @@ public class InternalToRestExceptionHandler {
 
   @ExceptionHandler(value = {BadRequestException.class})
   ResponseEntity<Exception> handleBadRequest(BadRequestException e) {
+    log.info("Bad request", e);
+    return new ResponseEntity<>(toRest(e, HttpStatus.BAD_REQUEST), HttpStatus.BAD_REQUEST);
+  }
+
+  @ExceptionHandler(value = {DataIntegrityViolationException.class})
+  ResponseEntity<Exception> handleDataIntegrityViolation(
+          DataIntegrityViolationException e) {
     log.info("Bad request", e);
     return new ResponseEntity<>(toRest(e, HttpStatus.BAD_REQUEST), HttpStatus.BAD_REQUEST);
   }
