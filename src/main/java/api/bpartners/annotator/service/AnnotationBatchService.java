@@ -10,6 +10,7 @@ import api.bpartners.annotator.model.exception.BadRequestException;
 import api.bpartners.annotator.model.exception.NotFoundException;
 import api.bpartners.annotator.repository.jpa.AnnotationBatchRepository;
 import api.bpartners.annotator.repository.model.AnnotationBatch;
+import api.bpartners.annotator.repository.model.Job;
 import api.bpartners.annotator.repository.model.Task;
 import api.bpartners.annotator.repository.model.enums.JobStatus;
 import java.util.List;
@@ -28,14 +29,16 @@ public class AnnotationBatchService {
 
   @Transactional
   public AnnotationBatch annotateAndSetTaskToReview(AnnotationBatch annotationBatch) {
-    JobStatus currentJobStatus = annotationBatch.getTask().getJob().getStatus();
+    Task linkedTask = annotationBatch.getTask();
+    Job linkedTaskJob = linkedTask.getJob();
+    JobStatus currentJobStatus = linkedTaskJob.getStatus();
     if (!STARTED.equals(currentJobStatus) && !TO_CORRECT.equals(currentJobStatus)) {
-      throw new BadRequestException("cannot annotate not started or to_correct job");
+      throw new BadRequestException("cannot annotate not (started or to_correct) job.Id = " + linkedTaskJob.getId());
     }
-    if (isTaskNotAnnotable(annotationBatch.getTask().getId())) {
-      throw new BadRequestException("Task is already completed");
+    if (isTaskNotAnnotable(linkedTask.getId())) {
+      throw new BadRequestException("Task.Id = "+linkedTask.getId()+" is already "+linkedTask.getStatus().name());
     }
-    taskService.setToReview(annotationBatch.getTask().getId());
+    taskService.setToReview(linkedTask.getId());
     return repository.save(annotationBatch);
   }
 

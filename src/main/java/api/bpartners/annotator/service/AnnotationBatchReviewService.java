@@ -68,7 +68,7 @@ public class AnnotationBatchReviewService {
     if (annotationBatchReview.isRejected()) {
       if (annotationBatchReview.getReviews() == null
           || annotationBatchReview.getReviews().isEmpty()) {
-        throw new BadRequestException("Reviews are mandatory for rejected batch review");
+        throw new BadRequestException("Reviews are mandatory for rejected batch review " + annotationBatchReview.getId());
       }
       taskService.reject(taskId);
       return repository.save(annotationBatchReview);
