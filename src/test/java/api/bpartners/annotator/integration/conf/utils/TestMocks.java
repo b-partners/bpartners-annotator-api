@@ -1,7 +1,7 @@
 package api.bpartners.annotator.integration.conf.utils;
 
-import static api.bpartners.annotator.endpoint.rest.model.JobStatus.READY;
 import static api.bpartners.annotator.endpoint.rest.model.JobStatus.STARTED;
+import static api.bpartners.annotator.endpoint.rest.model.JobStatus.TO_CORRECT;
 import static api.bpartners.annotator.endpoint.rest.model.JobType.LABELLING;
 import static api.bpartners.annotator.endpoint.rest.model.JobType.REVIEWING;
 import static api.bpartners.annotator.endpoint.rest.model.ReviewStatus.ACCEPTED;
@@ -70,21 +70,21 @@ public class TestMocks {
         .labels(List.of(label1(), label2()));
   }
 
-  public static Job job2() {
+  public static Job job9() {
     return new Job()
-        .id(JOB_2_ID)
-        .bucketName("bucket_1_name")
+        .id("job_9_id")
+        .bucketName("bucket_5_name")
         .teamId(team1().getId())
-        .status(READY)
-        .folderPath("images/2/")
+        .status(TO_CORRECT)
+        .folderPath("images/5/")
         .ownerEmail("admin@email.com")
-        .name("job_2")
+        .name("job_9")
         .taskStatistics(
             new TaskStatistics()
-                .remainingTasks(6L)
-                .totalTasks(6L)
+                .remainingTasks(0L)
+                .totalTasks(0L)
                 .completedTasksByUserId(0L)
-                .remainingTasksForUserId(6L))
+                .remainingTasksForUserId(0L))
         .type(REVIEWING)
         .labels(List.of(label1(), label2()));
   }

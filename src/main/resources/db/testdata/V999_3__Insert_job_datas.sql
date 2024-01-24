@@ -6,4 +6,5 @@ VALUES ('job_1_id', 'bucket_1_name', 'team_1_id', 'STARTED', 'images/', 'admin@e
        ('job_5_id', 'bucket_5_name', 'team_1_id', 'STARTED', 'images/5/', 'admin@email.com', 'job_5', 'LABELLING'),
        ('job_6_id', 'bucket_5_name', 'team_1_id', 'FAILED', 'images/5/', 'admin@email.com', 'job_6', 'LABELLING'),
        ('job_7_id', 'bucket_5_name', 'team_1_id', 'TO_REVIEW', 'images/5/', 'admin@email.com', 'job_7', 'LABELLING'),
-       ('job_8_id', 'bucket_5_name', 'team_1_id', 'TO_CORRECT', 'images/5/', 'admin@email.com', 'job_8', 'LABELLING');
+       ('job_8_id', 'bucket_5_name', 'team_1_id', 'TO_CORRECT', 'images/5/', 'admin@email.com', 'job_8', 'LABELLING'),
+       ('job_9_id', 'bucket_5_name', 'team_1_id', 'TO_CORRECT', 'images/5/', 'admin@email.com', 'job_9', 'REVIEWING');

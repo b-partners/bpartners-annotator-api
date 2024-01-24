@@ -11,6 +11,7 @@ import api.bpartners.annotator.endpoint.rest.model.CrupdateJob;
 import api.bpartners.annotator.endpoint.rest.model.ExportFormat;
 import api.bpartners.annotator.endpoint.rest.model.Job;
 import api.bpartners.annotator.endpoint.rest.model.JobStatus;
+import api.bpartners.annotator.endpoint.rest.model.JobType;
 import api.bpartners.annotator.endpoint.rest.validator.CrupdateAnnotatedJobIdValidator;
 import api.bpartners.annotator.endpoint.rest.validator.CrupdateJobIdValidator;
 import api.bpartners.annotator.model.BoundedPageSize;
@@ -42,8 +43,12 @@ public class JobController {
   public List<Job> getJobs(
       @RequestParam(defaultValue = "1", required = false) PageFromOne page,
       @RequestParam(defaultValue = "30", required = false) BoundedPageSize pageSize,
-      @RequestParam(required = false) JobStatus status) {
-    return service.getAllByStatus(page, pageSize, statusMapper.toDomain(status)).stream()
+      @RequestParam(required = false) JobStatus status,
+      @RequestParam(required = false) JobType type,
+      @RequestParam(required = false) String name) {
+    return service
+        .getAllByStatusAndName(page, pageSize, type, statusMapper.toDomain(status), name)
+        .stream()
         .map(mapper::toRest)
         .toList();
   }

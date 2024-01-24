@@ -64,6 +64,16 @@ paths:
           name: status
           schema:
             $ref: "#/components/schemas/JobStatus"
+        - in: query
+          name: name
+          description: filters jobs by name
+          schema:
+            type: string
+        - in: query
+          name: type
+          description: filters by job type
+          schema:
+            $ref: "#/components/schemas/JobType"
       responses:
         '200':
           description: List of all jobs
@@ -204,9 +214,22 @@ paths:
       operationId: getAnnotatorReadableTeamJobs
       summary: get started team jobs
       parameters:
+        - in: query
+          name: page
+          schema:
+            $ref: "#/components/schemas/Page"
+        - in: query
+          name: pageSize
+          schema:
+            $ref: "#/components/schemas/PageSize"
         - name: teamId
           in: path
           required: true
+          schema:
+            type: string
+        - in: query
+          name: name
+          description: filters jobs by name
           schema:
             type: string
       responses:

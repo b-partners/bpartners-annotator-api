@@ -9,10 +9,12 @@ import api.bpartners.annotator.endpoint.event.EventProducer;
 import api.bpartners.annotator.endpoint.event.gen.AnnotatedJobCrupdated;
 import api.bpartners.annotator.endpoint.event.gen.JobCreated;
 import api.bpartners.annotator.endpoint.rest.model.CrupdateAnnotatedJob;
+import api.bpartners.annotator.endpoint.rest.model.JobType;
 import api.bpartners.annotator.model.BoundedPageSize;
 import api.bpartners.annotator.model.PageFromOne;
 import api.bpartners.annotator.model.exception.BadRequestException;
 import api.bpartners.annotator.model.exception.NotFoundException;
+import api.bpartners.annotator.repository.dao.JobDao;
 import api.bpartners.annotator.repository.jpa.JobRepository;
 import api.bpartners.annotator.repository.model.Job;
 import api.bpartners.annotator.repository.model.Task;
@@ -29,14 +31,22 @@ import org.springframework.transaction.annotation.Transactional;
 @AllArgsConstructor
 public class JobService {
   private final JobRepository repository;
+  private final JobDao dao;
   private final EventProducer eventProducer;
 
   public static JobCreated toEventType(Job job, String nextContinuationToken) {
     return JobCreated.builder().nextContinuationToken(nextContinuationToken).job(job).build();
   }
 
-  public List<Job> getAllByTeamAndStatuses(String teamId, Collection<JobStatus> statuses) {
-    return repository.findAllByTeamIdAndStatusIn(teamId, statuses);
+  public List<Job> getAllByTeamAndStatusesAndName(
+      String teamId,
+      String name,
+      JobType type,
+      Collection<JobStatus> statuses,
+      PageFromOne page,
+      BoundedPageSize pageSize) {
+    Pageable pageable = PageRequest.of(page.getValue() - 1, pageSize.getValue());
+    return dao.findAllByCriteria(teamId, name, type, statuses, pageable);
   }
 
   public Job getByTeamAndIdAndStatuses(String teamId, String id, Collection<JobStatus> statuses) {
@@ -54,12 +64,11 @@ public class JobService {
                         + " ) not found"));
   }
 
-  public List<Job> getAllByStatus(PageFromOne page, BoundedPageSize pageSize, JobStatus status) {
+  public List<Job> getAllByStatusAndName(
+      PageFromOne page, BoundedPageSize pageSize, JobType type, JobStatus status, String name) {
     Pageable pageable = PageRequest.of(page.getValue() - 1, pageSize.getValue());
-    if (status == null) {
-      return repository.findAll(pageable).toList();
-    }
-    return repository.findAllByStatus(status, pageable);
+    return dao.findAllByCriteria(
+        null, name, type, status == null ? null : List.of(status), pageable);
   }
 
   public Job getById(String id) {
