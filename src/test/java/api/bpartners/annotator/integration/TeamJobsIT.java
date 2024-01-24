@@ -48,7 +48,7 @@ public class TeamJobsIT extends FacadeIT {
     ApiClient joeDoeClient = anApiClient();
     TeamJobsApi api = new TeamJobsApi(joeDoeClient);
 
-    List<Job> actual = api.getAnnotatorReadableTeamJobs(TEAM_1_ID);
+    List<Job> actual = api.getAnnotatorReadableTeamJobs(TEAM_1_ID, null, null, null);
 
     assertTrue(actual.contains(job1()));
     assertTrue(

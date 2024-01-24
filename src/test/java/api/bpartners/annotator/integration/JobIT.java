@@ -9,8 +9,10 @@ import static api.bpartners.annotator.endpoint.rest.model.JobType.REVIEWING;
 import static api.bpartners.annotator.integration.conf.utils.TestMocks.ADMIN_API_KEY;
 import static api.bpartners.annotator.integration.conf.utils.TestMocks.GEOJOBS_TEAM_ID;
 import static api.bpartners.annotator.integration.conf.utils.TestMocks.GEOJOBS_USER_ID;
+import static api.bpartners.annotator.integration.conf.utils.TestMocks.JOB_1_ID;
 import static api.bpartners.annotator.integration.conf.utils.TestMocks.JOE_DOE_TOKEN;
 import static api.bpartners.annotator.integration.conf.utils.TestMocks.job1;
+import static api.bpartners.annotator.integration.conf.utils.TestMocks.job9;
 import static api.bpartners.annotator.integration.conf.utils.TestMocks.team1;
 import static api.bpartners.annotator.integration.conf.utils.TestUtils.assertThrowsBadRequestException;
 import static api.bpartners.annotator.integration.conf.utils.TestUtils.setUpCognito;
@@ -97,7 +99,7 @@ public class JobIT extends FacadeIT {
     ApiClient adminClient = anAdminApiClient();
     JobsApi api = new JobsApi(adminClient);
 
-    List<Job> actualJobs = api.getJobs(1, 10, null);
+    List<Job> actualJobs = api.getJobs(1, 10, null, null, null);
 
     // assertEquals(8, actualJobs.size());
     assertTrue(actualJobs.contains(job1AsAdminView()));
@@ -108,13 +110,20 @@ public class JobIT extends FacadeIT {
     ApiClient adminClient = anAdminApiClient();
     JobsApi api = new JobsApi(adminClient);
 
-    List<Job> actualStartedJobs = api.getJobs(1, 10, STARTED);
-    List<Job> actualPendingJobs = api.getJobs(1, 10, PENDING);
-    List<Job> actualReadyJobs = api.getJobs(1, 10, READY);
-    List<Job> actualCompletedJobs = api.getJobs(1, 10, COMPLETED);
-    List<Job> actualToReviewJobs = api.getJobs(1, 10, TO_REVIEW);
-    List<Job> actualToCorrectJobs = api.getJobs(1, 10, TO_CORRECT);
-    List<Job> actualFailedJobs = api.getJobs(1, 10, FAILED);
+    List<Job> actualStartedJobs = api.getJobs(1, 10, STARTED, null, null);
+    List<Job> actualPendingJobs = api.getJobs(1, 10, PENDING, null, null);
+    List<Job> actualReadyJobs = api.getJobs(1, 10, READY, null, null);
+    List<Job> actualCompletedJobs = api.getJobs(1, 10, COMPLETED, null, null);
+    List<Job> actualToReviewJobs = api.getJobs(1, 10, TO_REVIEW, null, null);
+    List<Job> actualToCorrectJobs = api.getJobs(1, 10, TO_CORRECT, null, null);
+    List<Job> actualFailedJobs = api.getJobs(1, 10, FAILED, null, null);
+    List<Job> actualAllJobs = api.getJobs(1, 500, null, null, null);
+    List<Job> actualJobsFilteredByExactName =
+        api.getJobs(1, 10, null, job1AsAdminView().getName(), null);
+    List<Job> actualJobsFilteredByNoMatchingName =
+        api.getJobs(1, 10, null, randomUUID().toString(), null);
+    List<Job> actualJobsFilteredByCommonName = api.getJobs(1, 10, null, "_", null);
+    List<Job> actualJobsFilteredByType = api.getJobs(1, 500, null, null, REVIEWING);
 
     assertEquals(2, actualStartedJobs.size());
     assertEquals(1, actualPendingJobs.size());
@@ -125,6 +134,11 @@ public class JobIT extends FacadeIT {
     assertEquals(1, actualToReviewJobs.size());
     // assertEquals(1, actualToCorrectJobs.size());
     assertEquals(1, actualFailedJobs.size());
+    assertTrue(actualJobsFilteredByExactName.contains(job1AsAdminView()));
+    assertTrue(actualJobsFilteredByNoMatchingName.isEmpty());
+    assertTrue(actualAllJobs.contains(job1AsAdminView()));
+    assertTrue(actualJobsFilteredByCommonName.contains(job1AsAdminView()));
+    assertTrue(actualJobsFilteredByType.contains(job9()));
 
     assertTrue(actualStartedJobs.stream().allMatch(j -> STARTED.equals(j.getStatus())));
     assertTrue(actualPendingJobs.stream().allMatch(j -> PENDING.equals(j.getStatus())));
@@ -140,7 +154,7 @@ public class JobIT extends FacadeIT {
     ApiClient adminClient = anAdminApiClient();
     JobsApi api = new JobsApi(adminClient);
 
-    Job actual = api.getJob("job_1_id");
+    Job actual = api.getJob(JOB_1_ID);
 
     assertEquals(job1AsAdminView(), actual);
   }
