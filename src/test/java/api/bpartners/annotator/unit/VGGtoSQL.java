@@ -28,7 +28,6 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.core.io.ClassPathResource;
 
-@Disabled
 class VGGtoSQL {
     private static final String BATCH_6_NANTES_VGG_FILENAME = "batch-6-Nantes-VGG.json";
     private static final String DIJON_VGG_VALIDATION_FILENAME = "Dijon-VGG-validation2.json";
@@ -38,7 +37,7 @@ class VGGtoSQL {
     private static final Map<String, String> DIJON_METADATA = Map.of(
             "bucketName", "annotations-images-6-regions",
             "teamId", ANNOTATOR_TEAM_ID,
-            "folderPath", "val_dijon/all_images/",
+            "folderPath", "val-dijon/all-images/",
             "jobName", "val_dijon",
             "vgg_filename", DIJON_VGG_VALIDATION_FILENAME
     );
@@ -48,7 +47,7 @@ class VGGtoSQL {
     private static final Map<String, String> NANTES_METADATA = Map.of(
             "bucketName", "annotations-images-6-regions",
             "teamId", ANNOTATOR_TEAM_ID,
-            "folderPath", "val_nantes/images_val/",
+            "folderPath", "val-nantes/images-val/",
             "jobName", "val_nantes",
             "vgg_filename", BATCH_6_NANTES_VGG_FILENAME
     );
@@ -141,6 +140,7 @@ class VGGtoSQL {
 
         int max = labels.size();
         for (Label label : labels) {
+            System.out.println(max + "labels left");
             String labelId = label.getId();
             String labelValuesToInsert = labelValuesToInsertTemplate
                     .replace("{ID}", labelId)
@@ -204,6 +204,7 @@ class VGGtoSQL {
         Set<Map.Entry<String, VGG.Annotation>> entries = vgg.entrySet();
         int numberOfAnnotationEntriesLeft = entries.size();
         for (Map.Entry<String, VGG.Annotation> annotationEntry : entries) {
+            System.out.println(numberOfAnnotationEntriesLeft + "tasks left");
             String taskId = randomUUID().toString();
             String randomAnnotatorId = getRandomAnnotatorId(random);
             String taskInsertValues = taskInsertValuesTemplate
@@ -251,6 +252,7 @@ class VGGtoSQL {
         Set<Map.Entry<String, VGG.Annotation.Region>> annotationRegionEntries = annotationEntry.getValue().getRegions().entrySet();
         int numberOfAnnotationRegionEntriesLeft = annotationRegionEntries.size();
         for (Map.Entry<String, VGG.Annotation.Region> regionEntry : annotationRegionEntries) {
+            System.out.println(numberOfAnnotationRegionEntriesLeft + "annotations left");
             String annotationSqlInsertValues = annotationSqlInsertValuesTemplate
                     .replace("{ID}", randomUUID().toString())
                     .replace("{TASK_ID}", taskId)
