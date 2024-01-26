@@ -25,6 +25,7 @@ import java.util.List;
 
 public class TestMocks {
   public static final String ADMIN_API_KEY = "dummy";
+  public static final String ADMIN_USER_ID = "dummy_admin_id";
   public static final String JOE_DOE_TOKEN = "joe_doe_token";
   public static final String JOE_DOE_EMAIL = "joe@email.com";
 

@@ -2,6 +2,7 @@ package api.bpartners.annotator.service;
 
 import static api.bpartners.annotator.repository.model.enums.JobStatus.STARTED;
 import static api.bpartners.annotator.repository.model.enums.JobStatus.TO_CORRECT;
+import static api.bpartners.annotator.repository.model.enums.JobStatus.TO_REVIEW;
 import static java.util.stream.Collectors.toCollection;
 import static org.springframework.data.domain.Sort.Direction.DESC;
 
@@ -45,6 +46,21 @@ public class AnnotationBatchService {
           "Task.Id = " + linkedTask.getId() + " is already " + linkedTask.getStatus().name());
     }
     taskService.setToReview(linkedTask.getId());
+    return repository.save(annotationBatch);
+  }
+
+  @Transactional
+  public AnnotationBatch annotateAndCompleteAnyTask(User user, AnnotationBatch annotationBatch) {
+    Task linkedTask = annotationBatch.getTask();
+    Job linkedTaskJob = linkedTask.getJob();
+    JobStatus currentJobStatus = linkedTaskJob.getStatus();
+    if (!STARTED.equals(currentJobStatus)
+        && !TO_CORRECT.equals(currentJobStatus)
+        && !TO_REVIEW.equals(currentJobStatus)) {
+      throw new BadRequestException(
+          "cannot annotate not (started or to_correct) job.Id = " + linkedTaskJob.getId());
+    }
+    taskService.completeAnyTask(user, linkedTask.getId());
     return repository.save(annotationBatch);
   }
 

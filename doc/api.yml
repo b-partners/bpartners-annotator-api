@@ -483,6 +483,43 @@ paths:
                 $ref: '#/components/schemas/AnnotationBatch'
         '500':
           $ref: '#/components/responses/500'
+    put:
+      tags:
+        - Annotations
+        - Admin
+      security: [apiKeyHeader: [ ]]
+      summary: annotate and complete a task
+      operationId: annotateAndCompleteTask
+      parameters:
+        - name: jobId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: taskId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: annotationBatchId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AnnotationBatch'
+      responses:
+        '200':
+          description: the annotation batch
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AnnotationBatch'
+        '500':
+          $ref: '#/components/responses/500'
   '/jobs/{jobId}/tasks/{taskId}/annotations/{annotationBatchId}/reviews':
     get:
       security: [ apiKeyHeader: [ ] ]
@@ -647,7 +684,7 @@ paths:
         - UserAnnotations
         - UserTasks # deprecated
       summary: annotates a task and sets the task status to COMPLETED
-      operationId: annotateAndCompleteTask
+      operationId: annotateAndSetTaskToReview
       parameters:
         - name: userId
           in: path
