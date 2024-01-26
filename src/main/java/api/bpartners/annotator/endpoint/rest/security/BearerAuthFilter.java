@@ -1,6 +1,6 @@
 package api.bpartners.annotator.endpoint.rest.security;
 
-import static api.bpartners.annotator.endpoint.rest.security.ApiKeyAuthenticator.API_KEY_HEADER;
+import static api.bpartners.annotator.endpoint.rest.security.authentication.apiKey.ApiKeyAuthenticator.API_KEY_HEADER;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -20,7 +20,7 @@ public class BearerAuthFilter extends AbstractAuthenticationProcessingFilter {
 
   private final String authHeader;
 
-  protected BearerAuthFilter(RequestMatcher requestMatcher, String authHeader) {
+  public BearerAuthFilter(RequestMatcher requestMatcher, String authHeader) {
     super(requestMatcher);
     this.authHeader = authHeader;
   }

@@ -1,6 +1,6 @@
 package api.bpartners.annotator.endpoint.rest.security.matcher;
 
-import api.bpartners.annotator.endpoint.rest.security.AuthenticatedResourceProvider;
+import api.bpartners.annotator.endpoint.rest.security.authentication.AuthenticatedResourceProvider;
 import org.springframework.http.HttpMethod;
 
 public class SelfUserMatcher extends SelfMatcher {

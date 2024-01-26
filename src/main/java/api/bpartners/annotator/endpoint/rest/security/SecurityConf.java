@@ -7,6 +7,8 @@ import static org.springframework.http.HttpMethod.OPTIONS;
 import static org.springframework.http.HttpMethod.POST;
 import static org.springframework.http.HttpMethod.PUT;
 
+import api.bpartners.annotator.endpoint.rest.security.authentication.AuthProvider;
+import api.bpartners.annotator.endpoint.rest.security.authentication.AuthenticatedResourceProvider;
 import api.bpartners.annotator.endpoint.rest.security.matcher.SelfTeamMatcher;
 import api.bpartners.annotator.endpoint.rest.security.matcher.SelfUserMatcher;
 import api.bpartners.annotator.model.exception.ForbiddenException;

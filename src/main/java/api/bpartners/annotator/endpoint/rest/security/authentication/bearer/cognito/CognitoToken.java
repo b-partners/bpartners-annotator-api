@@ -1,4 +1,4 @@
-package api.bpartners.annotator.endpoint.rest.security.cognito;
+package api.bpartners.annotator.endpoint.rest.security.authentication.bearer.cognito;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;

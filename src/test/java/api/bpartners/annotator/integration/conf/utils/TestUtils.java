@@ -10,7 +10,7 @@ import static org.mockito.Mockito.when;
 
 import api.bpartners.annotator.endpoint.rest.client.ApiClient;
 import api.bpartners.annotator.endpoint.rest.client.ApiException;
-import api.bpartners.annotator.endpoint.rest.security.cognito.CognitoComponent;
+import api.bpartners.annotator.endpoint.rest.security.authentication.bearer.cognito.CognitoComponent;
 import api.bpartners.annotator.service.aws.S3Service;
 import java.io.IOException;
 import java.net.MalformedURLException;

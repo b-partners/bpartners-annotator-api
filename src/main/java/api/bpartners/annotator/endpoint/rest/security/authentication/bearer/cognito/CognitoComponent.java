@@ -1,4 +1,4 @@
-package api.bpartners.annotator.endpoint.rest.security.cognito;
+package api.bpartners.annotator.endpoint.rest.security.authentication.bearer.cognito;
 
 import static api.bpartners.annotator.model.exception.ApiException.ExceptionType.SERVER_EXCEPTION;
 

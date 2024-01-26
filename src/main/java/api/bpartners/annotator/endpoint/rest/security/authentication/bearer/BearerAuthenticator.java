@@ -1,6 +1,7 @@
-package api.bpartners.annotator.endpoint.rest.security;
+package api.bpartners.annotator.endpoint.rest.security.authentication.bearer;
 
-import api.bpartners.annotator.endpoint.rest.security.cognito.CognitoComponent;
+import api.bpartners.annotator.endpoint.rest.security.authentication.UsernamePasswordAuthenticator;
+import api.bpartners.annotator.endpoint.rest.security.authentication.bearer.cognito.CognitoComponent;
 import api.bpartners.annotator.endpoint.rest.security.model.Principal;
 import api.bpartners.annotator.repository.model.User;
 import api.bpartners.annotator.service.UserService;

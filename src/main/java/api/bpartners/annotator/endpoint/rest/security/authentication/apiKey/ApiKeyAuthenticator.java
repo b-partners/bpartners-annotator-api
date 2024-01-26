@@ -1,5 +1,6 @@
-package api.bpartners.annotator.endpoint.rest.security;
+package api.bpartners.annotator.endpoint.rest.security.authentication.apiKey;
 
+import api.bpartners.annotator.endpoint.rest.security.authentication.UsernamePasswordAuthenticator;
 import api.bpartners.annotator.endpoint.rest.security.model.Principal;
 import api.bpartners.annotator.service.UserService;
 import java.util.Objects;

@@ -1,4 +1,4 @@
-package api.bpartners.annotator.endpoint.rest.security;
+package api.bpartners.annotator.endpoint.rest.security.authentication;
 
 import api.bpartners.annotator.repository.model.User;
 import lombok.AllArgsConstructor;
