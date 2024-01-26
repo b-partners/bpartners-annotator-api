@@ -54,7 +54,7 @@ public class TeamJobsIT extends FacadeIT {
     assertTrue(
         actual.stream()
             .allMatch(
-                job -> job.getStatus().equals(STARTED) || job.getStatus().equals(TO_CORRECT)));
+                job -> STARTED.equals(job.getStatus()) || TO_CORRECT.equals(job.getStatus())));
   }
 
   @Test

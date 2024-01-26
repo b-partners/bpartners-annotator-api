@@ -92,6 +92,8 @@ public class SecurityConf {
                     .permitAll()
                     .requestMatchers(GET, "/ping")
                     .permitAll()
+
+									//<--HEALTH-->
                     .requestMatchers("/health/bucket")
                     .permitAll()
                     .requestMatchers("/health/db")
@@ -100,13 +102,20 @@ public class SecurityConf {
                     .permitAll()
                     .requestMatchers("/health/event")
                     .permitAll()
-                    .requestMatchers("/whoami")
+									//<--HEALTH-->
+
+									.requestMatchers("/whoami")
                     .hasAnyRole(ADMIN.getRole(), ANNOTATOR.getRole())
-                    .requestMatchers(POST, "/users")
+
+									//<--USERS-->
+									.requestMatchers(POST, "/users")
                     .hasRole(ADMIN.getRole())
                     .requestMatchers(GET, "/users")
                     .hasRole(ADMIN.getRole())
-                    .requestMatchers(PUT, "/annotated-jobs/*")
+									//<--USERS-->
+
+									//<--JOBS-->
+									.requestMatchers(PUT, "/annotated-jobs/*")
                     .hasRole(ADMIN.getRole())
                     .requestMatchers(GET, "/jobs")
                     .hasRole(ADMIN.getRole())
@@ -116,25 +125,40 @@ public class SecurityConf {
                     .hasRole(ADMIN.getRole())
                     .requestMatchers(GET, "/jobs/*/export")
                     .hasRole(ADMIN.getRole())
-                    .requestMatchers(GET, "/jobs/*/tasks")
+									//<--JOBS-->
+
+									//<--JOB_TASKS-->
+									.requestMatchers(GET, "/jobs/*/tasks")
                     .hasRole(ADMIN.getRole())
                     .requestMatchers(GET, "/jobs/*/tasks/*")
                     .hasRole(ADMIN.getRole())
-                    .requestMatchers(GET, "/jobs/*/tasks/*/annotations")
+									//<--JOB_TASKS-->
+
+									//<--JOB_TASK_ANNOTATIONS-->
+									.requestMatchers(GET, "/jobs/*/tasks/*/annotations")
                     .hasRole(ADMIN.getRole())
                     .requestMatchers(GET, "/jobs/*/tasks/*/annotations/*")
                     .hasRole(ADMIN.getRole())
-                    .requestMatchers(GET, "/jobs/*/tasks/*/annotations/*/reviews")
+									//<--JOB_TASK_ANNOTATIONS-->
+
+									//<--JOB_TASK_ANNOTATIONS_REVIEWS-->
+									.requestMatchers(GET, "/jobs/*/tasks/*/annotations/*/reviews")
                     .hasRole(ADMIN.getRole())
                     .requestMatchers(PUT, "/jobs/*/tasks/*/annotations/*/reviews/*")
                     .hasRole(ADMIN.getRole())
                     .requestMatchers(GET, "/jobs/*/tasks/*/annotations/*/reviews/*")
                     .hasRole(ADMIN.getRole())
-                    .requestMatchers(GET, "/teams")
+									//<--JOB_TASK_ANNOTATIONS_REVIEWS-->
+
+									//<--TEAMS-->
+									.requestMatchers(GET, "/teams")
                     .hasRole(ADMIN.getRole())
                     .requestMatchers(POST, "/teams")
                     .hasRole(ADMIN.getRole())
-                    .requestMatchers(new SelfTeamMatcher(GET, "/teams/*/jobs", resourceProvider))
+									//<--TEAMS-->
+
+									//<--TEAM_JOBS-->
+									.requestMatchers(new SelfTeamMatcher(GET, "/teams/*/jobs", resourceProvider))
                     .hasRole(ANNOTATOR.getRole())
                     .requestMatchers(GET, "/teams/*/jobs")
                     .hasRole(ADMIN.getRole())
@@ -142,7 +166,10 @@ public class SecurityConf {
                     .hasRole(ANNOTATOR.getRole())
                     .requestMatchers(GET, "/teams/*/jobs/*")
                     .hasRole(ADMIN.getRole())
-                    .requestMatchers(
+									//<--TEAM_JOBS-->
+
+									//<--TEAM_JOB_TASKS-->
+									.requestMatchers(
                         new SelfTeamMatcher(GET, "/teams/*/jobs/*/task", resourceProvider))
                     .hasRole(ANNOTATOR.getRole())
                     // .requestMatchers(GET, "/teams/*/jobs/*/task")
@@ -150,7 +177,10 @@ public class SecurityConf {
                     .requestMatchers(
                         new SelfTeamMatcher(PUT, "/teams/*/jobs/*/tasks/*", resourceProvider))
                     .hasRole(ANNOTATOR.getRole())
-                    .requestMatchers(
+									//<--TEAM_JOB_TASKS-->
+
+									//<--USER_TASK_ANNOTATIONS-->
+									.requestMatchers(
                         new SelfUserMatcher(PUT, "/users/*/tasks/*/annotations", resourceProvider))
                     .hasRole(ANNOTATOR.getRole())
                     .requestMatchers(
@@ -164,7 +194,10 @@ public class SecurityConf {
                     .hasRole(ANNOTATOR.getRole())
                     .requestMatchers(GET, "/users/*/tasks/*/annotations/*")
                     .hasRole(ADMIN.getRole())
-                    .requestMatchers(
+									//<--USER_TASK_ANNOTATIONS-->
+
+									//<--USER_TASK_ANNOTATION_REVIEWS-->
+									.requestMatchers(
                         new SelfUserMatcher(
                             GET, "/users/*/tasks/*/annotations/*/reviews", resourceProvider))
                     .hasRole(ANNOTATOR.getRole())
@@ -176,7 +209,9 @@ public class SecurityConf {
                     .hasRole(ANNOTATOR.getRole())
                     .requestMatchers(GET, "/users/*/tasks/*/annotations/*/reviews/*")
                     .hasRole(ADMIN.getRole())
-                    // .requestMatchers(PUT, "/users/*/tasks/*/annotations/*")
+									//<--USER_TASK_ANNOTATION_REVIEWS-->
+
+									// .requestMatchers(PUT, "/users/*/tasks/*/annotations/*")
                     // .hasRole(ADMIN.getRole())
                     .requestMatchers("/**")
                     .denyAll())
