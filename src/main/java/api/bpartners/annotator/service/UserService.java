@@ -5,7 +5,6 @@ import static java.util.stream.Collectors.toList;
 import api.bpartners.annotator.endpoint.event.EventProducer;
 import api.bpartners.annotator.endpoint.event.gen.UserTeamUpdated;
 import api.bpartners.annotator.endpoint.event.gen.UserUpserted;
-import api.bpartners.annotator.endpoint.rest.security.model.Role;
 import api.bpartners.annotator.model.BoundedPageSize;
 import api.bpartners.annotator.model.PageFromOne;
 import api.bpartners.annotator.model.exception.NotFoundException;
@@ -25,6 +24,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class UserService {
+
   private final UserRepository repository;
   private final EventProducer eventProducer;
   private final Map<String, String> geoJobsUserInfo;
@@ -44,15 +44,6 @@ public class UserService {
     return repository
         .findByEmail(email)
         .orElseThrow(() -> new NotFoundException("User with User.email= " + email + " not found."));
-  }
-
-  public User getAdmin() {
-    return User.builder()
-        .id("f162d92b-1c76-4fad-ae3f-494b1759bc33")
-        .email("contact@bpartners.app")
-        .roles(new api.bpartners.annotator.endpoint.rest.security.model.Role[] {Role.ADMIN})
-        .team(new Team("f162d92b-1c76-4fad-ae3f-494b1759bc33", "admin"))
-        .build();
   }
 
   public User getById(String id) {
