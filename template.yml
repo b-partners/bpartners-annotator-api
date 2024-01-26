@@ -32,13 +32,13 @@ Globals:
         SPRING_DATASOURCE_URL: !Sub '{{resolve:ssm:/bpartners-annotator/${Env}/db/url}}'
         SPRING_DATASOURCE_USERNAME: !Sub '{{resolve:ssm:/bpartners-annotator/${Env}/db/username}}'
         SPRING_DATASOURCE_PASSWORD: !Sub '{{resolve:ssm:/bpartners-annotator/${Env}/db/password}}'
-        ADMIN_API_KEY: !Sub '{{resolve:ssm:/bpartners-annotator/${Env}/admin/api-key}}'
+        ADMINS: !Sub '{{resolve:ssm:/bpartners-annotator/${Env}/admins}}'
         AWS_COGNITO_USERPOOL_ID: !Sub '{{resolve:ssm:/bpartners-annotator/${Env}/cognito/userpool-id}}'
         AWS_COGNITO_USERPOOL_DOMAIN: !Sub '{{resolve:ssm:/bpartners-annotator/${Env}/cognito/userpool-domain}}'
         AWS_COGNITO_USERPOOL_CLIENTID: !Sub '{{resolve:ssm:/bpartners-annotator/${Env}/cognito/userpool-client-id}}'
         AWS_COGNITO_USERPOOL_CLIENTSECRET: !Sub '{{resolve:ssm:/bpartners-annotator/${Env}/cognito/userpool-client-secret}}'
         GEOJOBS_USER_INFO: !Sub '{{resolve:ssm:/bpartners-annotator/preprod/geojobs/userinfo}}'
-        
+
 
 Parameters:
   Env:
