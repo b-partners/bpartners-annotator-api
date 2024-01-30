@@ -1,3 +1,26 @@
+# [2.4.0](https://github.com/b-partners/bpartners-annotator-api/compare/v2.1.0...v2.4.0) (2024-01-30)
+
+
+### Bug Fixes
+
+* add unique constraint to job.name and handle duplicates ([44c60b4](https://github.com/b-partners/bpartners-annotator-api/commit/44c60b452a38b91caeb5b2619e60557f8de3f47a))
+* Annotation.Polygon.Point must not be null ([fe3a43f](https://github.com/b-partners/bpartners-annotator-api/commit/fe3a43f7bb821bd276c7a2a770cd2d8719803a15))
+* annotations not correctly saved in batch ([b703531](https://github.com/b-partners/bpartners-annotator-api/commit/b703531d7d3414c3754bca0572748865df74bc89))
+* available tasks are either your own (to_correct, under_completion) tasks or any pending task ([6527e98](https://github.com/b-partners/bpartners-annotator-api/commit/6527e9874ed323c84d69985992d81e9adc46ec50))
+* correctly name variables and correct sql logic for querying annotation batch review ([9b92929](https://github.com/b-partners/bpartners-annotator-api/commit/9b929296797503196d4d172bf6b3222a82cec2b4))
+* labels are not updatable on a job ([34eba69](https://github.com/b-partners/bpartners-annotator-api/commit/34eba69482898780fde4e79e37e09829d7b6ee8c))
+* some annotation attributes are mandatory, label is not nullable anywhere ([7b7411c](https://github.com/b-partners/bpartners-annotator-api/commit/7b7411cbdca0886ac24d8a8a76851887d1723dd5))
+* vgg task key is its filename ([e3727d7](https://github.com/b-partners/bpartners-annotator-api/commit/e3727d75c35ef0d50f170c3e957f485176f9c714))
+
+
+### Features
+
+* add creationDatetime to annotationBatch fields ([b33f9b7](https://github.com/b-partners/bpartners-annotator-api/commit/b33f9b7048350413ec092a4c2492ad4c18e4e713))
+* add remainingTaskForUserId in TaskStatistics attribute ([7dff804](https://github.com/b-partners/bpartners-annotator-api/commit/7dff804b4dde1053700092cb58652893beecd192))
+* synchronous export for VGG ([1884c4c](https://github.com/b-partners/bpartners-annotator-api/commit/1884c4c07f068142e954580f172fdc2552b16262))
+
+
+
 # [2.1.0](https://github.com/b-partners/bpartners-annotator-api/compare/v2.0.0...v2.1.0) (2023-12-07)
 
 
@@ -119,22 +142,6 @@
 ### Bug Fixes
 
 * add id generation strategy for user and team ([058440d](https://github.com/b-partners/bpartners-annotator-api/commit/058440d48b3d48913c410d969df48abb282318a7))
-
-
-
-# [0.7.0](https://github.com/b-partners/bpartners-annotator-api/compare/v0.6.0...v0.7.0) (2023-11-22)
-
-
-### Bug Fixes
-
-* allow OPTIONS on all paths for CORS ([715b46f](https://github.com/b-partners/bpartners-annotator-api/commit/715b46fe97d4664b0ee7d9f5734ca79c62fae2b8))
-* team id is not a generated value ([09c7373](https://github.com/b-partners/bpartners-annotator-api/commit/09c7373f87f4899ad82e693fa6dab178d7d62250))
-* use post method for user creation ([36bb752](https://github.com/b-partners/bpartners-annotator-api/commit/36bb75225f915064e903949ae5152f78efba556b))
-
-
-### Features
-
-* create users with post method ([#58](https://github.com/b-partners/bpartners-annotator-api/issues/58)) ([77d1f35](https://github.com/b-partners/bpartners-annotator-api/commit/77d1f35cca5cf421a6b412e275852c697b104907))
 
 
 
