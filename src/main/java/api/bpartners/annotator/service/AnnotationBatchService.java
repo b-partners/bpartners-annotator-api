@@ -33,10 +33,12 @@ public class AnnotationBatchService {
     Job linkedTaskJob = linkedTask.getJob();
     JobStatus currentJobStatus = linkedTaskJob.getStatus();
     if (!STARTED.equals(currentJobStatus) && !TO_CORRECT.equals(currentJobStatus)) {
-      throw new BadRequestException("cannot annotate not (started or to_correct) job.Id = " + linkedTaskJob.getId());
+      throw new BadRequestException(
+          "cannot annotate not (started or to_correct) job.Id = " + linkedTaskJob.getId());
     }
     if (isTaskNotAnnotable(linkedTask.getId())) {
-      throw new BadRequestException("Task.Id = "+linkedTask.getId()+" is already "+linkedTask.getStatus().name());
+      throw new BadRequestException(
+          "Task.Id = " + linkedTask.getId() + " is already " + linkedTask.getStatus().name());
     }
     taskService.setToReview(linkedTask.getId());
     return repository.save(annotationBatch);

@@ -29,8 +29,7 @@ public class InternalToRestExceptionHandler {
   }
 
   @ExceptionHandler(value = {DataIntegrityViolationException.class})
-  ResponseEntity<Exception> handleDataIntegrityViolation(
-          DataIntegrityViolationException e) {
+  ResponseEntity<Exception> handleDataIntegrityViolation(DataIntegrityViolationException e) {
     log.info("Bad request", e);
     return new ResponseEntity<>(toRest(e, HttpStatus.BAD_REQUEST), HttpStatus.BAD_REQUEST);
   }
