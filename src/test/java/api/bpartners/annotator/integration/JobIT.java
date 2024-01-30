@@ -68,7 +68,7 @@ public class JobIT extends FacadeIT {
 
     List<Job> actualJobs = api.getJobs(1, 10, null);
 
-    //assertEquals(8, actualJobs.size());
+    // assertEquals(8, actualJobs.size());
     assertTrue(actualJobs.contains(job1AsAdminView()));
   }
 
@@ -92,7 +92,7 @@ public class JobIT extends FacadeIT {
     assertEquals(2, actualReadyJobs.size());
     assertEquals(1, actualCompletedJobs.size());
     assertEquals(1, actualToReviewJobs.size());
-    //assertEquals(1, actualToCorrectJobs.size());
+    // assertEquals(1, actualToCorrectJobs.size());
     assertEquals(1, actualFailedJobs.size());
 
     assertTrue(actualStartedJobs.stream().allMatch(j -> STARTED.equals(j.getStatus())));
