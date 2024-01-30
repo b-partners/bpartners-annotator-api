@@ -9,9 +9,9 @@ java_facade_it: FacadeIT
 package_full_name: api.bpartners.annotator
 region: eu-west-3
 ses_source: contact@bpartners.app
-ssm_sg_id: /bpartners/sg/id
-ssm_subnet1_id: /bpartners/private/subnet1/id
-ssm_subnet2_id: /bpartners/private/subnet2/id
+ssm_sg_id: /bpartners-imagery/sg/id
+ssm_subnet1_id: /bpartners-imagery/private/subnet1/id
+ssm_subnet2_id: /bpartners-imagery/private/subnet2/id
 ts_client_api_url_env_var_name: REACT_APP_BPARTNERS_ANNOTATOR_API_URL
 ts_client_default_openapi_server_url: annotator-api.preprod.bpartners.app
 with_database: postgres
