@@ -2,6 +2,7 @@ package api.bpartners.annotator.service.validator;
 
 import static api.bpartners.annotator.repository.model.enums.TaskStatus.COMPLETED;
 import static api.bpartners.annotator.repository.model.enums.TaskStatus.PENDING;
+import static api.bpartners.annotator.repository.model.enums.TaskStatus.TO_CORRECT;
 import static api.bpartners.annotator.repository.model.enums.TaskStatus.UNDER_COMPLETION;
 
 import api.bpartners.annotator.model.exception.BadRequestException;
@@ -15,20 +16,22 @@ public class TaskUpdateValidator implements BiConsumer<Task, Task> {
   @Override
   public void accept(Task entity, Task update) {
     StringBuilder exceptionMessageBuilder = new StringBuilder();
-    if (UNDER_COMPLETION.equals(update.getStatus())
+    TaskStatus updatedTaskStatus = update.getStatus();
+    if (UNDER_COMPLETION.equals(updatedTaskStatus)
+        || TO_CORRECT.equals(updatedTaskStatus)
         || update.isCompleted()
         || update.isToReview()) {
       if (update.getUserId() == null) {
         exceptionMessageBuilder
             .append("userId is mandatory in order to update a task status to ")
-            .append(update.getStatus());
+            .append(updatedTaskStatus);
       }
     }
-    if (PENDING.equals(update.getStatus())) {
+    if (PENDING.equals(updatedTaskStatus)) {
       if (update.getUserId() != null) {
         exceptionMessageBuilder
             .append("userId must be null in order to update a task status to ")
-            .append(update.getStatus());
+            .append(updatedTaskStatus);
       }
     }
     try {
