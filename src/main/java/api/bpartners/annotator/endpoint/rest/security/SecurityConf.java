@@ -67,8 +67,11 @@ public class SecurityConf extends WebSecurityConfigurerAdapter {
                     new OrRequestMatcher(
                         new AntPathRequestMatcher("/**", OPTIONS.toString()),
                         new AntPathRequestMatcher("/ping", GET.name()),
-                        new AntPathRequestMatcher("/dummy-table", GET.name()),
-                        new AntPathRequestMatcher("/uuid-created", GET.name())))),
+                        new AntPathRequestMatcher("/health/bucket", GET.name()),
+                        new AntPathRequestMatcher("/health/db", GET.name()),
+                        new AntPathRequestMatcher("/health/email", GET.name()),
+                        new AntPathRequestMatcher("/health/event", GET.name())
+                        ))),
             AnonymousAuthenticationFilter.class)
         .anonymous()
 
@@ -79,9 +82,13 @@ public class SecurityConf extends WebSecurityConfigurerAdapter {
         .permitAll()
         .antMatchers(GET, "/ping")
         .permitAll()
-        .antMatchers("/dummy-table")
+        .antMatchers("/health/bucket")
         .permitAll()
-        .antMatchers("/uuid-created")
+        .antMatchers("/health/db")
+        .permitAll()
+        .antMatchers("/health/email")
+        .permitAll()
+        .antMatchers("/health/event")
         .permitAll()
         .antMatchers("/whoami")
         .hasAnyRole(ADMIN.getRole(), ANNOTATOR.getRole())
