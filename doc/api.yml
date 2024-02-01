@@ -88,6 +88,36 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Whoami"
+  '/annotated-jobs/{jobId}':
+    put:
+      tags:
+        - Jobs
+        - Admin
+        - AnnotatedJobs
+      security:
+        - apiKeyHeader: [ ]
+      summary: crupdate an annotatedJob
+      operationId: crupdateAnnotatedJob
+      parameters:
+        - name: jobId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateAnnotatedJob"
+      responses:
+        '200':
+          description: the job created with the givenId
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Job"
+        '500':
+          $ref: '#/components/responses/500'
   '/jobs/{jobId}':
     get:
       tags:
@@ -989,6 +1019,27 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/Label"
+    CreateAnnotatedJob:
+      type: object
+      allOf:
+        - $ref: "#/components/schemas/CrupdateJob"
+      properties:
+        annotatedTasks:
+          type: array
+          items:
+            $ref: "#/components/schemas/AnnotatedTask"
+    AnnotatedTask:
+      type: object
+      properties:
+        id:
+          type: string
+        annotatorId:
+          type: string
+        filename:
+          type: string
+          pattern: "^[^/]"
+        annotationBatch:
+          $ref: "#/components/schemas/AnnotationBatch"
     Job:
       type: object
       allOf:
