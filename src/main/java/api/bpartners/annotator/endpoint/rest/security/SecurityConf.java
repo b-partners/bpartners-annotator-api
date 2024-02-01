@@ -70,8 +70,7 @@ public class SecurityConf extends WebSecurityConfigurerAdapter {
                         new AntPathRequestMatcher("/health/bucket", GET.name()),
                         new AntPathRequestMatcher("/health/db", GET.name()),
                         new AntPathRequestMatcher("/health/email", GET.name()),
-                        new AntPathRequestMatcher("/health/event", GET.name())
-                        ))),
+                        new AntPathRequestMatcher("/health/event", GET.name())))),
             AnonymousAuthenticationFilter.class)
         .anonymous()
 
