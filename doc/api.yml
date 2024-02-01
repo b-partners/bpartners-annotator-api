@@ -1037,6 +1037,8 @@ components:
       properties:
         imageUri:
           type: string
+        filename:
+          type: string
     TaskStatus:
       type: string
       enum:

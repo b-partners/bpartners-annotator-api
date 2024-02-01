@@ -27,7 +27,8 @@ public class TaskMapper {
         .id(domain.getId())
         .status(statusMapper.toRest(domain.getStatus()))
         .imageUri(presignedUrl.toString())
-        .userId(domain.getUserId());
+        .userId(domain.getUserId())
+        .filename(domain.getFilename());
   }
 
   public api.bpartners.annotator.repository.model.Task toDomain(UpdateTask rest) {
