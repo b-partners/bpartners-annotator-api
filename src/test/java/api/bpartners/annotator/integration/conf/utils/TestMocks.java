@@ -72,7 +72,12 @@ public class TestMocks {
   }
 
   public static Task task1() {
-    return new Task().id(TASK_1_ID).status(PENDING).userId(null).imageUri(MOCK_PRESIGNED_URL);
+    return new Task()
+        .id(TASK_1_ID)
+        .status(PENDING)
+        .userId(null)
+        .imageUri(MOCK_PRESIGNED_URL)
+        .filename("image_1");
   }
 
   public static Team team2() {
