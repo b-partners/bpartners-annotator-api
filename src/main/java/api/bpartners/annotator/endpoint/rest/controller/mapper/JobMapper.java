@@ -34,6 +34,7 @@ public class JobMapper {
         .status(statusMapper.toRest(domain.getStatus()))
         .labels(domain.getLabels().stream().map(labelMapper::toRest).toList())
         .teamId(domain.getTeamId())
+        .type(domain.getType())
         .taskStatistics(taskStatistics);
   }
 
@@ -48,6 +49,7 @@ public class JobMapper {
         .folderPath(rest.getFolderPath())
         .ownerEmail(rest.getOwnerEmail())
         .teamId(rest.getTeamId())
+        .type(rest.getType())
         .labels(rest.getLabels().stream().map(labelMapper::toDomain).toList())
         .build();
   }

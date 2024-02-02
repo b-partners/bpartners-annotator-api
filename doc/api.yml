@@ -96,7 +96,7 @@ paths:
         - AnnotatedJobs
       security:
         - apiKeyHeader: [ ]
-      summary: crupdate an annotatedJob
+      summary: create or update an annotated job
       operationId: crupdateAnnotatedJob
       parameters:
         - name: jobId
@@ -108,7 +108,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/CreateAnnotatedJob"
+              $ref: "#/components/schemas/CrupdateAnnotatedJob"
       responses:
         '200':
           description: the job created with the givenId
@@ -1000,6 +1000,8 @@ components:
     CrupdateJob:
       type: object
       properties:
+        type:
+          $ref: "#/components/schemas/JobType"
         id:
           type: string
         name:
@@ -1019,7 +1021,12 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/Label"
-    CreateAnnotatedJob:
+    JobType:
+      type: string
+      enum:
+        - LABELLING
+        - REVIEWING
+    CrupdateAnnotatedJob:
       type: object
       allOf:
         - $ref: "#/components/schemas/CrupdateJob"

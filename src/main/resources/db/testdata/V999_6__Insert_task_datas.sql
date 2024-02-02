@@ -12,4 +12,10 @@ VALUES ('task_1_id', 'job_1_id', 'PENDING', 'image_1', null),
        ('task_11_id', 'job_1_id', 'TO_CORRECT', 'image_1', 'joe_doe_id'),
        ('task_12_id', 'job_1_id', 'TO_CORRECT', 'image_2', 'joe_doe_id'),
        ('task_13_id', 'job_1_id', 'COMPLETED', 'image_1', 'jane_doe_id'),
-       ('task_14_id', 'job_1_id', 'PENDING', 'image_2', null);
+       ('task_14_id', 'job_1_id', 'PENDING', 'image_2', null),
+       ('task_15_id', 'job_2_id', 'PENDING', 'image_1', null),
+       ('task_16_id', 'job_2_id', 'PENDING', 'image_2', null),
+       ('task_17_id', 'job_2_id', 'PENDING', 'image_1', null),
+       ('task_18_id', 'job_2_id', 'PENDING', 'image_2', null),
+       ('task_19_id', 'job_2_id', 'PENDING', 'image_1', null),
+       ('task_20_id', 'job_2_id', 'PENDING', 'image_2', null);

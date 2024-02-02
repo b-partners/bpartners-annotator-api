@@ -1,5 +1,6 @@
 package api.bpartners.annotator.integration;
 
+import static api.bpartners.annotator.endpoint.rest.model.JobType.LABELLING;
 import static api.bpartners.annotator.endpoint.rest.model.ReviewStatus.REJECTED;
 import static api.bpartners.annotator.integration.conf.utils.TestMocks.ANNOTATION_1_ID;
 import static api.bpartners.annotator.integration.conf.utils.TestMocks.BATCH_1_ID;
@@ -116,6 +117,7 @@ public class AnnotationBatchReviewIT extends FacadeIT {
             .name(randomUUID().toString())
             .teamId(TEAM_2_ID)
             .labels(List.of(label))
+            .type(LABELLING)
             .build());
   }
 

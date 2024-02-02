@@ -4,8 +4,10 @@ import static api.bpartners.annotator.endpoint.rest.model.JobStatus.*;
 import static api.bpartners.annotator.endpoint.rest.model.JobStatus.PENDING;
 import static api.bpartners.annotator.endpoint.rest.model.JobStatus.READY;
 import static api.bpartners.annotator.endpoint.rest.model.JobStatus.STARTED;
+import static api.bpartners.annotator.endpoint.rest.model.JobType.LABELLING;
 import static api.bpartners.annotator.integration.conf.utils.TestMocks.job1;
 import static api.bpartners.annotator.integration.conf.utils.TestUtils.assertThrowsBadRequestException;
+import static java.util.Collections.emptyList;
 import static java.util.UUID.randomUUID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -21,7 +23,6 @@ import api.bpartners.annotator.endpoint.rest.model.Label;
 import api.bpartners.annotator.endpoint.rest.model.TaskStatistics;
 import api.bpartners.annotator.integration.conf.utils.TestMocks;
 import api.bpartners.annotator.integration.conf.utils.TestUtils;
-import java.util.Collections;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -45,6 +46,7 @@ public class JobIT extends FacadeIT {
         .ownerEmail("admin@gmail.com")
         .bucketName("bucket-name")
         .teamId("team_1_id")
+        .type(LABELLING)
         .labels(List.of(new Label().id("label_5_id").name("POOL").color("#00ff00")));
   }
 
@@ -58,6 +60,7 @@ public class JobIT extends FacadeIT {
         .folderPath(crupdateJob.getFolderPath() == null ? "" : crupdateJob.getFolderPath())
         .ownerEmail(crupdateJob.getOwnerEmail())
         .name(crupdateJob.getName())
+        .type(crupdateJob.getType())
         .labels(crupdateJob.getLabels());
   }
 
@@ -157,7 +160,7 @@ public class JobIT extends FacadeIT {
     ApiClient adminClient = anApiClient();
     JobsApi api = new JobsApi(adminClient);
     CrupdateJob invalidCrupdateJob =
-        crupdateJob1().id(null).folderPath("/a").ownerEmail(null).labels(Collections.emptyList());
+        crupdateJob1().id(null).folderPath("/a").ownerEmail(null).labels(emptyList());
 
     assertThrowsBadRequestException(
         () -> api.saveJob(randomUUID().toString(), invalidCrupdateJob),
