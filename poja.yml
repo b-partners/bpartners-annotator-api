@@ -1,9 +1,9 @@
 app_name: bpartners-annotator
-cli_version: 10.7.0
+cli_version: 10.8.0
 custom_java_deps: poja-custom-java-deps.txt
 custom_java_env_vars: poja-custom-java-env-vars.txt
 custom_java_repositories: poja-custom-java-repositories.txt
-frontal_memory: 300
+frontal_memory: 512
 jacoco_min_coverage: '0.5'
 java_facade_it: FacadeIT
 package_full_name: api.bpartners.annotator
