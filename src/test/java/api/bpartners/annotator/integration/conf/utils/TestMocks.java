@@ -1,6 +1,9 @@
 package api.bpartners.annotator.integration.conf.utils;
 
+import static api.bpartners.annotator.endpoint.rest.model.JobStatus.READY;
 import static api.bpartners.annotator.endpoint.rest.model.JobStatus.STARTED;
+import static api.bpartners.annotator.endpoint.rest.model.JobType.LABELLING;
+import static api.bpartners.annotator.endpoint.rest.model.JobType.REVIEWING;
 import static api.bpartners.annotator.endpoint.rest.model.ReviewStatus.ACCEPTED;
 import static api.bpartners.annotator.endpoint.rest.model.ReviewStatus.REJECTED;
 import static api.bpartners.annotator.endpoint.rest.model.TaskStatus.PENDING;
@@ -40,6 +43,7 @@ public class TestMocks {
   public static final String BATCH_REVIEW_2_ID = "batch_review_2_id";
   public static final String BATCH_REVIEW_1_ID = "batch_review_1_id";
   public static final String BATCH_2_ID = "batch_2_id";
+  public static final String JOB_2_ID = "job_2_id";
 
   public static Team team1() {
     return new Team().id(TEAM_1_ID).name("joe_team");
@@ -60,6 +64,26 @@ public class TestMocks {
                 .totalTasks(14L)
                 .completedTasksByUserId(0L)
                 .remainingTasksForUserId(11L))
+        .type(LABELLING)
+        .labels(List.of(label1(), label2()));
+  }
+
+  public static Job job2() {
+    return new Job()
+        .id(JOB_2_ID)
+        .bucketName("bucket_1_name")
+        .teamId(team1().getId())
+        .status(READY)
+        .folderPath("images/2/")
+        .ownerEmail("admin@email.com")
+        .name("job_2")
+        .taskStatistics(
+            new TaskStatistics()
+                .remainingTasks(6L)
+                .totalTasks(6L)
+                .completedTasksByUserId(0L)
+                .remainingTasksForUserId(6L))
+        .type(REVIEWING)
         .labels(List.of(label1(), label2()));
   }
 

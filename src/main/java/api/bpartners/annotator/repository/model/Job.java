@@ -4,6 +4,7 @@ import static api.bpartners.annotator.repository.model.enums.JobStatus.COMPLETED
 import static javax.persistence.CascadeType.ALL;
 import static javax.persistence.EnumType.STRING;
 
+import api.bpartners.annotator.endpoint.rest.model.JobType;
 import api.bpartners.annotator.repository.model.enums.JobStatus;
 import api.bpartners.annotator.repository.model.types.PostgresEnumType;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -31,6 +32,7 @@ import org.hibernate.annotations.TypeDef;
 @AllArgsConstructor
 @TypeDef(name = "pgsql_enum", typeClass = PostgresEnumType.class)
 public class Job {
+
   @Id private String id;
   private String name;
   private String bucketName;
@@ -43,6 +45,11 @@ public class Job {
   private JobStatus status;
 
   private String teamId;
+
+  @Enumerated(STRING)
+  @Column(name = "type")
+  @Type(type = "pgsql_enum")
+  private JobType type;
 
   @OneToMany()
   @JoinColumn(insertable = false, updatable = false, name = "job_id", referencedColumnName = "id")
