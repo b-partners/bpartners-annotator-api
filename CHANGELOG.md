@@ -1,3 +1,13 @@
+## [2.4.1](https://github.com/b-partners/bpartners-annotator-api/compare/v2.4.0...v2.4.1) (2024-02-02)
+
+
+### Bug Fixes
+
+* health endpoints are now publicly accessible ([ba11f45](https://github.com/b-partners/bpartners-annotator-api/commit/ba11f45d46190f302927516ff332e0a503b295db))
+* throw bad request if task status is set to correct without setting userId ([7084261](https://github.com/b-partners/bpartners-annotator-api/commit/7084261bc242738522828f8abc9f2c6f2f340611))
+
+
+
 # [2.4.0](https://github.com/b-partners/bpartners-annotator-api/compare/v2.1.0...v2.4.0) (2024-01-30)
 
 
@@ -133,15 +143,6 @@
 ### Features
 
 * add task statistics ([#65](https://github.com/b-partners/bpartners-annotator-api/issues/65)) ([8af1ecc](https://github.com/b-partners/bpartners-annotator-api/commit/8af1eccb02ebb207ba532823e8efb95af3bbfa22))
-
-
-
-## [0.7.1](https://github.com/b-partners/bpartners-annotator-api/compare/v0.7.0...v0.7.1) (2023-11-23)
-
-
-### Bug Fixes
-
-* add id generation strategy for user and team ([058440d](https://github.com/b-partners/bpartners-annotator-api/commit/058440d48b3d48913c410d969df48abb282318a7))
 
 
 
