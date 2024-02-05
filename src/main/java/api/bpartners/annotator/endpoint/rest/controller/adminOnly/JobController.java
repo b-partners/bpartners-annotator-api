@@ -6,6 +6,7 @@ import static org.springframework.http.MediaType.TEXT_PLAIN_VALUE;
 
 import api.bpartners.annotator.endpoint.rest.controller.mapper.JobMapper;
 import api.bpartners.annotator.endpoint.rest.controller.mapper.JobStatusMapper;
+import api.bpartners.annotator.endpoint.rest.model.CrupdateAnnotatedJob;
 import api.bpartners.annotator.endpoint.rest.model.CrupdateJob;
 import api.bpartners.annotator.endpoint.rest.model.ExportFormat;
 import api.bpartners.annotator.endpoint.rest.model.Job;
@@ -26,7 +27,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController()
+@RestController
 @AllArgsConstructor
 public class JobController {
   private final JobService service;
@@ -65,5 +66,12 @@ public class JobController {
     HttpHeaders headers = new HttpHeaders();
     headers.setContentType(TEXT_PLAIN);
     return new ResponseEntity<>("ok", headers, OK);
+  }
+
+  @PutMapping("/annotated-jobs/{jobId}")
+  public Job crupdateAnnotatedJob(
+      @PathVariable String jobId, @RequestBody CrupdateAnnotatedJob crupdateAnnotatedJob) {
+    return mapper.toRest(
+        service.crupdateAnnotatedJob(crupdateAnnotatedJob, mapper.toDomain(crupdateAnnotatedJob)));
   }
 }

@@ -115,4 +115,8 @@ public class TaskService {
   public List<Task> createTasks(List<Task> tasks) {
     return repository.saveAll(tasks);
   }
+
+  public Task save(Task task) {
+    return repository.save(task);
+  }
 }

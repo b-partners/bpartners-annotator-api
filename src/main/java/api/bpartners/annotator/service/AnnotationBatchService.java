@@ -44,6 +44,17 @@ public class AnnotationBatchService {
     return repository.save(annotationBatch);
   }
 
+  public AnnotationBatch annotateTask(AnnotationBatch annotationBatch) {
+    // /!\ WARNING : this will directly annotate without changing its status afterwards or checking
+    // the job status /!\
+    Task linkedTask = annotationBatch.getTask();
+    if (isTaskNotAnnotable(linkedTask.getId())) {
+      throw new BadRequestException(
+          "Task.Id = " + linkedTask.getId() + " is already " + linkedTask.getStatus().name());
+    }
+    return repository.save(annotationBatch);
+  }
+
   private boolean isTaskNotAnnotable(String taskId) {
     Task task = taskService.getById(taskId);
     return task.isCompleted() || task.isToReview();
