@@ -100,6 +100,7 @@ public class AnnotationBatchReviewIT extends FacadeIT {
   Task createTask(Job job) {
     return taskRepository.save(
         Task.builder()
+            .id(randomUUID().toString())
             .job(job)
             .userId(JOE_DOE_ID)
             .filename(randomUUID().toString())
