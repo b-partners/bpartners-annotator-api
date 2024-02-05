@@ -68,6 +68,10 @@ public class UserService {
     return repository.findAll(pageable).toList();
   }
 
+  public List<User> findAllBy(Team team) {
+    return repository.findAllByTeam(team);
+  }
+
   public User updateUserTeam(User toUpdate) {
     eventProducer.accept(List.of(toUserTeamUpdatedType(toUpdate)));
     return repository.save(toUpdate);

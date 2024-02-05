@@ -4,6 +4,7 @@ import static api.bpartners.annotator.repository.model.enums.JobStatus.READY;
 import static api.bpartners.annotator.repository.model.enums.TaskStatus.PENDING;
 import static api.bpartners.annotator.service.JobService.toEventType;
 import static api.bpartners.annotator.service.utils.TemplateResolverUtils.parseTemplateResolver;
+import static java.util.UUID.randomUUID;
 
 import api.bpartners.annotator.endpoint.event.EventProducer;
 import api.bpartners.annotator.endpoint.event.gen.JobCreated;
@@ -49,6 +50,7 @@ public class JobCreatedService implements Consumer<JobCreated> {
             .map(
                 objectKey ->
                     Task.builder()
+                        .id(randomUUID().toString())
                         .job(jobCreated.getJob())
                         .status(PENDING)
                         .filename(objectKey)

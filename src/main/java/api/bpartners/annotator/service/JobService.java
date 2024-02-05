@@ -6,7 +6,9 @@ import static api.bpartners.annotator.repository.model.enums.JobStatus.TO_CORREC
 import static api.bpartners.annotator.repository.model.enums.JobStatus.TO_REVIEW;
 
 import api.bpartners.annotator.endpoint.event.EventProducer;
+import api.bpartners.annotator.endpoint.event.gen.AnnotatedJobCrupdated;
 import api.bpartners.annotator.endpoint.event.gen.JobCreated;
+import api.bpartners.annotator.endpoint.rest.model.CrupdateAnnotatedJob;
 import api.bpartners.annotator.model.BoundedPageSize;
 import api.bpartners.annotator.model.PageFromOne;
 import api.bpartners.annotator.model.exception.BadRequestException;
@@ -74,6 +76,14 @@ public class JobService {
       return savedJob;
     }
     return updateJob(job);
+  }
+
+  @Transactional
+  public Job crupdateAnnotatedJob(
+      String jobId, CrupdateAnnotatedJob crupdateAnnotatedJob, Job job) {
+    Job updated = repository.save(job);
+    eventProducer.accept(List.of(new AnnotatedJobCrupdated(crupdateAnnotatedJob, job)));
+    return updated;
   }
 
   public Job updateJobStatus(String jobId, JobStatus status) {

@@ -1,8 +1,8 @@
 package api.bpartners.annotator.endpoint.event.gen;
 
+import api.bpartners.annotator.endpoint.rest.model.CrupdateAnnotatedJob;
 import api.bpartners.annotator.repository.model.Job;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.io.Serializable;
 import javax.annotation.processing.Generated;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,10 +18,10 @@ import lombok.ToString;
 @Data
 @EqualsAndHashCode
 @ToString
-public class JobCreated implements Serializable {
+public class AnnotatedJobCrupdated {
+  @JsonProperty("crupdateAnnotatedJob")
+  private CrupdateAnnotatedJob crupdateAnnotatedJob;
+
   @JsonProperty("job")
   private Job job;
-
-  @JsonProperty("next_continuation_token")
-  private String nextContinuationToken;
 }
