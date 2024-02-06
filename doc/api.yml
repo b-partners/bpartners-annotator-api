@@ -160,12 +160,12 @@ paths:
                   $ref: "#/components/schemas/ExportFormat"
         responses:
           "200":
-            description: a File containing the job informations as a file
+            description: OK response for mail sending initiation
             content:
-              application/json:
+              text/plain:
                 schema:
                   type: string
-                  format: byte
+                  example: "OK"
 
   '/teams/{teamId}/jobs':
     get:
