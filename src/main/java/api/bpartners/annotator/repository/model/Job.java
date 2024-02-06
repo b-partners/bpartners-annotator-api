@@ -7,6 +7,7 @@ import static javax.persistence.EnumType.STRING;
 import api.bpartners.annotator.repository.model.enums.JobStatus;
 import api.bpartners.annotator.repository.model.types.PostgresEnumType;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -45,6 +46,7 @@ public class Job {
 
   @OneToMany()
   @JoinColumn(insertable = false, updatable = false, name = "job_id", referencedColumnName = "id")
+  @JsonIgnoreProperties("job")
   private List<Task> tasks;
 
   @ManyToMany(cascade = ALL)

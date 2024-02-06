@@ -2,6 +2,8 @@ package api.bpartners.annotator.service;
 
 import static org.springframework.transaction.annotation.Propagation.REQUIRED;
 
+import api.bpartners.annotator.endpoint.event.EventProducer;
+import api.bpartners.annotator.endpoint.event.gen.JobExportInitiated;
 import api.bpartners.annotator.endpoint.rest.model.ExportFormat;
 import api.bpartners.annotator.model.VGG;
 import api.bpartners.annotator.model.exception.BadRequestException;
@@ -20,6 +22,13 @@ import org.springframework.transaction.annotation.Transactional;
 @AllArgsConstructor
 public class ExportService {
   private final AnnotationBatchService annotationBatchService;
+  private final EventProducer eventProducer;
+  private final JobService jobService;
+
+  public void initiateJobExport(String jobId, ExportFormat exportFormat) {
+    var linkedJob = jobService.getById(jobId);
+    eventProducer.accept(List.of(new JobExportInitiated(linkedJob, exportFormat)));
+  }
 
   @Transactional(propagation = REQUIRED, readOnly = true, rollbackFor = Exception.class)
   public Object exportJob(String jobId, ExportFormat format) {

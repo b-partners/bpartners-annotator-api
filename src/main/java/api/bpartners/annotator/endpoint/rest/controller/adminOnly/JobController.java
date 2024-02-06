@@ -1,5 +1,9 @@
 package api.bpartners.annotator.endpoint.rest.controller.adminOnly;
 
+import static org.springframework.http.HttpStatus.OK;
+import static org.springframework.http.MediaType.TEXT_PLAIN;
+import static org.springframework.http.MediaType.TEXT_PLAIN_VALUE;
+
 import api.bpartners.annotator.endpoint.rest.controller.mapper.JobMapper;
 import api.bpartners.annotator.endpoint.rest.controller.mapper.JobStatusMapper;
 import api.bpartners.annotator.endpoint.rest.model.CrupdateJob;
@@ -14,8 +18,6 @@ import api.bpartners.annotator.service.utils.ByteWriter;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -56,15 +58,12 @@ public class JobController {
 
   @GetMapping(
       value = "/jobs/{jobId}/export",
-      produces = {MediaType.APPLICATION_JSON_VALUE})
-  public ResponseEntity<byte[]> export(
+      produces = {TEXT_PLAIN_VALUE})
+  public ResponseEntity<String> export(
       @PathVariable String jobId, @RequestParam("format") ExportFormat exportFormat) {
-    var result = exportService.exportJob(jobId, exportFormat);
-    var bytes = byteWriter.apply(result);
+    exportService.initiateJobExport(jobId, exportFormat);
     HttpHeaders headers = new HttpHeaders();
-    headers.setContentType(MediaType.APPLICATION_JSON);
-    headers.setContentDispositionFormData(
-        "attachment", String.format(EXPORTED_FILENAME_FORMAT, jobId, exportFormat));
-    return new ResponseEntity<>(bytes, headers, HttpStatus.OK);
+    headers.setContentType(TEXT_PLAIN);
+    return new ResponseEntity<>("ok", headers, OK);
   }
 }
