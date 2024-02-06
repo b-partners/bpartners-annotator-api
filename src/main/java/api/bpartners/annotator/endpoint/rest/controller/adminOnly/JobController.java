@@ -11,11 +11,12 @@ import api.bpartners.annotator.endpoint.rest.model.CrupdateJob;
 import api.bpartners.annotator.endpoint.rest.model.ExportFormat;
 import api.bpartners.annotator.endpoint.rest.model.Job;
 import api.bpartners.annotator.endpoint.rest.model.JobStatus;
+import api.bpartners.annotator.endpoint.rest.validator.CrupdateAnnotatedJobIdValidator;
+import api.bpartners.annotator.endpoint.rest.validator.CrupdateJobIdValidator;
 import api.bpartners.annotator.model.BoundedPageSize;
 import api.bpartners.annotator.model.PageFromOne;
 import api.bpartners.annotator.service.ExportService;
 import api.bpartners.annotator.service.JobService;
-import api.bpartners.annotator.service.utils.ByteWriter;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpHeaders;
@@ -34,8 +35,8 @@ public class JobController {
   private final JobMapper mapper;
   private final JobStatusMapper statusMapper;
   private final ExportService exportService;
-  private final ByteWriter byteWriter;
-  private static final String EXPORTED_FILENAME_FORMAT = "%s_%s.json";
+  private final CrupdateJobIdValidator crupdateJobIdValidator;
+  private final CrupdateAnnotatedJobIdValidator annotatedJobIdValidator;
 
   @GetMapping("/jobs")
   public List<Job> getJobs(
@@ -54,6 +55,7 @@ public class JobController {
 
   @PutMapping("/jobs/{jobId}")
   public Job saveJob(@PathVariable String jobId, @RequestBody CrupdateJob job) {
+    crupdateJobIdValidator.accept(job, jobId);
     return mapper.toRest(service.save(mapper.toDomain(job)));
   }
 
@@ -71,7 +73,9 @@ public class JobController {
   @PutMapping("/annotated-jobs/{jobId}")
   public Job crupdateAnnotatedJob(
       @PathVariable String jobId, @RequestBody CrupdateAnnotatedJob crupdateAnnotatedJob) {
+    annotatedJobIdValidator.accept(crupdateAnnotatedJob, jobId);
     return mapper.toRest(
-        service.crupdateAnnotatedJob(crupdateAnnotatedJob, mapper.toDomain(crupdateAnnotatedJob)));
+        service.crupdateAnnotatedJob(
+            jobId, crupdateAnnotatedJob, mapper.toDomain(crupdateAnnotatedJob)));
   }
 }
