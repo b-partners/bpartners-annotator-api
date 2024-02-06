@@ -159,13 +159,13 @@ public class JobIT extends FacadeIT {
   void admin_create_job_ko() {
     ApiClient adminClient = anApiClient();
     JobsApi api = new JobsApi(adminClient);
+    String randomUUID = randomUUID().toString();
     CrupdateJob invalidCrupdateJob =
-        crupdateJob1().id(null).folderPath("/a").ownerEmail(null).labels(emptyList());
+        crupdateJob1().id(randomUUID).folderPath("/a").ownerEmail(null).labels(emptyList());
 
     assertThrowsBadRequestException(
-        () -> api.saveJob(randomUUID().toString(), invalidCrupdateJob),
-        "ID is mandatory."
-            + "folder path: /a does not follow regex ^(?!/).+/$."
+        () -> api.saveJob(randomUUID, invalidCrupdateJob),
+        "folder path: /a does not follow regex ^(?!/).+/$."
             + "Owner Email is mandatory."
             + "Labels are mandatory.");
   }
