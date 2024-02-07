@@ -12,20 +12,33 @@ import api.bpartners.annotator.model.exception.NotFoundException;
 import api.bpartners.annotator.repository.jpa.UserRepository;
 import api.bpartners.annotator.repository.model.Team;
 import api.bpartners.annotator.repository.model.User;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
-import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
-@AllArgsConstructor
-@Slf4j
 public class UserService {
   private final UserRepository repository;
   private final EventProducer eventProducer;
+  private final Map<String, String> geoJobsUserInfo;
+
+  public UserService(
+      UserRepository repository,
+      EventProducer eventProducer,
+      @Value("${GEOJOBS.USER.INFO}") String geoJobsUsersAsString,
+      ObjectMapper objectMapper)
+      throws JsonProcessingException {
+    this.repository = repository;
+    this.eventProducer = eventProducer;
+    this.geoJobsUserInfo = objectMapper.readValue(geoJobsUsersAsString, new TypeReference<>() {});
+  }
 
   public User findByEmail(String email) {
     return repository
@@ -75,6 +88,11 @@ public class UserService {
   public User updateUserTeam(User toUpdate) {
     eventProducer.accept(List.of(toUserTeamUpdatedType(toUpdate)));
     return repository.save(toUpdate);
+  }
+
+  public List<User> getGeoJobsUsersWithoutCaringAboutTeam() {
+    // THIS COMPLETELY IGNORES TEAMID
+    return List.of(getById(geoJobsUserInfo.get("userId")));
   }
 
   private UserTeamUpdated toUserTeamUpdatedType(User user) {
