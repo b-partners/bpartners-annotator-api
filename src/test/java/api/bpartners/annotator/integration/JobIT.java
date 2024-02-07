@@ -252,7 +252,7 @@ public class JobIT extends FacadeIT {
                 .annotations(List.of(creatableAnnotation(taskId, annotatorId, dummyLabel))));
   }
 
-  public static Annotation creatableAnnotation(String taskId, String annotatorId,Label label) {
+  public static Annotation creatableAnnotation(String taskId, String annotatorId, Label label) {
     return new Annotation()
         .id(randomUUID().toString())
         .taskId(taskId)
