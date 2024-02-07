@@ -2,6 +2,7 @@ package api.bpartners.annotator.service;
 
 import static api.bpartners.annotator.repository.model.enums.JobStatus.STARTED;
 import static api.bpartners.annotator.repository.model.enums.JobStatus.TO_CORRECT;
+import static java.util.stream.Collectors.toCollection;
 import static org.springframework.data.domain.Sort.Direction.DESC;
 
 import api.bpartners.annotator.model.BoundedPageSize;
@@ -12,7 +13,9 @@ import api.bpartners.annotator.repository.jpa.AnnotationBatchRepository;
 import api.bpartners.annotator.repository.model.AnnotationBatch;
 import api.bpartners.annotator.repository.model.Job;
 import api.bpartners.annotator.repository.model.Task;
+import api.bpartners.annotator.repository.model.User;
 import api.bpartners.annotator.repository.model.enums.JobStatus;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -26,6 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class AnnotationBatchService {
   private final AnnotationBatchRepository repository;
   private final TaskService taskService;
+  private final UserService userService;
 
   @Transactional
   public AnnotationBatch annotateAndSetTaskToReview(AnnotationBatch annotationBatch) {
@@ -68,12 +72,17 @@ public class AnnotationBatchService {
     return repository.findAllByTaskId(taskId, pageable);
   }
 
-  public List<AnnotationBatch> findAllByAnnotatorIdAndTask(
+  public List<AnnotationBatch> findAllByInterExternalAnnotatorIdAndTask(
       String annotatorId, String taskId, PageFromOne page, BoundedPageSize pageSize) {
+    List<String> geoJobUsers =
+        userService.getGeoJobsUsersWithoutCaringAboutTeam().stream()
+            .map(User::getId)
+            .collect(toCollection(ArrayList::new));
+    geoJobUsers.add(annotatorId);
     Pageable pageable =
         PageRequest.of(
             page.getValue() - 1, pageSize.getValue(), Sort.by(DESC, "creationTimestamp"));
-    return repository.findAllByAnnotatorIdAndTaskId(annotatorId, taskId, pageable);
+    return repository.findAllByAnnotatorIdInAndTaskId(geoJobUsers, taskId, pageable);
   }
 
   public AnnotationBatch findByTaskIdAndId(String taskId, String id) {
@@ -89,10 +98,15 @@ public class AnnotationBatchService {
                         + " not found"));
   }
 
-  public AnnotationBatch findByAnnotatorIdAndTaskIdAndId(
+  public AnnotationBatch findByInterExternalAnnotatorIdAndTaskIdAndId(
       String annotatorId, String taskId, String id) {
+    List<String> geoJobUsers =
+        userService.getGeoJobsUsersWithoutCaringAboutTeam().stream()
+            .map(User::getId)
+            .collect(toCollection(ArrayList::new));
+    geoJobUsers.add(annotatorId);
     return repository
-        .findByAnnotatorIdAndTaskIdAndId(annotatorId, taskId, id)
+        .findByAnnotatorIdInAndTaskIdAndId(geoJobUsers, taskId, id)
         .orElseThrow(
             () ->
                 new NotFoundException(

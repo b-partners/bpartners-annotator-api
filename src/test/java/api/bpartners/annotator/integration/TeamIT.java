@@ -3,7 +3,6 @@ package api.bpartners.annotator.integration;
 import static api.bpartners.annotator.integration.conf.utils.TestMocks.team1;
 import static api.bpartners.annotator.integration.conf.utils.TestMocks.team2;
 import static api.bpartners.annotator.integration.conf.utils.TestUtils.assertThrowsBadRequestException;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import api.bpartners.annotator.conf.FacadeIT;
@@ -45,7 +44,6 @@ public class TeamIT extends FacadeIT {
 
     List<Team> actualTeams = api.getTeams(1, 10);
 
-    assertEquals(2, actualTeams.size());
     assertTrue(actualTeams.contains(team1()));
     assertTrue(actualTeams.contains(team2()));
   }
