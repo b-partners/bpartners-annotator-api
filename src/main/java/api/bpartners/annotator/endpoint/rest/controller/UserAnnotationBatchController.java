@@ -25,23 +25,23 @@ public class UserAnnotationBatchController {
   private final AnnotationBatchIdValidator idValidator;
 
   @GetMapping("/users/{userId}/tasks/{taskId}/annotations")
-  public List<AnnotationBatch> getAnnotationBatchesByJobTask(
+  public List<AnnotationBatch> getUserAnnotationBatchesByJobTask(
       @PathVariable String userId,
       @PathVariable String taskId,
       @RequestParam PageFromOne page,
       @RequestParam BoundedPageSize pageSize) {
-    return service.findAllByAnnotatorIdAndTask(userId, taskId, page, pageSize).stream()
+    return service.findAllByInterExternalAnnotatorIdAndTask(userId, taskId, page, pageSize).stream()
         .map(mapper::toRest)
         .collect(toList());
   }
 
   @GetMapping("/users/{userId}/tasks/{taskId}/annotations/{annotationBatchId}")
-  public AnnotationBatch getAnnotationBatchByJobTaskAndId(
+  public AnnotationBatch getUserAnnotationBatchByJobTaskAndId(
       @PathVariable String userId,
       @PathVariable String taskId,
       @PathVariable String annotationBatchId) {
     return mapper.toRest(
-        service.findByAnnotatorIdAndTaskIdAndId(userId, taskId, annotationBatchId));
+        service.findByInterExternalAnnotatorIdAndTaskIdAndId(userId, taskId, annotationBatchId));
   }
 
   @PutMapping("/users/{userId}/tasks/{taskId}/annotations/{annotationBatchId}")
