@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>Annotated Job Task And Annotations Creation Finished</title>
+    <style>
+        * {
+            font-family: Arial, Verdana, Georgia, and Courier, serif;
+            color: black;
+        }
+    </style>
+</head>
+<body>
+<p>
+    Bonjour,
+</p>
+<p>La création des tâches à corriger pour le job "<span th:text="${job.name}"></span>" (id=<span th:text="${job.id}"></span>) a été effectuée et elle est prếte à
+    être commencée. Prière de changer l'attribut teamId du job par une team de votre choix</p>
+<br/>
+<p>BPartners, l'assistant intelligent Tout-en-Un, qui accélère la croissance des artisans & indépendants
+    français.</p>
+</body>
+</html>
