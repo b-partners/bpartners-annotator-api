@@ -13,6 +13,7 @@ import api.bpartners.annotator.repository.dao.TaskDao;
 import api.bpartners.annotator.repository.jpa.TaskRepository;
 import api.bpartners.annotator.repository.model.Job;
 import api.bpartners.annotator.repository.model.Task;
+import api.bpartners.annotator.repository.model.User;
 import api.bpartners.annotator.repository.model.enums.TaskStatus;
 import api.bpartners.annotator.service.validator.TaskUpdateValidator;
 import java.util.List;
@@ -31,6 +32,7 @@ public class TaskService {
   private final JobService jobService;
   private final TaskDao taskDao;
   private final TaskUpdateValidator updateValidator;
+  private final UserService userService;
 
   public List<Task> getAllByJobAndStatus(
       String jobId, TaskStatus status, String userId, PageFromOne page, BoundedPageSize pageSize) {
@@ -98,14 +100,24 @@ public class TaskService {
     return update(persisted.getJob().getId(), persisted.getId(), persisted);
   }
 
-  public Task getAvailableTaskFromJobOrJobAndUserId(String teamId, String jobId, String userId) {
-    Optional<Task> optionalTask = taskDao.findAvailableTaskFromJobOrJobAndUserId(jobId, userId);
+  public Task getAvailableTaskFromJobOrJobAndUserIdOrJobAndExternalUsers(
+      String teamId, String jobId, String userId) {
+    List<String> geoJobsUsers =
+        userService.getGeoJobsUsersWithoutCaringAboutTeam().stream().map(User::getId).toList();
+    Optional<Task> optionalTask =
+        taskDao.findAvailableTaskFromJobOrJobAndUserIdOrJobAndExternalUserIds(
+            jobId, userId, geoJobsUsers);
 
     if (optionalTask.isEmpty()) {
       return null;
     }
     Task availableTask = optionalTask.get();
-    if (PENDING.equals(availableTask.getStatus())) {
+    boolean isAnnotatedByGeojobs =
+        geoJobsUsers.contains(availableTask.getUserId())
+            && availableTask.getUserId() != null
+            && !availableTask.getUserId().equals(userId);
+    if (PENDING.equals(availableTask.getStatus()) || isAnnotatedByGeojobs) {
+      // if the task is from GeoJobs, update the task to be our current user's property
       return setToUnderCompletionByUserId(userId, availableTask.getId());
     }
 

@@ -25,7 +25,8 @@ public class UserTaskController {
       @PathVariable String jobId,
       @AuthenticationPrincipal Principal principal) {
     return mapper.toRest(
-        service.getAvailableTaskFromJobOrJobAndUserId(teamId, jobId, principal.getUser().getId()));
+        service.getAvailableTaskFromJobOrJobAndUserIdOrJobAndExternalUsers(
+            teamId, jobId, principal.getUser().getId()));
   }
 
   @PutMapping("/teams/{teamId}/jobs/{jobId}/tasks/{taskId}")

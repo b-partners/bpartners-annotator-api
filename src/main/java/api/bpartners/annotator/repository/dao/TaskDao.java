@@ -56,8 +56,8 @@ public class TaskDao {
         .getResultList();
   }
 
-  public Optional<Task> findAvailableTaskFromJobOrJobAndUserId(
-      @NotNull String jobId, @NotNull String userId) {
+  public Optional<Task> findAvailableTaskFromJobOrJobAndUserIdOrJobAndExternalUserIds(
+      @NotNull String jobId, @NotNull String userId, @NotNull List<String> externalUserIds) {
     CriteriaBuilder cb = entityManager.getCriteriaBuilder();
     CriteriaQuery<Task> query = cb.createQuery(Task.class);
     Root<Task> taskRoot = query.from(Task.class);
@@ -66,6 +66,7 @@ public class TaskDao {
       cb.and(
           cb.equal(taskRoot.get("job").get("id"), jobId),
           cb.or(
+              cb.and(taskRoot.get("userId").in(externalUserIds)),
               cb.and(
                   cb.equal(taskRoot.get("userId"), userId),
                   taskRoot.get("status").in(ANNOTATOR_OWNABLE_AVAILABLE_TASK_STATUSES)),
