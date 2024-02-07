@@ -44,6 +44,8 @@ public class TestMocks {
   public static final String BATCH_REVIEW_1_ID = "batch_review_1_id";
   public static final String BATCH_2_ID = "batch_2_id";
   public static final String JOB_2_ID = "job_2_id";
+  public static final String GEOJOBS_USER_ID = "geo-jobs_user_id";
+  public static final String GEOJOBS_TEAM_ID = "geo_jobs_team_id";
 
   public static Team team1() {
     return new Team().id(TEAM_1_ID).name("joe_team");
