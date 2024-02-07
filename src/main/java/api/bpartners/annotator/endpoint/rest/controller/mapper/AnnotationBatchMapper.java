@@ -32,6 +32,7 @@ public class AnnotationBatchMapper {
                 .map(restAnnotation -> annotationMapper.toDomain(rest.getId(), restAnnotation))
                 .toList())
         .task(taskService.getById(taskId))
+        .creationTimestamp(rest.getCreationDatetime())
         .build();
   }
 }
