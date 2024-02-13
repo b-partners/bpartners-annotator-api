@@ -1,36 +1,34 @@
 package api.bpartners.annotator.repository.model;
 
 import static api.bpartners.annotator.repository.model.enums.JobStatus.COMPLETED;
-import static javax.persistence.CascadeType.ALL;
-import static javax.persistence.EnumType.STRING;
+import static jakarta.persistence.CascadeType.ALL;
+import static jakarta.persistence.EnumType.STRING;
+import static org.hibernate.type.SqlTypes.NAMED_ENUM;
 
 import api.bpartners.annotator.endpoint.rest.model.JobType;
 import api.bpartners.annotator.repository.model.enums.JobStatus;
-import api.bpartners.annotator.repository.model.types.PostgresEnumType;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import java.util.List;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Enumerated;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.Type;
-import org.hibernate.annotations.TypeDef;
+import org.hibernate.annotations.JdbcTypeCode;
 
 @Entity
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@TypeDef(name = "pgsql_enum", typeClass = PostgresEnumType.class)
 public class Job {
 
   @Id private String id;
@@ -41,17 +39,16 @@ public class Job {
 
   @Enumerated(STRING)
   @Column(name = "status")
-  @Type(type = "pgsql_enum")
+  @JdbcTypeCode(NAMED_ENUM)
   private JobStatus status;
 
   private String teamId;
 
   @Enumerated(STRING)
   @Column(name = "type")
-  @Type(type = "pgsql_enum")
   private JobType type;
 
-  @OneToMany()
+  @OneToMany
   @JoinColumn(insertable = false, updatable = false, name = "job_id", referencedColumnName = "id")
   @JsonIgnoreProperties("job")
   private List<Task> tasks;

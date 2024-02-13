@@ -10,12 +10,18 @@ import static org.springframework.http.HttpMethod.PUT;
 import api.bpartners.annotator.endpoint.rest.security.matcher.SelfTeamMatcher;
 import api.bpartners.annotator.endpoint.rest.security.matcher.SelfUserMatcher;
 import api.bpartners.annotator.model.exception.ForbiddenException;
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AnonymousAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.NegatedRequestMatcher;
@@ -25,7 +31,8 @@ import org.springframework.web.servlet.HandlerExceptionResolver;
 
 @Configuration
 @Slf4j
-public class SecurityConf extends WebSecurityConfigurerAdapter {
+@EnableWebSecurity
+public class SecurityConf {
 
   public static final String AUTHORIZATION_HEADER = "Authorization";
   private final AuthProvider authProvider;
@@ -42,24 +49,28 @@ public class SecurityConf extends WebSecurityConfigurerAdapter {
     this.resourceProvider = resourceProvider;
   }
 
-  @Override
-  protected void configure(HttpSecurity http) throws Exception {
+  @Bean
+  public SecurityFilterChain configure(HttpSecurity http) throws Exception {
     // @formatter:off
-    http.exceptionHandling()
-        .authenticationEntryPoint(
-            // note(spring-exception)
-            // https://stackoverflow.com/questions/59417122/how-to-handle-usernamenotfoundexception-spring-security
-            // issues like when a user tries to access a resource
-            // without appropriate authentication elements
-            (req, res, e) ->
-                exceptionResolver.resolveException(req, res, null, forbiddenWithRemoteInfo(e, req)))
-        .accessDeniedHandler(
-            // note(spring-exception): issues like when a user not having required roles
-            (req, res, e) ->
-                exceptionResolver.resolveException(req, res, null, forbiddenWithRemoteInfo(e, req)))
-
+    http.exceptionHandling(
+            (exceptionHandler) ->
+                exceptionHandler
+                    .authenticationEntryPoint(
+                        // note(spring-exception)
+                        // https://stackoverflow.com/questions/59417122/how-to-handle-usernamenotfoundexception-spring-security
+                        // issues like when a user tries to access a resource
+                        // without appropriate authentication elements
+                        (req, res, e) ->
+                            exceptionResolver.resolveException(
+                                req, res, null, forbiddenWithRemoteInfo(e, req)))
+                    .accessDeniedHandler(
+                        // note(spring-exception): issues like when a user not having required roles
+                        (req, res, e) ->
+                            exceptionResolver.resolveException(
+                                req, res, null, forbiddenWithRemoteInfo(e, req))))
+        .sessionManagement(
+            session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         // authenticate
-        .and()
         .authenticationProvider(authProvider)
         .addFilterBefore(
             bearerFilter(
@@ -72,109 +83,110 @@ public class SecurityConf extends WebSecurityConfigurerAdapter {
                         new AntPathRequestMatcher("/health/email", GET.name()),
                         new AntPathRequestMatcher("/health/event", GET.name())))),
             AnonymousAuthenticationFilter.class)
-        .anonymous()
-
-        // authorize
-        .and()
-        .authorizeRequests()
-        .antMatchers(OPTIONS, "/**")
-        .permitAll()
-        .antMatchers(GET, "/ping")
-        .permitAll()
-        .antMatchers("/health/bucket")
-        .permitAll()
-        .antMatchers("/health/db")
-        .permitAll()
-        .antMatchers("/health/email")
-        .permitAll()
-        .antMatchers("/health/event")
-        .permitAll()
-        .antMatchers("/whoami")
-        .hasAnyRole(ADMIN.getRole(), ANNOTATOR.getRole())
-        .antMatchers(POST, "/users")
-        .hasRole(ADMIN.getRole())
-        .antMatchers(GET, "/users")
-        .hasRole(ADMIN.getRole())
-        .antMatchers(PUT, "/annotated-jobs/*")
-        .hasRole(ADMIN.getRole())
-        .antMatchers(GET, "/jobs")
-        .hasRole(ADMIN.getRole())
-        .antMatchers(GET, "/jobs/*")
-        .hasRole(ADMIN.getRole())
-        .antMatchers(PUT, "/jobs/*")
-        .hasRole(ADMIN.getRole())
-        .antMatchers(GET, "/jobs/*/export")
-        .hasRole(ADMIN.getRole())
-        .antMatchers(GET, "/jobs/*/tasks")
-        .hasRole(ADMIN.getRole())
-        .antMatchers(GET, "/jobs/*/tasks/*")
-        .hasRole(ADMIN.getRole())
-        .antMatchers(GET, "/jobs/*/tasks/*/annotations")
-        .hasRole(ADMIN.getRole())
-        .antMatchers(GET, "/jobs/*/tasks/*/annotations/*")
-        .hasRole(ADMIN.getRole())
-        .antMatchers(GET, "/jobs/*/tasks/*/annotations/*/reviews")
-        .hasRole(ADMIN.getRole())
-        .antMatchers(PUT, "/jobs/*/tasks/*/annotations/*/reviews/*")
-        .hasRole(ADMIN.getRole())
-        .antMatchers(GET, "/jobs/*/tasks/*/annotations/*/reviews/*")
-        .hasRole(ADMIN.getRole())
-        .antMatchers(GET, "/teams")
-        .hasRole(ADMIN.getRole())
-        .antMatchers(POST, "/teams")
-        .hasRole(ADMIN.getRole())
-        .requestMatchers(new SelfTeamMatcher(GET, "/teams/*/jobs", resourceProvider))
-        .hasRole(ANNOTATOR.getRole())
-        .antMatchers(GET, "/teams/*/jobs")
-        .hasRole(ADMIN.getRole())
-        .requestMatchers(new SelfTeamMatcher(GET, "/teams/*/jobs/*", resourceProvider))
-        .hasRole(ANNOTATOR.getRole())
-        .antMatchers(GET, "/teams/*/jobs/*")
-        .hasRole(ADMIN.getRole())
-        .requestMatchers(new SelfTeamMatcher(GET, "/teams/*/jobs/*/task", resourceProvider))
-        .hasRole(ANNOTATOR.getRole())
-        // .antMatchers(GET, "/teams/*/jobs/*/task")
-        // .hasRole(ADMIN.getRole())
-        .requestMatchers(new SelfTeamMatcher(PUT, "/teams/*/jobs/*/tasks/*", resourceProvider))
-        .hasRole(ANNOTATOR.getRole())
-        .requestMatchers(new SelfUserMatcher(PUT, "/users/*/tasks/*/annotations", resourceProvider))
-        .hasRole(ANNOTATOR.getRole())
-        .requestMatchers(new SelfUserMatcher(GET, "/users/*/tasks/*/annotations", resourceProvider))
-        .hasRole(ANNOTATOR.getRole())
-        .antMatchers(GET, "/users/*/tasks/*/annotations")
-        .hasRole(ADMIN.getRole())
-        .requestMatchers(
-            new SelfUserMatcher(GET, "/users/*/tasks/*/annotations/*", resourceProvider))
-        .hasRole(ANNOTATOR.getRole())
-        .antMatchers(GET, "/users/*/tasks/*/annotations/*")
-        .hasRole(ADMIN.getRole())
-        .requestMatchers(
-            new SelfUserMatcher(GET, "/users/*/tasks/*/annotations/*/reviews", resourceProvider))
-        .hasRole(ANNOTATOR.getRole())
-        .antMatchers(GET, "/users/*/tasks/*/annotations/*/reviews")
-        .hasRole(ADMIN.getRole())
-        .requestMatchers(
-            new SelfUserMatcher(GET, "/users/*/tasks/*/annotations/*/reviews/*", resourceProvider))
-        .hasRole(ANNOTATOR.getRole())
-        .antMatchers(GET, "/users/*/tasks/*/annotations/*/reviews/*")
-        .hasRole(ADMIN.getRole())
-        // .antMatchers(PUT, "/users/*/tasks/*/annotations/*")
-        // .hasRole(ADMIN.getRole())
-        .antMatchers("/**")
-        .denyAll()
-
+        .authorizeHttpRequests(
+            (authorize) ->
+                authorize
+                    .requestMatchers(OPTIONS, "/**")
+                    .permitAll()
+                    .requestMatchers(GET, "/ping")
+                    .permitAll()
+                    .requestMatchers("/health/bucket")
+                    .permitAll()
+                    .requestMatchers("/health/db")
+                    .permitAll()
+                    .requestMatchers("/health/email")
+                    .permitAll()
+                    .requestMatchers("/health/event")
+                    .permitAll()
+                    .requestMatchers("/whoami")
+                    .hasAnyRole(ADMIN.getRole(), ANNOTATOR.getRole())
+                    .requestMatchers(POST, "/users")
+                    .hasRole(ADMIN.getRole())
+                    .requestMatchers(GET, "/users")
+                    .hasRole(ADMIN.getRole())
+                    .requestMatchers(PUT, "/annotated-jobs/*")
+                    .hasRole(ADMIN.getRole())
+                    .requestMatchers(GET, "/jobs")
+                    .hasRole(ADMIN.getRole())
+                    .requestMatchers(GET, "/jobs/*")
+                    .hasRole(ADMIN.getRole())
+                    .requestMatchers(PUT, "/jobs/*")
+                    .hasRole(ADMIN.getRole())
+                    .requestMatchers(GET, "/jobs/*/export")
+                    .hasRole(ADMIN.getRole())
+                    .requestMatchers(GET, "/jobs/*/tasks")
+                    .hasRole(ADMIN.getRole())
+                    .requestMatchers(GET, "/jobs/*/tasks/*")
+                    .hasRole(ADMIN.getRole())
+                    .requestMatchers(GET, "/jobs/*/tasks/*/annotations")
+                    .hasRole(ADMIN.getRole())
+                    .requestMatchers(GET, "/jobs/*/tasks/*/annotations/*")
+                    .hasRole(ADMIN.getRole())
+                    .requestMatchers(GET, "/jobs/*/tasks/*/annotations/*/reviews")
+                    .hasRole(ADMIN.getRole())
+                    .requestMatchers(PUT, "/jobs/*/tasks/*/annotations/*/reviews/*")
+                    .hasRole(ADMIN.getRole())
+                    .requestMatchers(GET, "/jobs/*/tasks/*/annotations/*/reviews/*")
+                    .hasRole(ADMIN.getRole())
+                    .requestMatchers(GET, "/teams")
+                    .hasRole(ADMIN.getRole())
+                    .requestMatchers(POST, "/teams")
+                    .hasRole(ADMIN.getRole())
+                    .requestMatchers(new SelfTeamMatcher(GET, "/teams/*/jobs", resourceProvider))
+                    .hasRole(ANNOTATOR.getRole())
+                    .requestMatchers(GET, "/teams/*/jobs")
+                    .hasRole(ADMIN.getRole())
+                    .requestMatchers(new SelfTeamMatcher(GET, "/teams/*/jobs/*", resourceProvider))
+                    .hasRole(ANNOTATOR.getRole())
+                    .requestMatchers(GET, "/teams/*/jobs/*")
+                    .hasRole(ADMIN.getRole())
+                    .requestMatchers(
+                        new SelfTeamMatcher(GET, "/teams/*/jobs/*/task", resourceProvider))
+                    .hasRole(ANNOTATOR.getRole())
+                    // .requestMatchers(GET, "/teams/*/jobs/*/task")
+                    // .hasRole(ADMIN.getRole())
+                    .requestMatchers(
+                        new SelfTeamMatcher(PUT, "/teams/*/jobs/*/tasks/*", resourceProvider))
+                    .hasRole(ANNOTATOR.getRole())
+                    .requestMatchers(
+                        new SelfUserMatcher(PUT, "/users/*/tasks/*/annotations", resourceProvider))
+                    .hasRole(ANNOTATOR.getRole())
+                    .requestMatchers(
+                        new SelfUserMatcher(GET, "/users/*/tasks/*/annotations", resourceProvider))
+                    .hasRole(ANNOTATOR.getRole())
+                    .requestMatchers(GET, "/users/*/tasks/*/annotations")
+                    .hasRole(ADMIN.getRole())
+                    .requestMatchers(
+                        new SelfUserMatcher(
+                            GET, "/users/*/tasks/*/annotations/*", resourceProvider))
+                    .hasRole(ANNOTATOR.getRole())
+                    .requestMatchers(GET, "/users/*/tasks/*/annotations/*")
+                    .hasRole(ADMIN.getRole())
+                    .requestMatchers(
+                        new SelfUserMatcher(
+                            GET, "/users/*/tasks/*/annotations/*/reviews", resourceProvider))
+                    .hasRole(ANNOTATOR.getRole())
+                    .requestMatchers(GET, "/users/*/tasks/*/annotations/*/reviews")
+                    .hasRole(ADMIN.getRole())
+                    .requestMatchers(
+                        new SelfUserMatcher(
+                            GET, "/users/*/tasks/*/annotations/*/reviews/*", resourceProvider))
+                    .hasRole(ANNOTATOR.getRole())
+                    .requestMatchers(GET, "/users/*/tasks/*/annotations/*/reviews/*")
+                    .hasRole(ADMIN.getRole())
+                    // .requestMatchers(PUT, "/users/*/tasks/*/annotations/*")
+                    // .hasRole(ADMIN.getRole())
+                    .requestMatchers("/**")
+                    .denyAll())
         // disable superfluous protections
         // Eg if all clients are non-browser then no csrf
         // https://docs.spring.io/spring-security/site/docs/3.2.0.CI-SNAPSHOT/reference/html/csrf.html,
         // Sec 13.3
-        .and()
-        .csrf()
-        .disable() // NOSONAR
-        .formLogin()
-        .disable()
-        .logout()
-        .disable();
+        .csrf(AbstractHttpConfigurer::disable)
+        .formLogin(AbstractHttpConfigurer::disable)
+        .logout(AbstractHttpConfigurer::disable);
     // formatter:on
+    return http.build();
   }
 
   private Exception forbiddenWithRemoteInfo(Exception e, HttpServletRequest req) {
@@ -183,6 +195,11 @@ public class SecurityConf extends WebSecurityConfigurerAdapter {
             "Access is denied for remote caller: address=%s, host=%s, port=%s",
             req.getRemoteAddr(), req.getRemoteHost(), req.getRemotePort()));
     return new ForbiddenException(e.getMessage());
+  }
+
+  @Bean
+  public AuthenticationManager authenticationManager() {
+    return new ProviderManager(authProvider);
   }
 
   private BearerAuthFilter bearerFilter(RequestMatcher requestMatcher) throws Exception {

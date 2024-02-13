@@ -1,10 +1,10 @@
 package api.bpartners.annotator.endpoint.rest.security.matcher;
 
 import api.bpartners.annotator.endpoint.rest.security.AuthenticatedResourceProvider;
+import jakarta.servlet.http.HttpServletRequest;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import javax.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.web.util.matcher.RequestMatcher;
@@ -26,7 +26,6 @@ public abstract class SelfMatcher implements RequestMatcher {
     return uriMatcher.find() ? uriMatcher.group(GROUP_NAME) : null;
   }
 
-  @Override
   public boolean matches(HttpServletRequest request) {
     return Objects.equals(getId(request), getAccessibleProtectedResourceId());
   }
