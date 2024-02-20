@@ -2,10 +2,8 @@ package api.bpartners.annotator.repository.model;
 
 import static jakarta.persistence.EnumType.STRING;
 import static org.hibernate.type.SqlTypes.ARRAY;
-import static org.hibernate.type.SqlTypes.NAMED_ENUM;
 
 import api.bpartners.annotator.endpoint.rest.security.model.Role;
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
