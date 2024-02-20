@@ -52,7 +52,7 @@ public class UserTasksIT extends FacadeIT {
     UserTasksApi api = new UserTasksApi(adminClient);
 
     assertThrowsForbiddenException(
-        () -> api.getUserTaskByJob(TEAM_1_ID, JOB_1_ID), "Access is denied");
+        () -> api.getUserTaskByJob(TEAM_1_ID, JOB_1_ID), "Access Denied");
   }
 
   @Test

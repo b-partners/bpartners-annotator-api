@@ -1,6 +1,6 @@
 package api.bpartners.annotator.repository.model;
 
-import static org.postgresql.core.Oid.JSONB;
+import static org.hibernate.type.SqlTypes.JSON;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -31,7 +31,7 @@ public class Annotation implements Serializable {
 
   private String userId;
 
-  @JdbcTypeCode(JSONB)
+  @JdbcTypeCode(JSON)
   private Polygon polygon;
 
   private String batchId;

@@ -46,6 +46,7 @@ public class Job {
 
   @Enumerated(STRING)
   @Column(name = "type")
+  @JdbcTypeCode(NAMED_ENUM)
   private JobType type;
 
   @OneToMany
