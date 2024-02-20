@@ -1,38 +1,24 @@
 package api.bpartners.annotator.repository.model;
 
+import static org.hibernate.type.SqlTypes.ARRAY;
+
 import api.bpartners.annotator.endpoint.rest.security.model.Role;
-import api.bpartners.annotator.repository.model.types.PostgresEnumType;
-import io.hypersistence.utils.hibernate.type.array.EnumArrayType;
-import io.hypersistence.utils.hibernate.type.array.internal.AbstractArrayType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.Parameter;
-import org.hibernate.annotations.Type;
-import org.hibernate.annotations.TypeDef;
-import org.hibernate.annotations.TypeDefs;
+import org.hibernate.annotations.JdbcTypeCode;
 
 @Entity
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@TypeDefs({
-  @TypeDef(name = "pgsql_enum", typeClass = PostgresEnumType.class),
-  @TypeDef(name = "user_roles", typeClass = EnumArrayType.class, defaultForType = Enum[].class),
-  @TypeDef(
-      name = "user_roles",
-      typeClass = EnumArrayType.class,
-      defaultForType = Role[].class,
-      parameters = @Parameter(name = AbstractArrayType.SQL_ARRAY_TYPE, value = "user_role"))
-})
 @Table(name = "\"user\"")
 public class User {
   @Id private String id;
@@ -41,8 +27,7 @@ public class User {
   @JoinColumn(name = "team_id")
   private Team team;
 
-  @Type(type = "user_roles")
-  @Column(name = "roles", columnDefinition = "user_role[]")
+  @JdbcTypeCode(ARRAY)
   private Role[] roles;
 
   private String email;

@@ -2,39 +2,37 @@ package api.bpartners.annotator.repository.model;
 
 import static api.bpartners.annotator.repository.model.enums.ReviewStatus.ACCEPTED;
 import static api.bpartners.annotator.repository.model.enums.ReviewStatus.REJECTED;
-import static javax.persistence.EnumType.STRING;
+import static jakarta.persistence.EnumType.STRING;
+import static org.hibernate.type.SqlTypes.NAMED_ENUM;
 
 import api.bpartners.annotator.repository.model.enums.ReviewStatus;
-import api.bpartners.annotator.repository.model.types.PostgresEnumType;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Enumerated;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.Type;
-import org.hibernate.annotations.TypeDef;
+import org.hibernate.annotations.JdbcTypeCode;
 
 @Entity
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@TypeDef(name = "pgsql_enum", typeClass = PostgresEnumType.class)
 public class AnnotationBatchReview {
   @Id private String id;
 
-  @Type(type = "pgsql_enum")
   @Enumerated(STRING)
+  @JdbcTypeCode(NAMED_ENUM)
   private ReviewStatus status;
 
   private String annotationBatchId;
