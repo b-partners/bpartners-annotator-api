@@ -1,21 +1,18 @@
 package api.bpartners.annotator.repository.model;
 
-import static api.bpartners.annotator.repository.model.types.PostgresTypes.JSONB;
+import static org.hibernate.type.SqlTypes.JSON;
 
-import io.hypersistence.utils.hibernate.type.json.JsonBinaryType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
 import java.io.Serializable;
 import java.util.List;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.Type;
-import org.hibernate.annotations.TypeDef;
+import org.hibernate.annotations.JdbcTypeCode;
 import org.springframework.lang.Nullable;
 
 @Entity
@@ -23,7 +20,6 @@ import org.springframework.lang.Nullable;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@TypeDef(name = JSONB, typeClass = JsonBinaryType.class)
 public class Annotation implements Serializable {
   @Id private String id;
   private String taskId;
@@ -35,8 +31,7 @@ public class Annotation implements Serializable {
 
   private String userId;
 
-  @Type(type = JSONB)
-  @Column(columnDefinition = JSONB)
+  @JdbcTypeCode(JSON)
   private Polygon polygon;
 
   private String batchId;
