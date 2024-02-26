@@ -3,4 +3,5 @@ AWS_COGNITO_USERPOOL_ID: !Sub '{{resolve:ssm:/bpartners-annotator/${Env}/cognito
 AWS_COGNITO_USERPOOL_DOMAIN: !Sub '{{resolve:ssm:/bpartners-annotator/${Env}/cognito/userpool-domain}}'
 AWS_COGNITO_USERPOOL_CLIENTID: !Sub '{{resolve:ssm:/bpartners-annotator/${Env}/cognito/userpool-client-id}}'
 AWS_COGNITO_USERPOOL_CLIENTSECRET: !Sub '{{resolve:ssm:/bpartners-annotator/${Env}/cognito/userpool-client-secret}}'
-GEOJOBS_USER_INFO: !Sub '{{resolve:ssm:/bpartners-annotator/preprod/geojobs/userinfo}}'
+GEOJOBS_USER_INFO: !Sub '{{resolve:ssm:/bpartners-annotator/${Env}/geojobs/userinfo}}'
+TASKS_INSERT_LIMIT_MAX: !Sub '{{resolve:ssm:/bpartners-annotator/${Env}/max-tasks-insert-nb}}'

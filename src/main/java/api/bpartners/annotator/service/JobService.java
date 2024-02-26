@@ -1,5 +1,7 @@
 package api.bpartners.annotator.service;
 
+import static api.bpartners.annotator.endpoint.rest.model.JobType.LABELLING;
+import static api.bpartners.annotator.endpoint.rest.model.JobType.REVIEWING;
 import static api.bpartners.annotator.repository.model.enums.JobStatus.COMPLETED;
 import static api.bpartners.annotator.repository.model.enums.JobStatus.PENDING;
 import static api.bpartners.annotator.repository.model.enums.JobStatus.STARTED;
@@ -95,7 +97,11 @@ public class JobService {
 
   @Transactional
   public Job save(Job job) {
-    if (!repository.existsById(job.getId()) && job.getStatus().equals(PENDING)) {
+    if (REVIEWING.equals(job.getType())) {
+      return repository.save(job);
+    } else if (!repository.existsById(job.getId())
+        && PENDING.equals(job.getStatus())
+        && LABELLING.equals(job.getType())) {
       var savedJob = repository.save(job);
       eventProducer.accept(List.of(toEventType(savedJob, null)));
       return savedJob;
