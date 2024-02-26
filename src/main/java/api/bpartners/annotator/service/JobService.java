@@ -9,9 +9,7 @@ import static org.springframework.data.domain.Pageable.unpaged;
 import static org.springframework.data.domain.Sort.Order.asc;
 
 import api.bpartners.annotator.endpoint.event.EventProducer;
-import api.bpartners.annotator.endpoint.event.gen.AnnotatedJobCrupdated;
 import api.bpartners.annotator.endpoint.event.gen.JobCreated;
-import api.bpartners.annotator.endpoint.rest.model.CrupdateAnnotatedJob;
 import api.bpartners.annotator.endpoint.rest.model.JobType;
 import api.bpartners.annotator.model.BoundedPageSize;
 import api.bpartners.annotator.model.PageFromOne;
@@ -105,14 +103,6 @@ public class JobService {
     return updateJob(job);
   }
 
-  @Transactional
-  public Job crupdateAnnotatedJob(
-      String jobId, CrupdateAnnotatedJob crupdateAnnotatedJob, Job job) {
-    Job updated = repository.save(job);
-    eventProducer.accept(List.of(new AnnotatedJobCrupdated(crupdateAnnotatedJob, job)));
-    return updated;
-  }
-
   public Job updateJobStatus(String jobId, JobStatus status) {
     Job persisted = getById(jobId);
     persisted.setStatus(status);
@@ -143,32 +133,38 @@ public class JobService {
     BadRequestException exception =
         new BadRequestException(String.format("illegal transition: %s -> %s", current, next));
     return switch (current) {
-      case PENDING -> switch (next) {
-        case PENDING, READY, FAILED -> next;
-        case STARTED, TO_REVIEW, TO_CORRECT, COMPLETED -> throw exception;
-      };
-      case READY -> switch (next) {
-        case READY, STARTED, FAILED -> next;
-        case PENDING, TO_REVIEW, TO_CORRECT, COMPLETED -> throw exception;
-      };
-      case STARTED -> switch (next) {
-        case STARTED, TO_REVIEW, TO_CORRECT, FAILED -> next;
-        case PENDING, READY, COMPLETED -> throw exception;
-      };
-      case TO_CORRECT -> switch (next) {
-        case TO_CORRECT, STARTED, TO_REVIEW, COMPLETED, FAILED -> next;
-        case PENDING, READY -> throw exception;
-      };
-      case TO_REVIEW -> switch (next) {
-        case TO_REVIEW, TO_CORRECT, COMPLETED, FAILED -> next;
-        case PENDING, READY, STARTED -> throw exception;
-      };
-      case FAILED -> throw new BadRequestException(
-          "Failed Job cannot be changed, create new Job instead");
-      case COMPLETED -> switch (next) {
-        case COMPLETED, TO_REVIEW, TO_CORRECT -> next;
-        case PENDING, READY, STARTED, FAILED -> throw exception;
-      };
+      case PENDING ->
+          switch (next) {
+            case PENDING, READY, FAILED -> next;
+            case STARTED, TO_REVIEW, TO_CORRECT, COMPLETED -> throw exception;
+          };
+      case READY ->
+          switch (next) {
+            case READY, STARTED, FAILED -> next;
+            case PENDING, TO_REVIEW, TO_CORRECT, COMPLETED -> throw exception;
+          };
+      case STARTED ->
+          switch (next) {
+            case STARTED, TO_REVIEW, TO_CORRECT, FAILED -> next;
+            case PENDING, READY, COMPLETED -> throw exception;
+          };
+      case TO_CORRECT ->
+          switch (next) {
+            case TO_CORRECT, STARTED, TO_REVIEW, COMPLETED, FAILED -> next;
+            case PENDING, READY -> throw exception;
+          };
+      case TO_REVIEW ->
+          switch (next) {
+            case TO_REVIEW, TO_CORRECT, COMPLETED, FAILED -> next;
+            case PENDING, READY, STARTED -> throw exception;
+          };
+      case FAILED ->
+          throw new BadRequestException("Failed Job cannot be changed, create new Job instead");
+      case COMPLETED ->
+          switch (next) {
+            case COMPLETED, TO_REVIEW, TO_CORRECT -> next;
+            case PENDING, READY, STARTED, FAILED -> throw exception;
+          };
     };
   }
 
