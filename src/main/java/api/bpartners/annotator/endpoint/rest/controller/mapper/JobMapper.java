@@ -1,10 +1,8 @@
 package api.bpartners.annotator.endpoint.rest.controller.mapper;
 
-import api.bpartners.annotator.endpoint.rest.model.CrupdateAnnotatedJob;
 import api.bpartners.annotator.endpoint.rest.model.CrupdateJob;
 import api.bpartners.annotator.endpoint.rest.model.Job;
 import api.bpartners.annotator.endpoint.rest.security.AuthenticatedResourceProvider;
-import api.bpartners.annotator.endpoint.rest.validator.CrupdateAnnotatedJobValidator;
 import api.bpartners.annotator.endpoint.rest.validator.JobValidator;
 import api.bpartners.annotator.repository.model.User;
 import api.bpartners.annotator.service.UserService;
@@ -19,7 +17,6 @@ public class JobMapper {
   private final LabelMapper labelMapper;
   private final JobValidator validator;
   private final AuthenticatedResourceProvider authenticatedResourceProvider;
-  private final CrupdateAnnotatedJobValidator crupdateAnnotatedJobValidator;
   private final UserService userService;
 
   public Job toRest(api.bpartners.annotator.repository.model.Job domain) {
@@ -56,26 +53,5 @@ public class JobMapper {
         .imagesWidth(rest.getImagesWidth())
         .labels(rest.getLabels().stream().map(labelMapper::toDomain).toList())
         .build();
-  }
-
-  public api.bpartners.annotator.repository.model.Job toDomain(CrupdateAnnotatedJob rest) {
-    crupdateAnnotatedJobValidator.accept(rest);
-    CrupdateJob converted = toCrupdateJob(rest);
-    return toDomain(converted);
-  }
-
-  private CrupdateJob toCrupdateJob(CrupdateAnnotatedJob crupdateAnnotatedJob) {
-    return new CrupdateJob()
-        .id(crupdateAnnotatedJob.getId())
-        .name(crupdateAnnotatedJob.getName())
-        .bucketName(crupdateAnnotatedJob.getBucketName())
-        .folderPath(crupdateAnnotatedJob.getFolderPath())
-        .ownerEmail(crupdateAnnotatedJob.getOwnerEmail())
-        .status(crupdateAnnotatedJob.getStatus())
-        .labels(crupdateAnnotatedJob.getLabels())
-        .teamId(crupdateAnnotatedJob.getTeamId())
-        .imagesHeight(crupdateAnnotatedJob.getImagesHeight())
-        .imagesWidth(crupdateAnnotatedJob.getImagesWidth())
-        .type(crupdateAnnotatedJob.getType());
   }
 }

@@ -7,34 +7,24 @@ import static api.bpartners.annotator.endpoint.rest.model.JobStatus.STARTED;
 import static api.bpartners.annotator.endpoint.rest.model.JobType.LABELLING;
 import static api.bpartners.annotator.endpoint.rest.model.JobType.REVIEWING;
 import static api.bpartners.annotator.integration.conf.utils.TestMocks.ADMIN_API_KEY;
-import static api.bpartners.annotator.integration.conf.utils.TestMocks.GEOJOBS_TEAM_ID;
-import static api.bpartners.annotator.integration.conf.utils.TestMocks.GEOJOBS_USER_ID;
 import static api.bpartners.annotator.integration.conf.utils.TestMocks.JOB_1_ID;
 import static api.bpartners.annotator.integration.conf.utils.TestMocks.JOE_DOE_TOKEN;
 import static api.bpartners.annotator.integration.conf.utils.TestMocks.job1;
 import static api.bpartners.annotator.integration.conf.utils.TestMocks.job9;
-import static api.bpartners.annotator.integration.conf.utils.TestMocks.team1;
 import static api.bpartners.annotator.integration.conf.utils.TestUtils.assertThrowsBadRequestException;
 import static api.bpartners.annotator.integration.conf.utils.TestUtils.setUpCognito;
 import static java.util.Collections.emptyList;
 import static java.util.UUID.randomUUID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.anyList;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 
 import api.bpartners.annotator.conf.FacadeIT;
 import api.bpartners.annotator.endpoint.event.EventProducer;
 import api.bpartners.annotator.endpoint.rest.api.JobsApi;
-import api.bpartners.annotator.endpoint.rest.api.TeamJobsApi;
 import api.bpartners.annotator.endpoint.rest.client.ApiClient;
 import api.bpartners.annotator.endpoint.rest.client.ApiException;
-import api.bpartners.annotator.endpoint.rest.model.AnnotatedTask;
 import api.bpartners.annotator.endpoint.rest.model.Annotation;
-import api.bpartners.annotator.endpoint.rest.model.AnnotationBatch;
 import api.bpartners.annotator.endpoint.rest.model.AnnotationNumberPerLabel;
-import api.bpartners.annotator.endpoint.rest.model.CrupdateAnnotatedJob;
 import api.bpartners.annotator.endpoint.rest.model.CrupdateJob;
 import api.bpartners.annotator.endpoint.rest.model.Job;
 import api.bpartners.annotator.endpoint.rest.model.Label;
@@ -226,62 +216,6 @@ public class JobIT extends FacadeIT {
             + "Labels are mandatory.");
   }
 
-  @Test
-  void admin_create_job_then_crupdate_and_annotator_get_ok() throws ApiException {
-    ApiClient adminClient = anAdminApiClient();
-    JobsApi api = new JobsApi(adminClient);
-    String randomUUID = randomUUID().toString();
-    ApiClient annotatorClient = anAnnotatorApiClient();
-    TeamJobsApi annotatorApi = new TeamJobsApi(annotatorClient);
-    Label dummyLabel = creatableDummyLabel();
-    CrupdateAnnotatedJob payload = creatableCrupdateAnnotatedJob(randomUUID, dummyLabel);
-    Job expected = from(payload);
-
-    Job actual = api.crupdateAnnotatedJob(randomUUID, payload);
-
-    verify(eventProducer, times(1)).accept(anyList());
-    String teamId = team1().getId();
-    // you do not have to update status to ready because it is automatically done by the API after
-    // all annotations get saved
-    api.saveJob(randomUUID, from(actual).status(READY).teamId(teamId));
-    api.saveJob(randomUUID, from(actual).status(STARTED).teamId(teamId));
-
-    Job actualJobFromClientView = annotatorApi.getAnnotatorReadableTeamJobById(teamId, randomUUID);
-
-    assertEquals(expected, actual);
-    assertEquals(expected.teamId(teamId).status(STARTED), actualJobFromClientView);
-  }
-
-  public static CrupdateAnnotatedJob creatableCrupdateAnnotatedJob(
-      String randomUUID, Label dummyLabel) {
-    return new CrupdateAnnotatedJob()
-        .id(randomUUID)
-        .type(REVIEWING)
-        .folderPath("test/")
-        .bucketName("dummy")
-        .imagesHeight(1024)
-        .imagesWidth(1024)
-        .teamId(GEOJOBS_TEAM_ID)
-        .ownerEmail("admin@gmail.com")
-        .status(PENDING)
-        .labels(List.of(dummyLabel))
-        .name(randomUUID)
-        .annotatedTasks(List.of(creatableAnnotatedTask(dummyLabel)));
-  }
-
-  public static AnnotatedTask creatableAnnotatedTask(Label dummyLabel) {
-    String taskId = randomUUID().toString();
-    String annotatorId = GEOJOBS_USER_ID;
-    return new AnnotatedTask()
-        .id(taskId)
-        .filename("haha.jpg")
-        .annotatorId(annotatorId)
-        .annotationBatch(
-            new AnnotationBatch()
-                .id(randomUUID().toString())
-                .annotations(List.of(creatableAnnotation(taskId, annotatorId, dummyLabel))));
-  }
-
   public static Annotation creatableAnnotation(String taskId, String annotatorId, Label label) {
     return new Annotation()
         .id(randomUUID().toString())
@@ -293,28 +227,6 @@ public class JobIT extends FacadeIT {
 
   public static Label creatableDummyLabel() {
     return new Label().id(randomUUID().toString()).name("dummy_label").color("#00ff00");
-  }
-
-  private Job from(CrupdateAnnotatedJob crupdateAnnotatedJob) {
-    List<Label> labels = crupdateAnnotatedJob.getLabels();
-    return new Job()
-        .id(crupdateAnnotatedJob.getId())
-        .type(crupdateAnnotatedJob.getType())
-        .labels(labels)
-        .status(crupdateAnnotatedJob.getStatus())
-        .name(crupdateAnnotatedJob.getName())
-        .ownerEmail(crupdateAnnotatedJob.getOwnerEmail())
-        .folderPath(crupdateAnnotatedJob.getFolderPath())
-        .bucketName(crupdateAnnotatedJob.getBucketName())
-        .teamId(crupdateAnnotatedJob.getTeamId())
-        .imagesHeight(crupdateAnnotatedJob.getImagesHeight())
-        .imagesWidth(crupdateAnnotatedJob.getImagesWidth())
-        .taskStatistics(
-            new TaskStatistics()
-                .totalTasks(0L)
-                .completedTasksByUserId(0L)
-                .remainingTasks(0L)
-                .remainingTasksForUserId(0L));
   }
 
   CrupdateJob from(Job job) {

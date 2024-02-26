@@ -7,13 +7,11 @@ import static org.springframework.http.MediaType.TEXT_PLAIN_VALUE;
 import api.bpartners.annotator.endpoint.rest.controller.mapper.JobMapper;
 import api.bpartners.annotator.endpoint.rest.controller.mapper.JobStatusMapper;
 import api.bpartners.annotator.endpoint.rest.model.AnnotationNumberPerLabel;
-import api.bpartners.annotator.endpoint.rest.model.CrupdateAnnotatedJob;
 import api.bpartners.annotator.endpoint.rest.model.CrupdateJob;
 import api.bpartners.annotator.endpoint.rest.model.ExportFormat;
 import api.bpartners.annotator.endpoint.rest.model.Job;
 import api.bpartners.annotator.endpoint.rest.model.JobStatus;
 import api.bpartners.annotator.endpoint.rest.model.JobType;
-import api.bpartners.annotator.endpoint.rest.validator.CrupdateAnnotatedJobIdValidator;
 import api.bpartners.annotator.endpoint.rest.validator.CrupdateJobIdValidator;
 import api.bpartners.annotator.model.BoundedPageSize;
 import api.bpartners.annotator.model.PageFromOne;
@@ -39,7 +37,6 @@ public class JobController {
   private final JobStatusMapper statusMapper;
   private final ExportService exportService;
   private final CrupdateJobIdValidator crupdateJobIdValidator;
-  private final CrupdateAnnotatedJobIdValidator annotatedJobIdValidator;
   private final AnnotationBatchService annotationBatchService;
 
   @GetMapping("/jobs")
@@ -85,14 +82,5 @@ public class JobController {
     HttpHeaders headers = new HttpHeaders();
     headers.setContentType(TEXT_PLAIN);
     return new ResponseEntity<>("ok", headers, OK);
-  }
-
-  @PutMapping("/annotated-jobs/{jobId}")
-  public Job crupdateAnnotatedJob(
-      @PathVariable String jobId, @RequestBody CrupdateAnnotatedJob crupdateAnnotatedJob) {
-    annotatedJobIdValidator.accept(crupdateAnnotatedJob, jobId);
-    return mapper.toRest(
-        service.crupdateAnnotatedJob(
-            jobId, crupdateAnnotatedJob, mapper.toDomain(crupdateAnnotatedJob)));
   }
 }

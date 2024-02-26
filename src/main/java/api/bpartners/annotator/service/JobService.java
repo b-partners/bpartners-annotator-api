@@ -9,9 +9,7 @@ import static org.springframework.data.domain.Pageable.unpaged;
 import static org.springframework.data.domain.Sort.Order.asc;
 
 import api.bpartners.annotator.endpoint.event.EventProducer;
-import api.bpartners.annotator.endpoint.event.gen.AnnotatedJobCrupdated;
 import api.bpartners.annotator.endpoint.event.gen.JobCreated;
-import api.bpartners.annotator.endpoint.rest.model.CrupdateAnnotatedJob;
 import api.bpartners.annotator.endpoint.rest.model.JobType;
 import api.bpartners.annotator.model.BoundedPageSize;
 import api.bpartners.annotator.model.PageFromOne;
@@ -103,14 +101,6 @@ public class JobService {
       return savedJob;
     }
     return updateJob(job);
-  }
-
-  @Transactional
-  public Job crupdateAnnotatedJob(
-      String jobId, CrupdateAnnotatedJob crupdateAnnotatedJob, Job job) {
-    Job updated = repository.save(job);
-    eventProducer.accept(List.of(new AnnotatedJobCrupdated(crupdateAnnotatedJob, job)));
-    return updated;
   }
 
   public Job updateJobStatus(String jobId, JobStatus status) {

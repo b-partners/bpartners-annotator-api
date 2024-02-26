@@ -98,36 +98,6 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Whoami"
-  '/annotated-jobs/{jobId}':
-    put:
-      tags:
-        - Jobs
-        - Admin
-        - AnnotatedJobs
-      security:
-        - apiKeyHeader: [ ]
-      summary: create or update an annotated job
-      operationId: crupdateAnnotatedJob
-      parameters:
-        - name: jobId
-          in: path
-          required: true
-          schema:
-            type: string
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/CrupdateAnnotatedJob"
-      responses:
-        '200':
-          description: the job created with the givenId
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/Job"
-        '500':
-          $ref: '#/components/responses/500'
   '/jobs/{jobId}':
     get:
       tags:
@@ -234,7 +204,6 @@ paths:
                 schema:
                   type: string
                   example: "OK"
-
   '/teams/{teamId}/jobs':
     get:
       tags:
@@ -409,6 +378,39 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Task'
+        '500':
+          $ref: '#/components/responses/500'
+    put:
+      tags:
+        - Tasks
+        - Admin
+      security:
+        - apiKeyHeader: [ ]
+      summary: add tasks to a job
+      description: only supports REVIEWING jobs for now
+      operationId: addAnnotatedTasksToAnnotatedJob
+      parameters:
+        - name: jobId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: "#/components/schemas/CreateAnnotatedTask"
+      responses:
+        '200':
+          description: the job created with the givenId
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Task"
         '500':
           $ref: '#/components/responses/500'
 
@@ -1081,16 +1083,7 @@ components:
       enum:
         - LABELLING
         - REVIEWING
-    CrupdateAnnotatedJob:
-      type: object
-      allOf:
-        - $ref: "#/components/schemas/CrupdateJob"
-      properties:
-        annotatedTasks:
-          type: array
-          items:
-            $ref: "#/components/schemas/AnnotatedTask"
-    AnnotatedTask:
+    CreateAnnotatedTask:
       type: object
       properties:
         id:
@@ -1101,7 +1094,7 @@ components:
           type: string
           pattern: "^[^/]"
         annotationBatch:
-          $ref: "#/components/schemas/AnnotationBatch"
+          $ref: "#/components/schemas/CreateAnnotationBatch"
     Job:
       type: object
       allOf:
@@ -1172,12 +1165,10 @@ components:
         - TO_CORRECT
         - TO_REVIEW
         - COMPLETED
-    Annotation:
+    AnnotationBaseFields:
       type: object
       properties:
         id:
-          type: string
-        taskId:
           type: string
         userId:
           type: string
@@ -1185,7 +1176,15 @@ components:
           $ref: '#/components/schemas/Label'
         polygon:
           $ref: '#/components/schemas/Polygon'
-    AnnotationBatch:
+    Annotation:
+      allOf:
+        - $ref: '#/components/schemas/AnnotationBaseFields'
+      properties:
+        id:
+          type: string
+        taskId:
+          type: string
+    CreateAnnotationBatch:
       type: object
       properties:
         id:
@@ -1193,11 +1192,23 @@ components:
         annotations:
           type: array
           items:
-            $ref: "#/components/schemas/Annotation"
+            $ref: "#/components/schemas/AnnotationBaseFields"
         creationDatetime:
           description: ignored in requestBody
           type: string
           format: date-time
+    AnnotationBatch:
+      allOf:
+        - $ref: "#/components/schemas/CreateAnnotationBatch"
+        - type: object
+          properties:
+            annotations:
+              type: array
+              items:
+                $ref: "#/components/schemas/Annotation"
+      properties:
+        id:
+          type: string
     Polygon:
       type: object
       properties:
