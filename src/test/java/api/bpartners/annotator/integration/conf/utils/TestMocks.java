@@ -43,7 +43,6 @@ public class TestMocks {
   public static final String BATCH_REVIEW_2_ID = "batch_review_2_id";
   public static final String BATCH_REVIEW_1_ID = "batch_review_1_id";
   public static final String BATCH_2_ID = "batch_2_id";
-  public static final String JOB_2_ID = "job_2_id";
   public static final String GEOJOBS_USER_ID = "geo-jobs_user_id";
   public static final String GEOJOBS_TEAM_ID = "geo_jobs_team_id";
 
@@ -120,7 +119,11 @@ public class TestMocks {
         .taskId(TASK_1_ID)
         .userId(JOE_DOE_ID)
         .label(label1())
-        .polygon(new Polygon().points(List.of(new Point().x(1.0).y(1.0))));
+        .polygon(polygon());
+  }
+
+  public static Polygon polygon() {
+    return new Polygon().points(List.of(new Point().x(1.0).y(1.0)));
   }
 
   public static Annotation annotation2() {

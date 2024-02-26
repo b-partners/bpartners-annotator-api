@@ -12,9 +12,7 @@ import api.bpartners.annotator.endpoint.rest.client.ApiClient;
 import api.bpartners.annotator.endpoint.rest.client.ApiException;
 import api.bpartners.annotator.endpoint.rest.security.cognito.CognitoComponent;
 import api.bpartners.annotator.service.aws.JobOrTaskS3Service;
-import java.io.IOException;
 import java.net.MalformedURLException;
-import java.net.ServerSocket;
 import java.net.URL;
 import org.junit.jupiter.api.function.Executable;
 
@@ -32,14 +30,6 @@ public class TestUtils {
           httpRequestBuilder -> httpRequestBuilder.header("x-api-key", "dummy"));
     }
     return client;
-  }
-
-  public static int anAvailableRandomPort() {
-    try {
-      return new ServerSocket(0).getLocalPort();
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    }
   }
 
   public static void setUpCognito(CognitoComponent cognitoComponent) {

@@ -1,18 +1,27 @@
 package api.bpartners.annotator.integration;
 
-import static api.bpartners.annotator.endpoint.rest.model.JobStatus.*;
+import static api.bpartners.annotator.endpoint.rest.model.JobStatus.COMPLETED;
+import static api.bpartners.annotator.endpoint.rest.model.JobStatus.FAILED;
 import static api.bpartners.annotator.endpoint.rest.model.JobStatus.PENDING;
 import static api.bpartners.annotator.endpoint.rest.model.JobStatus.READY;
 import static api.bpartners.annotator.endpoint.rest.model.JobStatus.STARTED;
+import static api.bpartners.annotator.endpoint.rest.model.JobStatus.TO_CORRECT;
+import static api.bpartners.annotator.endpoint.rest.model.JobStatus.TO_REVIEW;
 import static api.bpartners.annotator.endpoint.rest.model.JobType.LABELLING;
 import static api.bpartners.annotator.endpoint.rest.model.JobType.REVIEWING;
 import static api.bpartners.annotator.integration.conf.utils.TestMocks.ADMIN_API_KEY;
+import static api.bpartners.annotator.integration.conf.utils.TestMocks.GEOJOBS_TEAM_ID;
+import static api.bpartners.annotator.integration.conf.utils.TestMocks.GEOJOBS_USER_ID;
 import static api.bpartners.annotator.integration.conf.utils.TestMocks.JOB_1_ID;
 import static api.bpartners.annotator.integration.conf.utils.TestMocks.JOE_DOE_TOKEN;
+import static api.bpartners.annotator.integration.conf.utils.TestMocks.MOCK_PRESIGNED_URL;
 import static api.bpartners.annotator.integration.conf.utils.TestMocks.job1;
 import static api.bpartners.annotator.integration.conf.utils.TestMocks.job9;
+import static api.bpartners.annotator.integration.conf.utils.TestMocks.polygon;
+import static api.bpartners.annotator.integration.conf.utils.TestMocks.team1;
 import static api.bpartners.annotator.integration.conf.utils.TestUtils.assertThrowsBadRequestException;
 import static api.bpartners.annotator.integration.conf.utils.TestUtils.setUpCognito;
+import static api.bpartners.annotator.integration.conf.utils.TestUtils.setUpS3Service;
 import static java.util.Collections.emptyList;
 import static java.util.UUID.randomUUID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -21,18 +30,24 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import api.bpartners.annotator.conf.FacadeIT;
 import api.bpartners.annotator.endpoint.event.EventProducer;
 import api.bpartners.annotator.endpoint.rest.api.JobsApi;
+import api.bpartners.annotator.endpoint.rest.api.TasksApi;
+import api.bpartners.annotator.endpoint.rest.api.TeamJobsApi;
 import api.bpartners.annotator.endpoint.rest.client.ApiClient;
 import api.bpartners.annotator.endpoint.rest.client.ApiException;
-import api.bpartners.annotator.endpoint.rest.model.Annotation;
+import api.bpartners.annotator.endpoint.rest.model.AnnotationBaseFields;
 import api.bpartners.annotator.endpoint.rest.model.AnnotationNumberPerLabel;
+import api.bpartners.annotator.endpoint.rest.model.CreateAnnotatedTask;
+import api.bpartners.annotator.endpoint.rest.model.CreateAnnotationBatch;
 import api.bpartners.annotator.endpoint.rest.model.CrupdateJob;
 import api.bpartners.annotator.endpoint.rest.model.Job;
 import api.bpartners.annotator.endpoint.rest.model.Label;
-import api.bpartners.annotator.endpoint.rest.model.Point;
-import api.bpartners.annotator.endpoint.rest.model.Polygon;
+import api.bpartners.annotator.endpoint.rest.model.Task;
 import api.bpartners.annotator.endpoint.rest.model.TaskStatistics;
+import api.bpartners.annotator.endpoint.rest.model.TaskStatus;
 import api.bpartners.annotator.endpoint.rest.security.cognito.CognitoComponent;
 import api.bpartners.annotator.integration.conf.utils.TestUtils;
+import api.bpartners.annotator.service.aws.JobOrTaskS3Service;
+import java.net.MalformedURLException;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -45,10 +60,12 @@ public class JobIT extends FacadeIT {
   @LocalServerPort private int port;
   @MockBean public CognitoComponent cognitoComponent;
   @MockBean public EventProducer eventProducer;
+  @MockBean public JobOrTaskS3Service fileService;
 
   @BeforeEach
-  public void setUp() {
+  public void setUp() throws MalformedURLException {
     setUpCognito(cognitoComponent);
+    setUpS3Service(fileService);
   }
 
   private ApiClient anAdminApiClient() {
@@ -74,7 +91,6 @@ public class JobIT extends FacadeIT {
   }
 
   static Job from(CrupdateJob crupdateJob, TaskStatistics taskStatistics) {
-    List<Label> labels = crupdateJob.getLabels();
     return new Job()
         .id(crupdateJob.getId())
         .taskStatistics(taskStatistics)
@@ -87,7 +103,7 @@ public class JobIT extends FacadeIT {
         .ownerEmail(crupdateJob.getOwnerEmail())
         .name(crupdateJob.getName())
         .type(crupdateJob.getType())
-        .labels(labels);
+        .labels(crupdateJob.getLabels());
   }
 
   @Test
@@ -121,7 +137,7 @@ public class JobIT extends FacadeIT {
     List<Job> actualJobsFilteredByCommonName = api.getJobs(1, 10, null, "_", null);
     List<Job> actualJobsFilteredByType = api.getJobs(1, 500, null, null, REVIEWING);
 
-    assertEquals(2, actualStartedJobs.size());
+    assertEquals(3, actualStartedJobs.size());
     assertEquals(1, actualPendingJobs.size());
     // TODO: dirty context seems not to work because inserted Ready jobs.size should be 1. read
     // testData
@@ -216,13 +232,105 @@ public class JobIT extends FacadeIT {
             + "Labels are mandatory.");
   }
 
-  public static Annotation creatableAnnotation(String taskId, String annotatorId, Label label) {
-    return new Annotation()
-        .id(randomUUID().toString())
-        .taskId(taskId)
-        .userId(annotatorId)
-        .polygon(new Polygon().points(List.of(new Point().x(1.0).y(1.0))))
-        .label(label);
+  @Test
+  void admin_create_job_then_add_tasks_and_annotator_get_ok() throws ApiException {
+    ApiClient adminClient = anAdminApiClient();
+    JobsApi api = new JobsApi(adminClient);
+    String jobId = randomUUID().toString();
+    List<Label> labels = List.of(creatableDummyLabel());
+    var payload = crupdateReviewingJob(jobId, labels);
+    Job expected =
+        from(
+            payload,
+            new TaskStatistics()
+                .completedTasksByUserId(0L)
+                .remainingTasks(0L)
+                .totalTasks(0L)
+                .remainingTasksForUserId(0L));
+
+    Job actual = api.saveJob(jobId, payload);
+
+    String teamId = team1().getId();
+    CrupdateJob crupdateJobFromJob = from(actual);
+    api.saveJob(jobId, crupdateJobFromJob.status(READY).teamId(teamId));
+    api.saveJob(jobId, crupdateJobFromJob.status(STARTED).teamId(teamId));
+
+    assertEquals(expected, actual);
+    assertTrue(annotator_can_get_job(teamId, jobId, expected));
+    assertTrue(admin_can_add_annotated_tasks(jobId, labels));
+    assertTrue(
+        annotator_can_get_job(
+            teamId,
+            jobId,
+            expected.taskStatistics(
+                new TaskStatistics()
+                    .remainingTasks(2L)
+                    .totalTasks(2L)
+                    .remainingTasksForUserId(2L)
+                    .completedTasksByUserId(0L))));
+  }
+
+  boolean annotator_can_get_job(String teamId, String jobId, Job expected) throws ApiException {
+    ApiClient annotatorClient = anAnnotatorApiClient();
+    TeamJobsApi annotatorApi = new TeamJobsApi(annotatorClient);
+
+    Job actualJobFromClientView = annotatorApi.getAnnotatorReadableTeamJobById(teamId, jobId);
+
+    assertEquals(expected.teamId(teamId).status(STARTED), actualJobFromClientView);
+    return true;
+  }
+
+  boolean admin_can_add_annotated_tasks(String jobId, List<Label> labels) throws ApiException {
+    ApiClient apiClient = anAdminApiClient();
+    TasksApi tasksApi = new TasksApi(apiClient);
+    // refer to EnvConf/tasks.insert.limit.max
+    List<CreateAnnotatedTask> actualPayload =
+        // this list size is the same as number of added annotations because we only use one label
+        // here
+        List.of(
+            createAnnotatedTask(randomUUID().toString(), labels),
+            createAnnotatedTask(randomUUID().toString(), labels));
+    List<Task> expectedTasks = actualPayload.stream().map(this::toTask).toList();
+
+    var savedTasks =
+        tasksApi.addAnnotatedTasksToAnnotatedJob(jobId, actualPayload).stream()
+            .map(this::ignoreTaskIds)
+            .toList();
+
+    assertTrue(savedTasks.containsAll(expectedTasks));
+    return true;
+  }
+
+  private static CreateAnnotatedTask createAnnotatedTask(String id, List<Label> labels) {
+    return new CreateAnnotatedTask()
+        .id(id)
+        .filename(randomUUID() + ".jpg")
+        .annotatorId(GEOJOBS_USER_ID)
+        .annotationBatch(
+            new CreateAnnotationBatch()
+                .id(randomUUID().toString())
+                .annotations(
+                    List.of(
+                        new AnnotationBaseFields()
+                            .id(randomUUID().toString())
+                            .label(labels.get(0))
+                            .polygon(polygon())
+                            .userId(GEOJOBS_USER_ID))));
+  }
+
+  public static CrupdateJob crupdateReviewingJob(String id, List<Label> labels) {
+    return new CrupdateJob()
+        .id(id)
+        .type(REVIEWING)
+        .folderPath("test/")
+        .bucketName("dummy")
+        .imagesHeight(1024)
+        .imagesWidth(1024)
+        .teamId(GEOJOBS_TEAM_ID)
+        .ownerEmail("admin@gmail.com")
+        .status(PENDING)
+        .labels(labels)
+        .name(id);
   }
 
   public static Label creatableDummyLabel() {
@@ -248,5 +356,19 @@ public class JobIT extends FacadeIT {
     Job job1 = job1();
     job1.setTaskStatistics(job1.getTaskStatistics().remainingTasksForUserId(9L));
     return job1;
+  }
+
+  Task toTask(CreateAnnotatedTask task) {
+    return new Task()
+        .id(null)
+        .filename(task.getFilename())
+        .status(TaskStatus.TO_CORRECT)
+        .imageUri(MOCK_PRESIGNED_URL)
+        .userId(task.getAnnotatorId());
+  }
+
+  Task ignoreTaskIds(Task task) {
+    task.setId(null);
+    return task;
   }
 }

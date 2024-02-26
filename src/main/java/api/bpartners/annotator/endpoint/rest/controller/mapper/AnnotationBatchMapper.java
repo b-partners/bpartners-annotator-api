@@ -2,6 +2,7 @@ package api.bpartners.annotator.endpoint.rest.controller.mapper;
 
 import api.bpartners.annotator.endpoint.rest.model.Annotation;
 import api.bpartners.annotator.endpoint.rest.model.AnnotationBatch;
+import api.bpartners.annotator.endpoint.rest.model.CreateAnnotationBatch;
 import api.bpartners.annotator.service.TaskService;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -30,6 +31,21 @@ public class AnnotationBatchMapper {
         .annotations(
             rest.getAnnotations().stream()
                 .map(restAnnotation -> annotationMapper.toDomain(rest.getId(), restAnnotation))
+                .toList())
+        .task(taskService.getById(taskId))
+        .creationTimestamp(rest.getCreationDatetime())
+        .build();
+  }
+
+  public api.bpartners.annotator.repository.model.AnnotationBatch toDomain(
+      String userId, String taskId, CreateAnnotationBatch rest) {
+    String id = rest.getId();
+    return api.bpartners.annotator.repository.model.AnnotationBatch.builder()
+        .id(id)
+        .annotatorId(userId)
+        .annotations(
+            rest.getAnnotations().stream()
+                .map(createAnnotation -> annotationMapper.toDomain(id, createAnnotation, taskId))
                 .toList())
         .task(taskService.getById(taskId))
         .creationTimestamp(rest.getCreationDatetime())

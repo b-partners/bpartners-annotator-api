@@ -17,5 +17,6 @@ public class EnvConf {
     registry.add(
         "GEOJOBS.USER.INFO",
         () -> "{\"userId\":\"geo-jobs_user_id\", \"teamId\":\"geo_jobs_team_id\"}");
+    registry.add("tasks.insert.limit.max", () -> "5");
   }
 }

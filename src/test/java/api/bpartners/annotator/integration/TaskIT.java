@@ -1,12 +1,15 @@
 package api.bpartners.annotator.integration;
 
-import static api.bpartners.annotator.endpoint.rest.model.TaskStatus.*;
+import static api.bpartners.annotator.endpoint.rest.model.TaskStatus.COMPLETED;
 import static api.bpartners.annotator.endpoint.rest.model.TaskStatus.PENDING;
+import static api.bpartners.annotator.endpoint.rest.model.TaskStatus.TO_CORRECT;
+import static api.bpartners.annotator.endpoint.rest.model.TaskStatus.UNDER_COMPLETION;
 import static api.bpartners.annotator.integration.conf.utils.TestMocks.JANE_DOE_ID;
 import static api.bpartners.annotator.integration.conf.utils.TestMocks.JOB_1_ID;
 import static api.bpartners.annotator.integration.conf.utils.TestMocks.JOE_DOE_ID;
 import static api.bpartners.annotator.integration.conf.utils.TestMocks.TASK_1_ID;
 import static api.bpartners.annotator.integration.conf.utils.TestMocks.task1;
+import static api.bpartners.annotator.integration.conf.utils.TestUtils.assertThrowsBadRequestException;
 import static api.bpartners.annotator.integration.conf.utils.TestUtils.setUpS3Service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -15,6 +18,7 @@ import api.bpartners.annotator.conf.FacadeIT;
 import api.bpartners.annotator.endpoint.rest.api.TasksApi;
 import api.bpartners.annotator.endpoint.rest.client.ApiClient;
 import api.bpartners.annotator.endpoint.rest.client.ApiException;
+import api.bpartners.annotator.endpoint.rest.model.CreateAnnotatedTask;
 import api.bpartners.annotator.endpoint.rest.model.Task;
 import api.bpartners.annotator.integration.conf.utils.TestMocks;
 import api.bpartners.annotator.integration.conf.utils.TestUtils;
@@ -90,5 +94,25 @@ public class TaskIT extends FacadeIT {
     Task actual = api.getJobTaskById(JOB_1_ID, TASK_1_ID);
 
     assertEquals(task1(), actual);
+  }
+
+  @Test
+  void admin_add_tasks_ko() {
+    ApiClient adminClient = anApiClient();
+    TasksApi api = new TasksApi(adminClient);
+
+    // refer to EnvConf/tasks.insert.limit.max
+    List<CreateAnnotatedTask> tooLargeAnnotatedTaskPayload =
+        List.of(
+            new CreateAnnotatedTask(),
+            new CreateAnnotatedTask(),
+            new CreateAnnotatedTask(),
+            new CreateAnnotatedTask(),
+            new CreateAnnotatedTask(),
+            new CreateAnnotatedTask());
+
+    assertThrowsBadRequestException(
+        () -> api.addAnnotatedTasksToAnnotatedJob(JOB_1_ID, tooLargeAnnotatedTaskPayload),
+        "cannot add tasks to Job.Id = job_1_id only 5 tasks per save is supported.");
   }
 }
