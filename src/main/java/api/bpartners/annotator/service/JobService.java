@@ -121,20 +121,20 @@ public class JobService {
         case STARTED, TO_REVIEW, TO_CORRECT, COMPLETED -> throw exception;
       };
       case READY -> switch (next) {
-        case READY, STARTED -> next;
-        case PENDING, FAILED, TO_REVIEW, TO_CORRECT, COMPLETED -> throw exception;
+        case READY, STARTED, FAILED -> next;
+        case PENDING, TO_REVIEW, TO_CORRECT, COMPLETED -> throw exception;
       };
       case STARTED -> switch (next) {
-        case STARTED, TO_REVIEW, TO_CORRECT -> next;
-        case PENDING, FAILED, READY, COMPLETED -> throw exception;
+        case STARTED, TO_REVIEW, TO_CORRECT, FAILED -> next;
+        case PENDING, READY, COMPLETED -> throw exception;
       };
       case TO_CORRECT -> switch (next) {
-        case TO_CORRECT, STARTED, TO_REVIEW, COMPLETED -> next;
-        case PENDING, READY, FAILED -> throw exception;
+        case TO_CORRECT, STARTED, TO_REVIEW, COMPLETED, FAILED -> next;
+        case PENDING, READY -> throw exception;
       };
       case TO_REVIEW -> switch (next) {
-        case TO_REVIEW, TO_CORRECT, COMPLETED -> next;
-        case PENDING, READY, FAILED, STARTED -> throw exception;
+        case TO_REVIEW, TO_CORRECT, COMPLETED, FAILED -> next;
+        case PENDING, READY, STARTED -> throw exception;
       };
       case FAILED -> throw new BadRequestException(
           "Failed Job cannot be changed, create new Job instead");
