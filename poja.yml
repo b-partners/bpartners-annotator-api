@@ -1,7 +1,10 @@
 app_name: bpartners-annotator
+aurora_auto_pause: 'false'
 aurora_max_capacity: 16
 aurora_min_capacity: 8
-cli_version: 11.7.1
+aurora_scale_point: null
+aurora_sleep: 300
+cli_version: 11.10.0
 custom_java_deps: poja-custom-java-deps.txt
 custom_java_env_vars: poja-custom-java-env-vars.txt
 custom_java_repositories: poja-custom-java-repositories.txt
@@ -12,6 +15,8 @@ jacoco_min_coverage: '0.5'
 java_facade_it: FacadeIT
 package_full_name: api.bpartners.annotator
 region: eu-west-3
+reserved_concurrent_executions_nb: null
+sentry_dsn: 'null'
 ses_source: contact@bpartners.app
 ssm_sg_id: /bpartners-imagery/sg/id
 ssm_subnet1_id: /bpartners-imagery/private/subnet1/id
@@ -23,6 +28,7 @@ with_database: postgres
 with_gen_clients: 'true'
 with_own_vpc: 'true'
 with_publish_to_npm_registry: 'true'
+with_sentry: 'false'
 with_snapstart: 'true'
 with_swagger_ui: 'false'
 worker_batch: 5
