@@ -13,6 +13,7 @@ import java.util.Collection;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.query.QueryUtils;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -46,8 +47,12 @@ public class JobDao {
               cb.like(cb.lower(root.get("name")), "%" + name + "%"),
               cb.like(root.get("name"), "%" + name + "%")));
     }
-    query.where(predicates.toArray(Predicate[]::new));
-
+    query
+        .where(predicates.toArray(Predicate[]::new))
+        .orderBy(QueryUtils.toOrders(pageable.getSort(), root, cb));
+    if (pageable.isUnpaged()) {
+      return entityManager.createQuery(query).getResultList();
+    }
     return entityManager
         .createQuery(query)
         .setFirstResult((pageable.getPageNumber()) * pageable.getPageSize())
