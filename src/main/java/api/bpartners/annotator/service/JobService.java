@@ -2,8 +2,11 @@ package api.bpartners.annotator.service;
 
 import static api.bpartners.annotator.repository.model.enums.JobStatus.COMPLETED;
 import static api.bpartners.annotator.repository.model.enums.JobStatus.PENDING;
+import static api.bpartners.annotator.repository.model.enums.JobStatus.STARTED;
 import static api.bpartners.annotator.repository.model.enums.JobStatus.TO_CORRECT;
 import static api.bpartners.annotator.repository.model.enums.JobStatus.TO_REVIEW;
+import static org.springframework.data.domain.Pageable.unpaged;
+import static org.springframework.data.domain.Sort.Order.asc;
 
 import api.bpartners.annotator.endpoint.event.EventProducer;
 import api.bpartners.annotator.endpoint.event.gen.AnnotatedJobCrupdated;
@@ -24,18 +27,28 @@ import java.util.List;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @AllArgsConstructor
 public class JobService {
+  private static final Sort JOB_SORT = Sort.by(asc("name"));
   private final JobRepository repository;
   private final JobDao dao;
   private final EventProducer eventProducer;
+  private static final List<JobStatus> ANNOTATOR_READABLE_JOB_STATUSES =
+      List.of(STARTED, TO_CORRECT);
 
   public static JobCreated toEventType(Job job, String nextContinuationToken) {
     return JobCreated.builder().nextContinuationToken(nextContinuationToken).job(job).build();
+  }
+
+  public List<Job> getAnnotatorReadableJobs(
+      String teamId, String name, JobType type, PageFromOne page, BoundedPageSize pageSize) {
+    return getAllByTeamAndStatusesAndName(
+        teamId, name, type, ANNOTATOR_READABLE_JOB_STATUSES, page, pageSize);
   }
 
   public List<Job> getAllByTeamAndStatusesAndName(
@@ -45,7 +58,12 @@ public class JobService {
       Collection<JobStatus> statuses,
       PageFromOne page,
       BoundedPageSize pageSize) {
-    Pageable pageable = PageRequest.of(page.getValue() - 1, pageSize.getValue());
+    Pageable pageable;
+    if (page != null && pageSize != null) {
+      pageable = PageRequest.of(page.getValue() - 1, pageSize.getValue(), JOB_SORT);
+    } else {
+      pageable = unpaged(JOB_SORT);
+    }
     return dao.findAllByCriteria(teamId, name, type, statuses, pageable);
   }
 
@@ -66,7 +84,7 @@ public class JobService {
 
   public List<Job> getAllByStatusAndName(
       PageFromOne page, BoundedPageSize pageSize, JobType type, JobStatus status, String name) {
-    Pageable pageable = PageRequest.of(page.getValue() - 1, pageSize.getValue());
+    Pageable pageable = PageRequest.of(page.getValue() - 1, pageSize.getValue(), JOB_SORT);
     return dao.findAllByCriteria(
         null, name, type, status == null ? null : List.of(status), pageable);
   }

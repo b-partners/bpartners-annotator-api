@@ -133,7 +133,8 @@ public class JobIT extends FacadeIT {
     assertEquals(1, actualCompletedJobs.size());
     assertEquals(1, actualToReviewJobs.size());
     // assertEquals(1, actualToCorrectJobs.size());
-    assertEquals(1, actualFailedJobs.size());
+    // FAILED JOBS ARE NOW HIDDEN
+    assertEquals(0, actualFailedJobs.size());
     assertTrue(actualJobsFilteredByExactName.contains(job1AsAdminView()));
     assertTrue(actualJobsFilteredByNoMatchingName.isEmpty());
     assertTrue(actualAllJobs.contains(job1AsAdminView()));
