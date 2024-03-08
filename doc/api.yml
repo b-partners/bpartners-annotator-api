@@ -4,7 +4,7 @@ info:
   title: Image Annotation API
 
 servers:
-  - url: 'https://annotator-api.preprod.bpartners.app'
+  - url: 'https://annotator-api.imagery.bpartners.app'
 security:
   - BearerAuth: [ ]
   - apiKeyHeader: [ ]
