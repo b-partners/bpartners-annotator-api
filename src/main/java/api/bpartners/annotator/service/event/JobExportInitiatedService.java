@@ -9,7 +9,7 @@ import api.bpartners.annotator.file.FileWriter;
 import api.bpartners.annotator.mail.Email;
 import api.bpartners.annotator.mail.Mailer;
 import api.bpartners.annotator.repository.model.Job;
-import api.bpartners.annotator.service.ExportService;
+import api.bpartners.annotator.service.JobService;
 import api.bpartners.annotator.service.utils.ByteWriter;
 import jakarta.mail.internet.InternetAddress;
 import java.nio.file.Files;
@@ -24,7 +24,7 @@ import org.thymeleaf.context.Context;
 @AllArgsConstructor
 public class JobExportInitiatedService implements Consumer<JobExportInitiated> {
   private final Mailer mailer;
-  private final ExportService exportService;
+  private final JobService.ExportService exportService;
   private final ByteWriter byteWriter;
   private final FileWriter fileWriter;
 
