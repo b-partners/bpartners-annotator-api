@@ -4,13 +4,17 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @AllArgsConstructor
 @Data
 @Builder
+@NoArgsConstructor
 public class COCO {
   private Map<String, String> info;
   private List<ImageDetail> images;
@@ -36,7 +40,12 @@ public class COCO {
     private String id;
 
     @JsonProperty("iscrowd")
+    @Getter(AccessLevel.NONE)
     private boolean isCrowd;
+
+    public int isCrowd() {
+      return isCrowd ? 1 : 0;
+    }
 
     @JsonProperty("image_id")
     private String imageId;
