@@ -1,15 +1,10 @@
-package api.bpartners.annotator.service;
+package api.bpartners.annotator.service.JobExport;
 
-import static org.springframework.transaction.annotation.Propagation.REQUIRED;
-
-import api.bpartners.annotator.endpoint.event.EventProducer;
-import api.bpartners.annotator.endpoint.event.gen.JobExportInitiated;
-import api.bpartners.annotator.endpoint.rest.model.ExportFormat;
 import api.bpartners.annotator.model.VGG;
-import api.bpartners.annotator.model.exception.BadRequestException;
-import api.bpartners.annotator.model.exception.NotImplementedException;
 import api.bpartners.annotator.repository.model.Annotation;
 import api.bpartners.annotator.repository.model.AnnotationBatch;
+import api.bpartners.annotator.repository.model.Job;
+import api.bpartners.annotator.service.AnnotationBatchService;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -18,38 +13,22 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Transactional
 @Service
 @AllArgsConstructor
-public class ExportService {
+public class VggExportService {
   private final AnnotationBatchService annotationBatchService;
-  private final EventProducer eventProducer;
-  private final JobService jobService;
 
-  public void initiateJobExport(String jobId, ExportFormat exportFormat) {
-    var linkedJob = jobService.getById(jobId);
-    eventProducer.accept(List.of(new JobExportInitiated(linkedJob, exportFormat)));
-  }
-
-  @Transactional(propagation = REQUIRED, readOnly = true, rollbackFor = Exception.class)
-  public Object exportJob(String jobId, ExportFormat format) {
-    if (ExportFormat.VGG.equals(format)) {
-      return exportToVgg(jobId);
-    }
-    if (ExportFormat.COCO.equals(format)) {
-      throw new NotImplementedException("COCO format has not been implemented yet");
-    }
-    throw new BadRequestException("unknown export format " + format);
-  }
-
-  private VGG exportToVgg(String jobId) {
+  public VGG export(Job job) {
     List<AnnotationBatch> latestPerTaskByJobId =
-        annotationBatchService.findLatestPerTaskByJobId(jobId);
+        annotationBatchService.findLatestPerTaskByJobId(job.getId());
     VGG vgg = new VGG();
-    latestPerTaskByJobId.forEach(batch -> vgg.put(batch.getTask().getFilename(), toVgg(batch)));
+    latestPerTaskByJobId.forEach(
+        batch -> vgg.put(batch.getTask().getFilename(), toVggAnnotation(batch)));
     return vgg;
   }
 
-  private static VGG.Annotation toVgg(AnnotationBatch batch) {
+  private static VGG.Annotation toVggAnnotation(AnnotationBatch batch) {
     var vggAnnotation = new VGG.Annotation();
     // <-- UNUSED_DATA put at default value
     vggAnnotation.setFileAttributes(Map.of());

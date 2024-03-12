@@ -9,7 +9,7 @@ import api.bpartners.annotator.file.FileWriter;
 import api.bpartners.annotator.mail.Email;
 import api.bpartners.annotator.mail.Mailer;
 import api.bpartners.annotator.repository.model.Job;
-import api.bpartners.annotator.service.ExportService;
+import api.bpartners.annotator.service.JobExport.ExportService;
 import api.bpartners.annotator.service.utils.ByteWriter;
 import jakarta.mail.internet.InternetAddress;
 import java.nio.file.Files;
@@ -33,7 +33,7 @@ public class JobExportInitiatedService implements Consumer<JobExportInitiated> {
   public void accept(JobExportInitiated jobExportInitiated) {
     Job linkedJob = jobExportInitiated.getJob();
     ExportFormat exportFormat = jobExportInitiated.getExportFormat();
-    var exported = exportService.exportJob(linkedJob.getId(), exportFormat);
+    var exported = exportService.exportJob(linkedJob, exportFormat);
     var exportedAsBytes = byteWriter.apply(exported);
     var inFile =
         fileWriter.write(

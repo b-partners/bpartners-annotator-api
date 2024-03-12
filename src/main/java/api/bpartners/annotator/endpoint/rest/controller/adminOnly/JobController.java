@@ -16,7 +16,7 @@ import api.bpartners.annotator.endpoint.rest.validator.CrupdateAnnotatedJobIdVal
 import api.bpartners.annotator.endpoint.rest.validator.CrupdateJobIdValidator;
 import api.bpartners.annotator.model.BoundedPageSize;
 import api.bpartners.annotator.model.PageFromOne;
-import api.bpartners.annotator.service.ExportService;
+import api.bpartners.annotator.service.JobExport.ExportService;
 import api.bpartners.annotator.service.JobService;
 import java.util.List;
 import lombok.AllArgsConstructor;
