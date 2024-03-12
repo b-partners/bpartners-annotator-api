@@ -176,6 +176,15 @@ paths:
                 $ref: '#/components/schemas/Job'
         '500':
           $ref: '#/components/responses/500'
+  '/jobs/import':
+    post:
+      tags:
+        - Jobs
+        - Admin
+      operationId: importJob
+      description: creates a job from a COCO or VGG file
+      requestBody:
+
   '/jobs/{jobId}/export':
       get:
         tags:
@@ -1216,6 +1225,13 @@ components:
       enum:
         - COCO
         - VGG
+    JobImport:
+      type: object
+      properties:
+        fileLink:
+          type: string
+        exportFormat:
+          $ref: "#/components/schemas/ExportFormat"
     Exception:
       type: object
       properties:

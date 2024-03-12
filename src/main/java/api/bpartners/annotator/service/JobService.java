@@ -282,4 +282,13 @@ public class JobService {
       return shapeAttributes;
     }
   }
+
+  @Service
+  @AllArgsConstructor
+  public static class ImportService {
+    public Job createJobFrom(){
+      VGG vgg = new VGG();
+      return new Job();
+    }
+  }
 }
