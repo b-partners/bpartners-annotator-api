@@ -23,8 +23,8 @@ mavenLocal()
 
 java {
     group = 'api.bpartners.annotator'
-    sourceCompatibility = '17'
-    targetCompatibility = '17'
+    sourceCompatibility = '21'
+    targetCompatibility = '21'
 }
 
 configurations {
