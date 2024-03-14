@@ -18,7 +18,7 @@ import api.bpartners.annotator.endpoint.rest.model.Task;
 import api.bpartners.annotator.endpoint.rest.security.cognito.CognitoComponent;
 import api.bpartners.annotator.integration.conf.utils.TestMocks;
 import api.bpartners.annotator.integration.conf.utils.TestUtils;
-import api.bpartners.annotator.service.aws.S3Service;
+import api.bpartners.annotator.service.aws.JobOrTaskS3Service;
 import java.net.MalformedURLException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,7 +30,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 public class UserTasksIT extends FacadeIT {
   @LocalServerPort private int port;
   @MockBean private CognitoComponent cognitoComponent;
-  @MockBean public S3Service fileService;
+  @MockBean public JobOrTaskS3Service fileService;
 
   private ApiClient adminApiClient() {
     return TestUtils.anApiClient(null, TestMocks.ADMIN_API_KEY, port);
