@@ -11,7 +11,7 @@ import static org.mockito.Mockito.when;
 import api.bpartners.annotator.endpoint.rest.client.ApiClient;
 import api.bpartners.annotator.endpoint.rest.client.ApiException;
 import api.bpartners.annotator.endpoint.rest.security.cognito.CognitoComponent;
-import api.bpartners.annotator.service.aws.S3Service;
+import api.bpartners.annotator.service.aws.JobOrTaskS3Service;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.ServerSocket;
@@ -46,7 +46,7 @@ public class TestUtils {
     when(cognitoComponent.getEmailByToken(JOE_DOE_TOKEN)).thenReturn(JOE_DOE_EMAIL);
   }
 
-  public static void setUpS3Service(S3Service fileService) throws MalformedURLException {
+  public static void setUpS3Service(JobOrTaskS3Service fileService) throws MalformedURLException {
     when(fileService.getPresignedUrl(any(String.class), any(String.class)))
         .thenReturn(new URL(MOCK_PRESIGNED_URL));
   }

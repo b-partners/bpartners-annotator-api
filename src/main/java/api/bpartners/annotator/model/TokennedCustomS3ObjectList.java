@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class S3CustomObject {
+public class TokennedCustomS3ObjectList {
   private String nextContinuationToken;
   private List<String> objectsFilename;
 }

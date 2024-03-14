@@ -18,7 +18,7 @@ import api.bpartners.annotator.endpoint.rest.client.ApiException;
 import api.bpartners.annotator.endpoint.rest.model.Task;
 import api.bpartners.annotator.integration.conf.utils.TestMocks;
 import api.bpartners.annotator.integration.conf.utils.TestUtils;
-import api.bpartners.annotator.service.aws.S3Service;
+import api.bpartners.annotator.service.aws.JobOrTaskS3Service;
 import java.net.MalformedURLException;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -30,7 +30,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 @Testcontainers
 public class TaskIT extends FacadeIT {
   @LocalServerPort private int port;
-  @MockBean public S3Service fileService;
+  @MockBean public JobOrTaskS3Service fileService;
 
   private ApiClient anApiClient() {
     return TestUtils.anApiClient(null, TestMocks.ADMIN_API_KEY, port);

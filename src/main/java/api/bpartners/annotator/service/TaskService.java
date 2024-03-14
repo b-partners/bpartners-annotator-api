@@ -15,6 +15,7 @@ import api.bpartners.annotator.repository.model.Job;
 import api.bpartners.annotator.repository.model.Task;
 import api.bpartners.annotator.repository.model.User;
 import api.bpartners.annotator.repository.model.enums.TaskStatus;
+import api.bpartners.annotator.service.aws.JobOrTaskS3Service;
 import api.bpartners.annotator.service.validator.TaskUpdateValidator;
 import java.util.List;
 import java.util.Optional;
@@ -22,6 +23,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @AllArgsConstructor
@@ -33,6 +35,7 @@ public class TaskService {
   private final TaskDao taskDao;
   private final TaskUpdateValidator updateValidator;
   private final UserService userService;
+  private final JobOrTaskS3Service jobOrTaskS3Service;
 
   public List<Task> getAllByJobAndStatus(
       String jobId, TaskStatus status, String userId, PageFromOne page, BoundedPageSize pageSize) {
@@ -130,5 +133,18 @@ public class TaskService {
 
   public Task save(Task task) {
     return repository.save(task);
+  }
+
+  @Transactional
+  public Task refreshFileInfos(Task task) {
+    var linkedJob = task.getJob();
+    var refreshedFileInfos =
+        jobOrTaskS3Service.getCustomS3ObjectForImage(linkedJob.getBucketName(), task.getFilename());
+
+    task.setHeight(refreshedFileInfos.height());
+    task.setWidth(refreshedFileInfos.width());
+    task.setSizeInKb(refreshedFileInfos.size());
+
+    return update(linkedJob.getId(), task.getId(), task);
   }
 }

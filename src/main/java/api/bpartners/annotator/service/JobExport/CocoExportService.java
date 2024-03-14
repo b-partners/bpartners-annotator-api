@@ -6,7 +6,6 @@ import api.bpartners.annotator.repository.model.AnnotationBatch;
 import api.bpartners.annotator.repository.model.Job;
 import api.bpartners.annotator.repository.model.Label;
 import api.bpartners.annotator.repository.model.Task;
-import api.bpartners.annotator.service.AnnotationBatchService;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,18 +18,14 @@ import org.springframework.transaction.annotation.Transactional;
 @AllArgsConstructor
 @Transactional
 public class CocoExportService {
-  private final AnnotationBatchService annotationBatchService;
-
-  public COCO export(Job job) {
-    List<AnnotationBatch> latestPerTaskByJobId =
-        annotationBatchService.findLatestPerTaskByJobId(job.getId());
+  public COCO export(Job job, List<AnnotationBatch> batches) {
     COCO coco = new COCO();
 
     coco.setInfo(getCocoInfos(job));
     coco.setImages(extractImageDetails(job));
     coco.setCategories(extractCategories(job));
 
-    List<COCO.Annotation> cocoAnnotations = extractCocoAnnotations(latestPerTaskByJobId);
+    List<COCO.Annotation> cocoAnnotations = extractCocoAnnotations(batches);
     coco.setAnnotations(cocoAnnotations);
 
     return coco;
@@ -63,8 +58,8 @@ public class CocoExportService {
   private COCO.ImageDetail getImageDetail(Task task) {
     return COCO.ImageDetail.builder()
         .id(task.getId())
-        .width(0)
-        .height(0)
+        .width(task.getWidth())
+        .height(task.getHeight())
         .filename(task.getFilename())
         .build();
   }
@@ -72,6 +67,7 @@ public class CocoExportService {
   private COCO.Annotation getCocoAnnotation(Annotation annotation) {
     //	/!\ NOTE: needs transactional to work /!\
     return COCO.Annotation.builder()
+        .id(annotation.getId())
         .isCrowd(false)
         .imageId(annotation.getTaskId())
         .segmentation(getSegmentation(annotation))

@@ -4,7 +4,6 @@ import api.bpartners.annotator.model.VGG;
 import api.bpartners.annotator.repository.model.Annotation;
 import api.bpartners.annotator.repository.model.AnnotationBatch;
 import api.bpartners.annotator.repository.model.Job;
-import api.bpartners.annotator.service.AnnotationBatchService;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -17,14 +16,12 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @AllArgsConstructor
 public class VggExportService {
-  private final AnnotationBatchService annotationBatchService;
-
-  public VGG export(Job job) {
-    List<AnnotationBatch> latestPerTaskByJobId =
-        annotationBatchService.findLatestPerTaskByJobId(job.getId());
+  public VGG export(Job job, List<AnnotationBatch> batches) {
     VGG vgg = new VGG();
-    latestPerTaskByJobId.forEach(
-        batch -> vgg.put(batch.getTask().getFilename(), toVggAnnotation(batch)));
+    batches.forEach(
+        batch -> {
+          vgg.put(batch.getTask().getFilename(), toVggAnnotation(batch));
+        });
     return vgg;
   }
 
@@ -32,7 +29,7 @@ public class VggExportService {
     var vggAnnotation = new VGG.Annotation();
     // <-- UNUSED_DATA put at default value
     vggAnnotation.setFileAttributes(Map.of());
-    vggAnnotation.setSize(null);
+    vggAnnotation.setSize(batch.getTask().getSizeInKb());
     vggAnnotation.setBase64ImageData(null);
     // UNUSED_DATA -->
 

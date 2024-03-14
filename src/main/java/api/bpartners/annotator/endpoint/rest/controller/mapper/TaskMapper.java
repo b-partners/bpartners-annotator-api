@@ -3,7 +3,7 @@ package api.bpartners.annotator.endpoint.rest.controller.mapper;
 import api.bpartners.annotator.endpoint.rest.model.Task;
 import api.bpartners.annotator.endpoint.rest.model.UpdateTask;
 import api.bpartners.annotator.endpoint.rest.validator.UpdateTaskValidator;
-import api.bpartners.annotator.service.aws.S3Service;
+import api.bpartners.annotator.service.aws.JobOrTaskS3Service;
 import java.net.URL;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 @AllArgsConstructor
 public class TaskMapper {
   private final TaskStatusMapper statusMapper;
-  private final S3Service fileService;
+  private final JobOrTaskS3Service fileService;
   private final UpdateTaskValidator restValidator;
 
   public Task toRest(api.bpartners.annotator.repository.model.Task domain) {

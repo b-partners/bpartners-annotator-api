@@ -10,12 +10,12 @@ import api.bpartners.annotator.endpoint.event.EventProducer;
 import api.bpartners.annotator.endpoint.event.gen.JobCreated;
 import api.bpartners.annotator.mail.Email;
 import api.bpartners.annotator.mail.Mailer;
-import api.bpartners.annotator.model.S3CustomObject;
+import api.bpartners.annotator.model.TokennedCustomS3ObjectList;
 import api.bpartners.annotator.repository.model.Job;
 import api.bpartners.annotator.repository.model.Task;
 import api.bpartners.annotator.service.JobService;
 import api.bpartners.annotator.service.TaskService;
-import api.bpartners.annotator.service.aws.S3Service;
+import api.bpartners.annotator.service.aws.JobOrTaskS3Service;
 import jakarta.mail.internet.InternetAddress;
 import java.util.List;
 import java.util.function.Consumer;
@@ -31,7 +31,7 @@ import org.thymeleaf.context.Context;
 @Slf4j
 public class JobCreatedService implements Consumer<JobCreated> {
   private static final String TASK_CREATION_FINISHED = "task_creation_finished";
-  private final S3Service s3Service;
+  private final JobOrTaskS3Service jobOrTaskS3Service;
   private final TaskService taskService;
   private final EventProducer eventProducer;
   private final JobService jobService;
@@ -43,7 +43,8 @@ public class JobCreatedService implements Consumer<JobCreated> {
     String bucketName = jobCreated.getJob().getBucketName();
     String prefix = jobCreated.getJob().getFolderPath();
     String continuationToken = jobCreated.getNextContinuationToken();
-    S3CustomObject response = s3Service.getObjectKeys(bucketName, prefix, continuationToken);
+    TokennedCustomS3ObjectList response =
+        jobOrTaskS3Service.getObjectKeys(bucketName, prefix, continuationToken);
 
     List<Task> tasksToCreate =
         response.getObjectsFilename().stream()
