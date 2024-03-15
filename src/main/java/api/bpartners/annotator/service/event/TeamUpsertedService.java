@@ -1,7 +1,7 @@
 package api.bpartners.annotator.service.event;
 
 import api.bpartners.annotator.endpoint.event.gen.TeamUpserted;
-import api.bpartners.annotator.endpoint.rest.security.cognito.CognitoComponent;
+import api.bpartners.annotator.endpoint.rest.security.authentication.bearer.cognito.CognitoComponent;
 import api.bpartners.annotator.service.TeamService;
 import jakarta.transaction.Transactional;
 import java.util.function.Consumer;

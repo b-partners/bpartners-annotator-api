@@ -45,7 +45,7 @@ public class UserAnnotationBatchController {
   }
 
   @PutMapping("/users/{userId}/tasks/{taskId}/annotations/{annotationBatchId}")
-  public AnnotationBatch annotateAndCompleteTask(
+  public AnnotationBatch annotateAndSetTaskToReview(
       @PathVariable String userId,
       @PathVariable String taskId,
       @PathVariable String annotationBatchId,

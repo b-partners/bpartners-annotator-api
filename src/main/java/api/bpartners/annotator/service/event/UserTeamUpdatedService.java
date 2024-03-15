@@ -1,7 +1,7 @@
 package api.bpartners.annotator.service.event;
 
 import api.bpartners.annotator.endpoint.event.gen.UserTeamUpdated;
-import api.bpartners.annotator.endpoint.rest.security.cognito.CognitoComponent;
+import api.bpartners.annotator.endpoint.rest.security.authentication.bearer.cognito.CognitoComponent;
 import java.util.function.Consumer;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;

@@ -40,7 +40,7 @@ import api.bpartners.annotator.endpoint.rest.model.Label;
 import api.bpartners.annotator.endpoint.rest.model.Point;
 import api.bpartners.annotator.endpoint.rest.model.Polygon;
 import api.bpartners.annotator.endpoint.rest.model.TaskStatistics;
-import api.bpartners.annotator.endpoint.rest.security.cognito.CognitoComponent;
+import api.bpartners.annotator.endpoint.rest.security.authentication.bearer.cognito.CognitoComponent;
 import api.bpartners.annotator.integration.conf.utils.TestUtils;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;

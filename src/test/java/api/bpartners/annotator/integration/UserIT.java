@@ -2,7 +2,7 @@ package api.bpartners.annotator.integration;
 
 import static api.bpartners.annotator.integration.conf.utils.TestMocks.team1;
 import static api.bpartners.annotator.integration.conf.utils.TestUtils.setUpCognito;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import api.bpartners.annotator.conf.FacadeIT;
 import api.bpartners.annotator.endpoint.rest.api.SecurityApi;
@@ -10,7 +10,7 @@ import api.bpartners.annotator.endpoint.rest.client.ApiClient;
 import api.bpartners.annotator.endpoint.rest.client.ApiException;
 import api.bpartners.annotator.endpoint.rest.model.User;
 import api.bpartners.annotator.endpoint.rest.model.UserRole;
-import api.bpartners.annotator.endpoint.rest.security.cognito.CognitoComponent;
+import api.bpartners.annotator.endpoint.rest.security.authentication.bearer.cognito.CognitoComponent;
 import api.bpartners.annotator.integration.conf.utils.TestMocks;
 import api.bpartners.annotator.integration.conf.utils.TestUtils;
 import org.junit.jupiter.api.BeforeEach;

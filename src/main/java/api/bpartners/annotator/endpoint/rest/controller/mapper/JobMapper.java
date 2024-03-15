@@ -4,7 +4,7 @@ import api.bpartners.annotator.endpoint.rest.model.CrupdateAnnotatedJob;
 import api.bpartners.annotator.endpoint.rest.model.CrupdateJob;
 import api.bpartners.annotator.endpoint.rest.model.Job;
 import api.bpartners.annotator.endpoint.rest.model.TaskStatistics;
-import api.bpartners.annotator.endpoint.rest.security.AuthenticatedResourceProvider;
+import api.bpartners.annotator.endpoint.rest.security.authentication.AuthenticatedResourceProvider;
 import api.bpartners.annotator.endpoint.rest.validator.CrupdateAnnotatedJobValidator;
 import api.bpartners.annotator.endpoint.rest.validator.JobValidator;
 import java.util.List;

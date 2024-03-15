@@ -1,5 +1,6 @@
 package api.bpartners.annotator.service;
 
+import static api.bpartners.annotator.endpoint.rest.security.model.Role.ADMIN;
 import static api.bpartners.annotator.repository.model.enums.TaskStatus.COMPLETED;
 import static api.bpartners.annotator.repository.model.enums.TaskStatus.PENDING;
 import static api.bpartners.annotator.repository.model.enums.TaskStatus.TO_CORRECT;
@@ -16,6 +17,7 @@ import api.bpartners.annotator.repository.model.Task;
 import api.bpartners.annotator.repository.model.User;
 import api.bpartners.annotator.repository.model.enums.TaskStatus;
 import api.bpartners.annotator.service.validator.TaskUpdateValidator;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import lombok.AllArgsConstructor;
@@ -79,6 +81,14 @@ public class TaskService {
 
   public Task complete(String taskId) {
     return updateStatus(taskId, COMPLETED);
+  }
+
+  public Task completeAnyTask(User user, String taskId) {
+    assert Arrays.asList(user.getRoles()).contains(ADMIN);
+    Task persisted = getById(taskId);
+    persisted.setUserId(user.getId());
+    persisted.setStatus(COMPLETED);
+    return update(persisted.getJob().getId(), taskId, persisted);
   }
 
   public Task setToReview(String taskId) {

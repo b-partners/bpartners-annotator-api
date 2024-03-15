@@ -14,7 +14,7 @@ import api.bpartners.annotator.endpoint.rest.api.TeamJobsApi;
 import api.bpartners.annotator.endpoint.rest.client.ApiClient;
 import api.bpartners.annotator.endpoint.rest.client.ApiException;
 import api.bpartners.annotator.endpoint.rest.model.Job;
-import api.bpartners.annotator.endpoint.rest.security.cognito.CognitoComponent;
+import api.bpartners.annotator.endpoint.rest.security.authentication.bearer.cognito.CognitoComponent;
 import api.bpartners.annotator.integration.conf.utils.TestMocks;
 import api.bpartners.annotator.integration.conf.utils.TestUtils;
 import api.bpartners.annotator.repository.jpa.TaskRepository;
@@ -54,7 +54,7 @@ public class TeamJobsIT extends FacadeIT {
     assertTrue(
         actual.stream()
             .allMatch(
-                job -> job.getStatus().equals(STARTED) || job.getStatus().equals(TO_CORRECT)));
+                job -> STARTED.equals(job.getStatus()) || TO_CORRECT.equals(job.getStatus())));
   }
 
   @Test

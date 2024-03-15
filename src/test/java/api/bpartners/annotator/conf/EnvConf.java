@@ -1,7 +1,5 @@
 package api.bpartners.annotator.conf;
 
-import static api.bpartners.annotator.integration.conf.utils.TestMocks.ADMIN_API_KEY;
-
 import org.springframework.test.context.DynamicPropertyRegistry;
 
 public class EnvConf {
@@ -12,7 +10,7 @@ public class EnvConf {
     registry.add("aws.cognito.userPool.domain", () -> "dummy");
     registry.add("aws.cognito.userPool.clientId", () -> "dummy");
     registry.add("aws.cognito.userPool.clientSecret", () -> "dummy");
-    registry.add("admin.api.key", () -> ADMIN_API_KEY);
+    registry.add("ADMINS", () -> "{\"dummy\":{\"email\":\"dummy@email.com\"}}");
     registry.add("spring.flyway.locations", () -> "classpath:/db/migration,classpath:/db/testdata");
     registry.add(
         "GEOJOBS.USER.INFO",

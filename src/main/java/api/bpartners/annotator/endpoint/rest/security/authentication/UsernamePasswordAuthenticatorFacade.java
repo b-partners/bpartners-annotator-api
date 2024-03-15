@@ -1,5 +1,7 @@
-package api.bpartners.annotator.endpoint.rest.security;
+package api.bpartners.annotator.endpoint.rest.security.authentication;
 
+import api.bpartners.annotator.endpoint.rest.security.authentication.apiKey.ApiKeyAuthenticator;
+import api.bpartners.annotator.endpoint.rest.security.authentication.bearer.BearerAuthenticator;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Primary;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

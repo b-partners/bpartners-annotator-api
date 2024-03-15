@@ -1,4 +1,4 @@
-ADMIN_API_KEY: !Sub '{{resolve:ssm:/bpartners-annotator/${Env}/admin/api-key}}'
+ADMINS: !Sub '{{resolve:ssm:/bpartners-annotator/${Env}/admins}}'
 AWS_COGNITO_USERPOOL_ID: !Sub '{{resolve:ssm:/bpartners-annotator/${Env}/cognito/userpool-id}}'
 AWS_COGNITO_USERPOOL_DOMAIN: !Sub '{{resolve:ssm:/bpartners-annotator/${Env}/cognito/userpool-domain}}'
 AWS_COGNITO_USERPOOL_CLIENTID: !Sub '{{resolve:ssm:/bpartners-annotator/${Env}/cognito/userpool-client-id}}'

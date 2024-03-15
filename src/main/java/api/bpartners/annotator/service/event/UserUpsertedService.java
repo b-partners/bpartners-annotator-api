@@ -1,7 +1,7 @@
 package api.bpartners.annotator.service.event;
 
 import api.bpartners.annotator.endpoint.event.gen.UserUpserted;
-import api.bpartners.annotator.endpoint.rest.security.cognito.CognitoComponent;
+import api.bpartners.annotator.endpoint.rest.security.authentication.bearer.cognito.CognitoComponent;
 import api.bpartners.annotator.service.UserService;
 import java.util.function.Consumer;
 import lombok.AllArgsConstructor;
