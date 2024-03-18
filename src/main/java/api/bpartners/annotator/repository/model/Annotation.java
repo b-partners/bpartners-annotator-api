@@ -9,6 +9,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
+import jakarta.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -16,7 +17,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.JdbcTypeCode;
-import org.springframework.lang.Nullable;
 
 @Entity
 @Data
@@ -29,7 +29,7 @@ public class Annotation implements Serializable {
 
   @OneToOne
   @JoinColumn(name = "label_id", updatable = false)
-  @Nullable
+  @NotNull
   private Label label;
 
   private String userId;
