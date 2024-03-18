@@ -1,5 +1,7 @@
 package api.bpartners.annotator.repository.model;
 
+import static java.lang.Double.MAX_VALUE;
+import static java.lang.Double.MIN_VALUE;
 import static org.hibernate.type.SqlTypes.JSON;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -46,10 +48,10 @@ public class Annotation implements Serializable {
 
     @JsonIgnore
     public List<Double> getBoundingBox() {
-      double minX = Double.MAX_VALUE;
-      double minY = Double.MAX_VALUE;
-      double maxX = Double.MIN_VALUE;
-      double maxY = Double.MIN_VALUE;
+      double minX = MAX_VALUE;
+      double minY = MAX_VALUE;
+      double maxX = MIN_VALUE;
+      double maxY = MIN_VALUE;
 
       for (Annotation.Point point : this.getPoints()) {
         double x = point.getX();
