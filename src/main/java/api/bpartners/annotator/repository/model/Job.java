@@ -6,6 +6,7 @@ import static jakarta.persistence.EnumType.STRING;
 import static org.hibernate.type.SqlTypes.NAMED_ENUM;
 
 import api.bpartners.annotator.endpoint.rest.model.JobType;
+import api.bpartners.annotator.endpoint.rest.model.TaskStatistics;
 import api.bpartners.annotator.repository.model.enums.JobStatus;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -19,6 +20,7 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicLong;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -82,32 +84,41 @@ public class Job {
   }
 
   @JsonIgnore
-  public long getRemainingTasksNumber() {
-    return getTasks().stream().filter(task -> !task.isCompleted() && !task.isToReview()).count();
-  }
-
-  @JsonIgnore
-  public long getRemainingTasksForUserId(String userId) {
-    assert (userId != null) : "UserId value missing.";
-    return getTasks().stream()
-        .filter(
-            task ->
-                (!task.isCompleted() && !task.isToReview())
-                    && (task.getUserId() == null || userId.equals(task.getUserId())))
-        .count();
-  }
-
-  @JsonIgnore
-  public long getTasksCompletedByUserId(String userId) {
-    assert (userId != null) : "UserId value missing.";
-    return getTasks().stream()
-        .filter(task -> userId.equals(task.getUserId()) && task.isCompleted())
-        .count();
-  }
-
-  @JsonIgnore
   public boolean isCompleted() {
     return COMPLETED.equals(this.status);
+  }
+
+  @JsonIgnore
+  public TaskStatistics getTaskStatistics(String userId) {
+    assert (userId != null) : "UserId value missing.";
+    List<Task> thisTasks = getTasks();
+    long size = thisTasks.size();
+    AtomicLong tasksCompletedByUserId = new AtomicLong(0);
+    AtomicLong remainingTasksNumber = new AtomicLong(0);
+    AtomicLong remainingTasksForUserId = new AtomicLong(0);
+
+    thisTasks.forEach(
+        task -> {
+          boolean isTaskCompleted = task.isCompleted();
+          if (isTaskCompleted) {
+            if (userId.equals(task.getUserId())) {
+              tasksCompletedByUserId.incrementAndGet();
+            }
+          } else {
+            if (!task.isToReview()) {
+              remainingTasksNumber.incrementAndGet();
+              if (task.getUserId() == null || userId.equals(task.getUserId())) {
+                remainingTasksForUserId.incrementAndGet();
+              }
+            }
+          }
+        });
+
+    return new TaskStatistics()
+        .completedTasksByUserId(tasksCompletedByUserId.longValue())
+        .totalTasks(size)
+        .remainingTasks(remainingTasksNumber.longValue())
+        .remainingTasksForUserId(remainingTasksForUserId.longValue());
   }
 
   @Override
