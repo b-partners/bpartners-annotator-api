@@ -11,22 +11,28 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @AllArgsConstructor
 @Transactional
+@Slf4j
 public class CocoExportService {
   public COCO export(Job job, List<AnnotationBatch> batches) {
     COCO coco = new COCO();
 
     coco.setInfo(getCocoInfos(job));
+    log.info("map set, {}", coco.getInfo());
     coco.setImages(extractImageDetails(job));
+    log.info("images set, {}", coco.getImages());
     coco.setCategories(extractCategories(job));
+    log.info("categories set, {}", coco.getCategories());
 
     List<COCO.Annotation> cocoAnnotations = extractCocoAnnotations(batches);
     coco.setAnnotations(cocoAnnotations);
+    log.info("annotations set, {}", coco.getAnnotations());
 
     return coco;
   }

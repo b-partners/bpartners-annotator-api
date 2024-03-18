@@ -17,12 +17,14 @@ import java.util.List;
 import java.util.function.Consumer;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.thymeleaf.context.Context;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class JobExportInitiatedService implements Consumer<JobExportInitiated> {
   private final Mailer mailer;
   private final ExportService exportService;
@@ -35,8 +37,12 @@ public class JobExportInitiatedService implements Consumer<JobExportInitiated> {
   public void accept(JobExportInitiated jobExportInitiated) {
     Job linkedJob = jobExportInitiated.getJob();
     ExportFormat exportFormat = jobExportInitiated.getExportFormat();
+    log.info("[DEBUG] begin exporting job {}", linkedJob.getId());
     var exported = exportService.exportJob(linkedJob, exportFormat);
+    log.info("[DEBUG] finished exporting job {}", linkedJob.getId());
+    log.info("[DEBUG] begin bytes job {}", linkedJob.getId());
     var exportedAsBytes = byteWriter.apply(exported);
+    log.info("[DEBUG] finished bytes job {}", linkedJob.getId());
     var inFile =
         fileWriter.write(
             exportedAsBytes,
@@ -45,6 +51,8 @@ public class JobExportInitiatedService implements Consumer<JobExportInitiated> {
     String subject = "[Bpartners-Annotator] Exportation de job sous format " + exportFormat;
     String htmlBody = parseTemplateResolver("job_export_finished", configureContext(linkedJob));
 
+    log.info(
+        "[DEBUG] mailing {} {}, {}", linkedJob.getOwnerEmail(), exported, exportedAsBytes.length);
     mailer.accept(
         new Email(
             new InternetAddress(linkedJob.getOwnerEmail()),

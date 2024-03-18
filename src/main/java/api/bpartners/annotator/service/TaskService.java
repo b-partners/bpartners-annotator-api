@@ -20,6 +20,7 @@ import api.bpartners.annotator.service.validator.TaskUpdateValidator;
 import java.util.List;
 import java.util.Optional;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -27,6 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class TaskService {
   public static final List<TaskStatus> NOT_COMPLETED_TASK_STATUSES =
       List.of(PENDING, UNDER_COMPLETION, TO_CORRECT);
@@ -140,10 +142,10 @@ public class TaskService {
     var linkedJob = task.getJob();
     var refreshedFileInfos =
         jobOrTaskS3Service.getCustomS3ObjectForImage(linkedJob.getBucketName(), task.getFilename());
-
     task.setHeight(refreshedFileInfos.height());
     task.setWidth(refreshedFileInfos.width());
     task.setSizeInKb(refreshedFileInfos.size());
+    log.info("refreshed {}", task);
 
     return update(linkedJob.getId(), task.getId(), task);
   }

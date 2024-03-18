@@ -16,11 +16,13 @@ import api.bpartners.annotator.service.JobService;
 import api.bpartners.annotator.service.TaskService;
 import java.util.List;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class ExportService {
   private final EventProducer eventProducer;
   private final JobService jobService;
@@ -48,14 +50,16 @@ public class ExportService {
   }
 
   List<AnnotationBatch> findAnnotationBatchesWithUpdatedTasks(String jobId) {
+    log.info("findAnnotationBatchesWithUpdatedTasks");
     return annotationBatchService.findLatestPerTaskByJobId(jobId).stream()
         .peek(
             batch -> {
               Task linkedTask = batch.getTask();
               if (linkedTask.hasMissingFileInfoFields()) {
-                batch.setTask(taskService.refreshFileInfos(linkedTask));
+                log.info("refreshing {}", linkedTask.getId());
+                //batch.setTask(taskService.refreshFileInfos(linkedTask));
               }
-            })
+						})
         .toList();
   }
 }
