@@ -3,7 +3,6 @@ package api.bpartners.annotator.endpoint.rest.controller.mapper;
 import api.bpartners.annotator.endpoint.rest.model.CrupdateAnnotatedJob;
 import api.bpartners.annotator.endpoint.rest.model.CrupdateJob;
 import api.bpartners.annotator.endpoint.rest.model.Job;
-import api.bpartners.annotator.endpoint.rest.model.TaskStatistics;
 import api.bpartners.annotator.endpoint.rest.security.AuthenticatedResourceProvider;
 import api.bpartners.annotator.endpoint.rest.validator.CrupdateAnnotatedJobValidator;
 import api.bpartners.annotator.endpoint.rest.validator.JobValidator;
@@ -22,12 +21,6 @@ public class JobMapper {
 
   public Job toRest(api.bpartners.annotator.repository.model.Job domain) {
     String connectedUserId = authenticatedResourceProvider.getAuthenticatedUser().getId();
-    TaskStatistics taskStatistics =
-        new TaskStatistics()
-            .completedTasksByUserId(domain.getTasksCompletedByUserId(connectedUserId))
-            .totalTasks((long) domain.getTasks().size())
-            .remainingTasks(domain.getRemainingTasksNumber())
-            .remainingTasksForUserId(domain.getRemainingTasksForUserId(connectedUserId));
     return new Job()
         .id(domain.getId())
         .name(domain.getName())
@@ -40,7 +33,7 @@ public class JobMapper {
         .type(domain.getType())
         .imagesHeight(domain.getImagesHeight())
         .imagesWidth(domain.getImagesWidth())
-        .taskStatistics(taskStatistics);
+        .taskStatistics(domain.getTaskStatistics(connectedUserId));
   }
 
   public api.bpartners.annotator.repository.model.Job toDomain(CrupdateJob rest) {
