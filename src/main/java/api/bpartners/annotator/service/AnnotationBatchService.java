@@ -5,18 +5,23 @@ import static api.bpartners.annotator.repository.model.enums.JobStatus.TO_CORREC
 import static java.util.stream.Collectors.toCollection;
 import static org.springframework.data.domain.Sort.Direction.DESC;
 
+import api.bpartners.annotator.endpoint.rest.model.AnnotationNumberPerLabel;
 import api.bpartners.annotator.model.BoundedPageSize;
 import api.bpartners.annotator.model.PageFromOne;
 import api.bpartners.annotator.model.exception.BadRequestException;
 import api.bpartners.annotator.model.exception.NotFoundException;
 import api.bpartners.annotator.repository.jpa.AnnotationBatchRepository;
+import api.bpartners.annotator.repository.model.Annotation;
 import api.bpartners.annotator.repository.model.AnnotationBatch;
 import api.bpartners.annotator.repository.model.Job;
+import api.bpartners.annotator.repository.model.Label;
 import api.bpartners.annotator.repository.model.Task;
 import api.bpartners.annotator.repository.model.User;
 import api.bpartners.annotator.repository.model.enums.JobStatus;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -119,5 +124,28 @@ public class AnnotationBatchService {
 
   public List<AnnotationBatch> findLatestPerTaskByJobId(String jobId) {
     return repository.findLatestPerTaskByJobId(jobId);
+  }
+
+  public List<AnnotationNumberPerLabel> getAnnotationStatistics(Job domain) {
+    List<AnnotationBatch> latestPerTaskByJobId = findLatestPerTaskByJobId(domain.getId());
+    Map<Label, Long> countedLabelMap = computeAnnotationStatistics(latestPerTaskByJobId);
+    List<AnnotationNumberPerLabel> annotationStatistics = new ArrayList<>();
+    domain
+        .getLabels()
+        .forEach(
+            label -> {
+              Long number = countedLabelMap.getOrDefault(label, 0L);
+              annotationStatistics.add(
+                  new AnnotationNumberPerLabel()
+                      .labelName(label.getName())
+                      .numberOfAnnotations(number));
+            });
+    return annotationStatistics;
+  }
+
+  private Map<Label, Long> computeAnnotationStatistics(List<AnnotationBatch> annotationBatches) {
+    return annotationBatches.stream()
+        .flatMap(annotationBatch -> annotationBatch.getAnnotations().stream())
+        .collect(Collectors.groupingBy(Annotation::getLabel, Collectors.counting()));
   }
 }
