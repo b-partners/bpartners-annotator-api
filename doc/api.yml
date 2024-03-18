@@ -1081,6 +1081,10 @@ components:
       properties:
         taskStatistics:
           $ref: "#/components/schemas/TaskStatistics"
+        annotationStatistics:
+          type: array
+          items:
+            $ref: "#/components/schemas/AnnotationNumberPerLabel"
     JobStatus:
       type: string
       enum:
@@ -1113,6 +1117,14 @@ components:
           type: integer
           format: int64
         totalTasks:
+          type: integer
+          format: int64
+    AnnotationNumberPerLabel:
+      type: object
+      properties:
+        labelName:
+          type: string
+        numberOfAnnotations:
           type: integer
           format: int64
     Task:
