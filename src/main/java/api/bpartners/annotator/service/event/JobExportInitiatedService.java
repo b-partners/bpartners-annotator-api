@@ -18,6 +18,7 @@ import java.util.function.Consumer;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.thymeleaf.context.Context;
 
 @Service
@@ -30,6 +31,7 @@ public class JobExportInitiatedService implements Consumer<JobExportInitiated> {
 
   @SneakyThrows
   @Override
+  @Transactional
   public void accept(JobExportInitiated jobExportInitiated) {
     Job linkedJob = jobExportInitiated.getJob();
     ExportFormat exportFormat = jobExportInitiated.getExportFormat();

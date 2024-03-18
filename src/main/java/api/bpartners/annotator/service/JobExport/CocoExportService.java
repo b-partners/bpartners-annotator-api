@@ -66,13 +66,15 @@ public class CocoExportService {
 
   private COCO.Annotation getCocoAnnotation(Annotation annotation) {
     //	/!\ NOTE: needs transactional to work /!\
+    Annotation.Polygon polygon = annotation.getPolygon();
     return COCO.Annotation.builder()
         .id(annotation.getId())
         .isCrowd(false)
         .imageId(annotation.getTaskId())
         .segmentation(getSegmentation(annotation))
         .categoryId(annotation.getLabel().getId())
-        .area(BigDecimal.valueOf(annotation.getPolygon().getArea()))
+        .boundingBox(polygon.getBoundingBox())
+        .area(BigDecimal.valueOf(polygon.getArea()))
         .build();
   }
 
