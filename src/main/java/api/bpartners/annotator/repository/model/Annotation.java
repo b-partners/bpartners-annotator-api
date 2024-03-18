@@ -2,6 +2,7 @@ package api.bpartners.annotator.repository.model;
 
 import static org.hibernate.type.SqlTypes.JSON;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
@@ -43,6 +44,7 @@ public class Annotation implements Serializable {
   public static class Polygon implements Serializable {
     private List<Point> points;
 
+    @JsonIgnore
     public List<Double> getBoundingBox() {
       double minX = Double.MAX_VALUE;
       double minY = Double.MAX_VALUE;
@@ -63,6 +65,7 @@ public class Annotation implements Serializable {
       return List.of(minX, minY, maxX - minX, maxY - minY);
     }
 
+    @JsonIgnore
     public double getArea() {
       // Assuming the segmentation defines a polygon, you can use the shoelace formula
       double area = 0.0;
