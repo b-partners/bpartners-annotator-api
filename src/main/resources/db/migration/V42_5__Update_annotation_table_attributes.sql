@@ -1,0 +1,1 @@
+alter table if exists "annotation" alter column label_id set not null;
