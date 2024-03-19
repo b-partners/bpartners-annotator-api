@@ -57,9 +57,9 @@ public class ExportService {
               Task linkedTask = batch.getTask();
               if (linkedTask.hasMissingFileInfoFields()) {
                 log.info("refreshing {}", linkedTask.getId());
-                //batch.setTask(taskService.refreshFileInfos(linkedTask));
+                // batch.setTask(taskService.refreshFileInfos(linkedTask));
               }
-						})
+            })
         .toList();
   }
 }
