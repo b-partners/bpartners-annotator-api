@@ -24,6 +24,7 @@ import org.thymeleaf.context.Context;
 @Service
 @AllArgsConstructor
 public class JobExportInitiatedService implements Consumer<JobExportInitiated> {
+  public static final String JSON_FILE_EXTENSION = ".json";
   private final Mailer mailer;
   private final ExportService exportService;
   private final ByteWriter byteWriter;
@@ -41,7 +42,7 @@ public class JobExportInitiatedService implements Consumer<JobExportInitiated> {
         fileWriter.write(
             exportedAsBytes,
             Files.createTempDirectory(randomUUID().toString()).toFile(),
-            linkedJob.getName());
+            linkedJob.getName() + JSON_FILE_EXTENSION);
     String subject = "[Bpartners-Annotator] Exportation de job sous format " + exportFormat;
     String htmlBody = parseTemplateResolver("job_export_finished", configureContext(linkedJob));
 
