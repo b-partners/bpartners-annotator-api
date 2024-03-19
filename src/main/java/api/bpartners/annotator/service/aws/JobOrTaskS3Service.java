@@ -1,24 +1,12 @@
 package api.bpartners.annotator.service.aws;
 
-import static api.bpartners.annotator.model.exception.ApiException.ExceptionType.SERVER_EXCEPTION;
-import static org.springframework.http.MediaType.IMAGE_JPEG_VALUE;
-import static org.springframework.http.MediaType.IMAGE_PNG_VALUE;
-
-import api.bpartners.annotator.model.CustomS3Object;
 import api.bpartners.annotator.model.TokennedCustomS3ObjectList;
-import api.bpartners.annotator.model.exception.ApiException;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.net.URL;
 import java.time.Duration;
-import javax.imageio.ImageIO;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import software.amazon.awssdk.core.ResponseBytes;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.GetObjectRequest;
-import software.amazon.awssdk.services.s3.model.GetObjectResponse;
 import software.amazon.awssdk.services.s3.model.ListObjectsV2Request;
 import software.amazon.awssdk.services.s3.model.ListObjectsV2Response;
 import software.amazon.awssdk.services.s3.model.S3Object;
@@ -75,40 +63,5 @@ public class JobOrTaskS3Service {
 
   private String replacePrefix(String original, String prefix) {
     return original.replace(prefix, "");
-  }
-
-  public CustomS3Object getCustomS3ObjectForImage(String bucketName, String key) {
-    ResponseBytes<GetObjectResponse> objectAsBytes =
-        client.getObjectAsBytes(GetObjectRequest.builder().bucket(bucketName).key(key).build());
-    String responseContentType = objectAsBytes.response().contentType();
-    if (!IMAGE_PNG_VALUE.equals(responseContentType)
-        && !IMAGE_JPEG_VALUE.equals(responseContentType)) {
-      throw new ApiException(
-          SERVER_EXCEPTION,
-          "only JPEG and PNG content-types are accepted for Tasks, correct following file"
-              + " bucketName = "
-              + bucketName
-              + ", key = "
-              + key);
-    }
-
-    byte[] bytes = objectAsBytes.asByteArray();
-    ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
-
-    try {
-      BufferedImage image = ImageIO.read(bis);
-      int width = image.getWidth();
-      int height = image.getHeight();
-
-      return CustomS3Object.builder()
-          .bucketName(bucketName)
-          .key(key)
-          .width(width)
-          .height(height)
-          .size(bytes.length / 1024)
-          .build();
-    } catch (IOException e) {
-      throw new ApiException(SERVER_EXCEPTION, e);
-    }
   }
 }

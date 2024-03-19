@@ -23,7 +23,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @AllArgsConstructor
@@ -133,18 +132,5 @@ public class TaskService {
 
   public Task save(Task task) {
     return repository.save(task);
-  }
-
-  @Transactional
-  public Task refreshFileInfos(Task task) {
-    var linkedJob = task.getJob();
-    var refreshedFileInfos =
-        jobOrTaskS3Service.getCustomS3ObjectForImage(linkedJob.getBucketName(), task.getFilename());
-
-    task.setHeight(refreshedFileInfos.height());
-    task.setWidth(refreshedFileInfos.width());
-    task.setSizeInKb(refreshedFileInfos.size());
-
-    return update(linkedJob.getId(), task.getId(), task);
   }
 }

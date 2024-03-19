@@ -43,9 +43,6 @@ public class Task {
   private TaskStatus status;
 
   private String userId;
-  private Long sizeInKb;
-  private Integer width;
-  private Integer height;
 
   @JsonIgnore
   public boolean isCompleted() {
@@ -73,18 +70,7 @@ public class Task {
         + ", userId='"
         + userId
         + '\''
-        + ", sizeInKb="
-        + sizeInKb
-        + ", width="
-        + width
-        + ", height="
-        + height
         + '}';
-  }
-
-  @JsonIgnore
-  public boolean hasMissingFileInfoFields() {
-    return sizeInKb == null || width == null || height == null;
   }
 
   @Override
@@ -97,10 +83,7 @@ public class Task {
     if (!id.equals(task.id)) return false;
     if (!filename.equals(task.filename)) return false;
     if (status != task.status) return false;
-    if (!Objects.equals(userId, task.userId)) return false;
-    if (!Objects.equals(sizeInKb, task.sizeInKb)) return false;
-    if (!Objects.equals(width, task.width)) return false;
-    return Objects.equals(height, task.height);
+    return Objects.equals(userId, task.userId);
   }
 
   @Override
@@ -109,9 +92,6 @@ public class Task {
     result = 31 * result + filename.hashCode();
     result = 31 * result + status.hashCode();
     result = 31 * result + (userId != null ? userId.hashCode() : 0);
-    result = 31 * result + (sizeInKb != null ? sizeInKb.hashCode() : 0);
-    result = 31 * result + (width != null ? width.hashCode() : 0);
-    result = 31 * result + (height != null ? height.hashCode() : 0);
     return result;
   }
 }
