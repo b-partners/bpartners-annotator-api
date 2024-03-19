@@ -38,6 +38,8 @@ public class JobMapper {
         .labels(domain.getLabels().stream().map(labelMapper::toRest).toList())
         .teamId(domain.getTeamId())
         .type(domain.getType())
+        .imagesHeight(domain.getImagesHeight())
+        .imagesWidth(domain.getImagesWidth())
         .taskStatistics(taskStatistics);
   }
 
@@ -53,6 +55,8 @@ public class JobMapper {
         .ownerEmail(rest.getOwnerEmail())
         .teamId(rest.getTeamId())
         .type(rest.getType())
+        .imagesHeight(rest.getImagesHeight())
+        .imagesWidth(rest.getImagesWidth())
         .labels(rest.getLabels().stream().map(labelMapper::toDomain).toList())
         .build();
   }
@@ -73,6 +77,8 @@ public class JobMapper {
         .status(crupdateAnnotatedJob.getStatus())
         .labels(crupdateAnnotatedJob.getLabels())
         .teamId(crupdateAnnotatedJob.getTeamId())
+        .imagesHeight(crupdateAnnotatedJob.getImagesHeight())
+        .imagesWidth(crupdateAnnotatedJob.getImagesWidth())
         .type(crupdateAnnotatedJob.getType());
   }
 }

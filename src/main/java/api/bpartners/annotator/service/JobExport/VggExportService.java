@@ -29,7 +29,7 @@ public class VggExportService {
     var vggAnnotation = new VGG.Annotation();
     // <-- UNUSED_DATA put at default value
     vggAnnotation.setFileAttributes(Map.of());
-    vggAnnotation.setSize(batch.getTask().getSizeInKb());
+    vggAnnotation.setSize(null);
     vggAnnotation.setBase64ImageData(null);
     // UNUSED_DATA -->
 

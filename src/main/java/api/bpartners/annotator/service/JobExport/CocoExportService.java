@@ -52,14 +52,16 @@ public class CocoExportService {
   }
 
   private List<COCO.ImageDetail> extractImageDetails(Job job) {
-    return job.getTasks().stream().map(this::getImageDetail).toList();
+    return job.getTasks().stream()
+        .map(t -> getImageDetail(job.getImagesWidth(), job.getImagesHeight(), t))
+        .toList();
   }
 
-  private COCO.ImageDetail getImageDetail(Task task) {
+  private COCO.ImageDetail getImageDetail(int imageWidth, int imageHeight, Task task) {
     return COCO.ImageDetail.builder()
         .id(task.getId())
-        .width(task.getWidth())
-        .height(task.getHeight())
+        .width(imageWidth)
+        .height(imageHeight)
         .filename(task.getFilename())
         .build();
   }

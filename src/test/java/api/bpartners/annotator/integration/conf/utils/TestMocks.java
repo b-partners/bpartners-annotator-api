@@ -60,6 +60,8 @@ public class TestMocks {
         .folderPath("images/")
         .ownerEmail("admin@email.com")
         .name("job_1")
+        .imagesHeight(1024)
+        .imagesWidth(1024)
         .taskStatistics(
             new TaskStatistics()
                 .remainingTasks(13L)
@@ -79,6 +81,8 @@ public class TestMocks {
         .folderPath("images/5/")
         .ownerEmail("admin@email.com")
         .name("job_9")
+        .imagesHeight(1024)
+        .imagesWidth(1024)
         .taskStatistics(
             new TaskStatistics()
                 .remainingTasks(0L)

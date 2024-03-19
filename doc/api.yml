@@ -1036,6 +1036,10 @@ components:
         ownerEmail:
           type: string
           format: email
+        imagesHeight:
+          type: integer
+        imagesWidth:
+          type: integer
         status:
           $ref: '#/components/schemas/JobStatus'
         teamId:
