@@ -1,6 +1,8 @@
 package api.bpartners.annotator;
 
+import static api.bpartners.annotator.concurrency.ThreadRenamer.renameWorkerThread;
 import static java.lang.Runtime.getRuntime;
+import static java.lang.Thread.currentThread;
 
 import api.bpartners.annotator.endpoint.event.EventConsumer;
 import com.amazonaws.services.lambda.runtime.Context;
@@ -21,6 +23,7 @@ public class MailboxEventHandler implements RequestHandler<SQSEvent, String> {
 
   @Override
   public String handleRequest(SQSEvent event, Context context) {
+    renameWorkerThread(currentThread());
     log.info("Received: event={}, awsReqId={}", event, context.getAwsRequestId());
     List<SQSEvent.SQSMessage> messages = event.getRecords();
     log.info("SQS messages: {}", messages);
