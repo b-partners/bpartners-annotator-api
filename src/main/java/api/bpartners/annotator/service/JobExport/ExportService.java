@@ -11,8 +11,10 @@ import api.bpartners.annotator.model.exception.BadRequestException;
 import api.bpartners.annotator.repository.model.Job;
 import api.bpartners.annotator.service.AnnotationBatchService;
 import api.bpartners.annotator.service.JobService;
+import jakarta.mail.internet.InternetAddress;
 import java.util.List;
 import lombok.AllArgsConstructor;
+import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,9 +27,11 @@ public class ExportService {
   private final CocoExportService cocoExportService;
   private final AnnotationBatchService annotationBatchService;
 
-  public void initiateJobExport(String jobId, ExportFormat exportFormat) {
+  @SneakyThrows
+  public void initiateJobExport(String jobId, ExportFormat exportFormat, String emailCC) {
     var linkedJob = jobService.getById(jobId);
-    eventProducer.accept(List.of(new JobExportInitiated(linkedJob, exportFormat)));
+    eventProducer.accept(
+        List.of(new JobExportInitiated(linkedJob, exportFormat, new InternetAddress(emailCC))));
   }
 
   @Transactional(propagation = REQUIRED, readOnly = true, rollbackFor = Exception.class)

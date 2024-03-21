@@ -198,6 +198,14 @@ paths:
               application/json:
                 schema:
                   $ref: "#/components/schemas/ExportFormat"
+          - name: emailCC
+            description: one email address which will receive the exported job other than the ownerEmail, will default to none
+            required: false
+            in: query
+            content:
+              application/json:
+                schema:
+                  type: string
         responses:
           "200":
             description: OK response for mail sending initiation

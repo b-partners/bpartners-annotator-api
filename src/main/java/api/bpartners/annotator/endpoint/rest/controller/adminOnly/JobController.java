@@ -68,8 +68,10 @@ public class JobController {
       value = "/jobs/{jobId}/export",
       produces = {TEXT_PLAIN_VALUE})
   public ResponseEntity<String> export(
-      @PathVariable String jobId, @RequestParam("format") ExportFormat exportFormat) {
-    exportService.initiateJobExport(jobId, exportFormat);
+      @PathVariable String jobId,
+      @RequestParam("format") ExportFormat exportFormat,
+      @RequestParam(required = false) String emailCC) {
+    exportService.initiateJobExport(jobId, exportFormat, emailCC);
     HttpHeaders headers = new HttpHeaders();
     headers.setContentType(TEXT_PLAIN);
     return new ResponseEntity<>("ok", headers, OK);

@@ -36,6 +36,7 @@ public class JobExportInitiatedService implements Consumer<JobExportInitiated> {
   public void accept(JobExportInitiated jobExportInitiated) {
     Job linkedJob = jobExportInitiated.getJob();
     ExportFormat exportFormat = jobExportInitiated.getExportFormat();
+    InternetAddress cc = jobExportInitiated.getEmailCC();
     var exported = exportService.exportJob(linkedJob, exportFormat);
     var exportedAsBytes = byteWriter.apply(exported);
     var inFile =
@@ -49,7 +50,7 @@ public class JobExportInitiatedService implements Consumer<JobExportInitiated> {
     mailer.accept(
         new Email(
             new InternetAddress(linkedJob.getOwnerEmail()),
-            List.of(),
+            cc == null ? List.of() : List.of(cc),
             List.of(),
             subject,
             htmlBody,
