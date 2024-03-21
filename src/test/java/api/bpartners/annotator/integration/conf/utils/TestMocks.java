@@ -11,7 +11,6 @@ import static api.bpartners.annotator.endpoint.rest.model.TaskStatus.PENDING;
 import api.bpartners.annotator.endpoint.rest.model.Annotation;
 import api.bpartners.annotator.endpoint.rest.model.AnnotationBatch;
 import api.bpartners.annotator.endpoint.rest.model.AnnotationBatchReview;
-import api.bpartners.annotator.endpoint.rest.model.AnnotationNumberPerLabel;
 import api.bpartners.annotator.endpoint.rest.model.AnnotationReview;
 import api.bpartners.annotator.endpoint.rest.model.Job;
 import api.bpartners.annotator.endpoint.rest.model.Label;
@@ -70,10 +69,6 @@ public class TestMocks {
                 .completedTasksByUserId(0L)
                 .remainingTasksForUserId(11L))
         .type(LABELLING)
-        .annotationStatistics(
-            List.of(
-                new AnnotationNumberPerLabel().labelName("POOL").numberOfAnnotations(1L),
-                new AnnotationNumberPerLabel().labelName("VELUX").numberOfAnnotations(1L)))
         .labels(List.of(label1(), label2()));
   }
 
@@ -95,11 +90,7 @@ public class TestMocks {
                 .completedTasksByUserId(0L)
                 .remainingTasksForUserId(0L))
         .type(REVIEWING)
-        .labels(List.of(label1(), label2()))
-        .annotationStatistics(
-            List.of(
-                new AnnotationNumberPerLabel().labelName("POOL").numberOfAnnotations(0L),
-                new AnnotationNumberPerLabel().labelName("VELUX").numberOfAnnotations(0L)));
+        .labels(List.of(label1(), label2()));
   }
 
   public static Label label1() {

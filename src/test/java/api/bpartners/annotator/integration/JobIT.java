@@ -33,7 +33,6 @@ import api.bpartners.annotator.endpoint.rest.client.ApiException;
 import api.bpartners.annotator.endpoint.rest.model.AnnotatedTask;
 import api.bpartners.annotator.endpoint.rest.model.Annotation;
 import api.bpartners.annotator.endpoint.rest.model.AnnotationBatch;
-import api.bpartners.annotator.endpoint.rest.model.AnnotationNumberPerLabel;
 import api.bpartners.annotator.endpoint.rest.model.CrupdateAnnotatedJob;
 import api.bpartners.annotator.endpoint.rest.model.CrupdateJob;
 import api.bpartners.annotator.endpoint.rest.model.Job;
@@ -83,8 +82,7 @@ public class JobIT extends FacadeIT {
         .labels(List.of(new Label().id("label_5_id").name("POOL").color("#00ff00")));
   }
 
-  static Job from(CrupdateJob crupdateJob, TaskStatistics taskStatistics) {
-    List<Label> labels = crupdateJob.getLabels();
+  static Job createJobFrom(CrupdateJob crupdateJob, TaskStatistics taskStatistics) {
     return new Job()
         .id(crupdateJob.getId())
         .taskStatistics(taskStatistics)
@@ -97,12 +95,7 @@ public class JobIT extends FacadeIT {
         .ownerEmail(crupdateJob.getOwnerEmail())
         .name(crupdateJob.getName())
         .type(crupdateJob.getType())
-        .labels(labels)
-        .annotationStatistics(labels.stream().map(JobIT::initAnnotationNumberFrom).toList());
-  }
-
-  static AnnotationNumberPerLabel initAnnotationNumberFrom(Label label) {
-    return new AnnotationNumberPerLabel().labelName(label.getName()).numberOfAnnotations(0L);
+        .labels(crupdateJob.getLabels());
   }
 
   @Test
@@ -180,7 +173,7 @@ public class JobIT extends FacadeIT {
     CrupdateJob toCreate = crupdateJob1();
     Job actual = api.saveJob(toCreate.getId(), toCreate);
     Job expected =
-        from(
+        createJobFrom(
             toCreate,
             new TaskStatistics()
                 .totalTasks(0L)
@@ -197,7 +190,7 @@ public class JobIT extends FacadeIT {
     Job updated = api.saveJob(toUpdate.getId(), toUpdate);
 
     Job expectedAfterUpdate =
-        from(
+        createJobFrom(
             toUpdate,
             new TaskStatistics()
                 .totalTasks(0L)
@@ -294,11 +287,10 @@ public class JobIT extends FacadeIT {
   }
 
   private Job from(CrupdateAnnotatedJob crupdateAnnotatedJob) {
-    List<Label> labels = crupdateAnnotatedJob.getLabels();
     return new Job()
         .id(crupdateAnnotatedJob.getId())
         .type(crupdateAnnotatedJob.getType())
-        .labels(labels)
+        .labels(crupdateAnnotatedJob.getLabels())
         .status(crupdateAnnotatedJob.getStatus())
         .name(crupdateAnnotatedJob.getName())
         .ownerEmail(crupdateAnnotatedJob.getOwnerEmail())
@@ -312,8 +304,7 @@ public class JobIT extends FacadeIT {
                 .totalTasks(0L)
                 .completedTasksByUserId(0L)
                 .remainingTasks(0L)
-                .remainingTasksForUserId(0L))
-        .annotationStatistics(labels.stream().map(JobIT::initAnnotationNumberFrom).toList());
+                .remainingTasksForUserId(0L));
   }
 
   CrupdateJob from(Job job) {

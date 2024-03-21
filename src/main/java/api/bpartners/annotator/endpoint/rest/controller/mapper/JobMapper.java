@@ -1,13 +1,11 @@
 package api.bpartners.annotator.endpoint.rest.controller.mapper;
 
-import api.bpartners.annotator.endpoint.rest.model.AnnotationNumberPerLabel;
 import api.bpartners.annotator.endpoint.rest.model.CrupdateAnnotatedJob;
 import api.bpartners.annotator.endpoint.rest.model.CrupdateJob;
 import api.bpartners.annotator.endpoint.rest.model.Job;
 import api.bpartners.annotator.endpoint.rest.security.AuthenticatedResourceProvider;
 import api.bpartners.annotator.endpoint.rest.validator.CrupdateAnnotatedJobValidator;
 import api.bpartners.annotator.endpoint.rest.validator.JobValidator;
-import api.bpartners.annotator.service.AnnotationBatchService;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -20,12 +18,9 @@ public class JobMapper {
   private final JobValidator validator;
   private final AuthenticatedResourceProvider authenticatedResourceProvider;
   private final CrupdateAnnotatedJobValidator crupdateAnnotatedJobValidator;
-  private final AnnotationBatchService annotationBatchService;
 
   public Job toRest(api.bpartners.annotator.repository.model.Job domain) {
     String connectedUserId = authenticatedResourceProvider.getAuthenticatedUser().getId();
-    List<AnnotationNumberPerLabel> annotationStatistics =
-        annotationBatchService.getAnnotationStatistics(domain);
     return new Job()
         .id(domain.getId())
         .name(domain.getName())
@@ -38,8 +33,7 @@ public class JobMapper {
         .type(domain.getType())
         .imagesHeight(domain.getImagesHeight())
         .imagesWidth(domain.getImagesWidth())
-        .taskStatistics(domain.getTaskStatistics(connectedUserId))
-        .annotationStatistics(annotationStatistics);
+        .taskStatistics(domain.getTaskStatistics(connectedUserId));
   }
 
   // use for rest list because annotationStatistics computing is a heavy task
