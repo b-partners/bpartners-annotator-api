@@ -49,7 +49,7 @@ public class JobController {
     return service
         .getAllByStatusAndName(page, pageSize, type, statusMapper.toDomain(status), name)
         .stream()
-        .map(mapper::toRest)
+        .map(mapper::toRestListComponent)
         .toList();
   }
 
