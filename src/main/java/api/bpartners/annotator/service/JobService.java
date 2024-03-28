@@ -1,5 +1,7 @@
 package api.bpartners.annotator.service;
 
+import static api.bpartners.annotator.endpoint.rest.model.JobType.LABELLING;
+import static api.bpartners.annotator.endpoint.rest.model.JobType.REVIEWING;
 import static api.bpartners.annotator.repository.model.enums.JobStatus.COMPLETED;
 import static api.bpartners.annotator.repository.model.enums.JobStatus.PENDING;
 import static api.bpartners.annotator.repository.model.enums.JobStatus.STARTED;
@@ -9,9 +11,7 @@ import static org.springframework.data.domain.Pageable.unpaged;
 import static org.springframework.data.domain.Sort.Order.asc;
 
 import api.bpartners.annotator.endpoint.event.EventProducer;
-import api.bpartners.annotator.endpoint.event.gen.AnnotatedJobCrupdated;
 import api.bpartners.annotator.endpoint.event.gen.JobCreated;
-import api.bpartners.annotator.endpoint.rest.model.CrupdateAnnotatedJob;
 import api.bpartners.annotator.endpoint.rest.model.JobType;
 import api.bpartners.annotator.model.BoundedPageSize;
 import api.bpartners.annotator.model.PageFromOne;
@@ -97,20 +97,16 @@ public class JobService {
 
   @Transactional
   public Job save(Job job) {
-    if (!repository.existsById(job.getId()) && job.getStatus().equals(PENDING)) {
+    if (REVIEWING.equals(job.getType())) {
+      return repository.save(job);
+    } else if (!repository.existsById(job.getId())
+        && PENDING.equals(job.getStatus())
+        && LABELLING.equals(job.getType())) {
       var savedJob = repository.save(job);
       eventProducer.accept(List.of(toEventType(savedJob, null)));
       return savedJob;
     }
     return updateJob(job);
-  }
-
-  @Transactional
-  public Job crupdateAnnotatedJob(
-      String jobId, CrupdateAnnotatedJob crupdateAnnotatedJob, Job job) {
-    Job updated = repository.save(job);
-    eventProducer.accept(List.of(new AnnotatedJobCrupdated(crupdateAnnotatedJob, job)));
-    return updated;
   }
 
   public Job updateJobStatus(String jobId, JobStatus status) {

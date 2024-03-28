@@ -15,17 +15,14 @@ import api.bpartners.annotator.repository.model.Job;
 import api.bpartners.annotator.repository.model.Task;
 import api.bpartners.annotator.repository.model.User;
 import api.bpartners.annotator.repository.model.enums.TaskStatus;
-import api.bpartners.annotator.service.aws.JobOrTaskS3Service;
 import api.bpartners.annotator.service.validator.TaskUpdateValidator;
 import java.util.List;
 import java.util.Optional;
-import lombok.AllArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
-@AllArgsConstructor
 public class TaskService {
   public static final List<TaskStatus> NOT_COMPLETED_TASK_STATUSES =
       List.of(PENDING, UNDER_COMPLETION, TO_CORRECT);
@@ -34,7 +31,19 @@ public class TaskService {
   private final TaskDao taskDao;
   private final TaskUpdateValidator updateValidator;
   private final UserService userService;
-  private final JobOrTaskS3Service jobOrTaskS3Service;
+
+  public TaskService(
+      TaskRepository repository,
+      JobService jobService,
+      TaskDao taskDao,
+      TaskUpdateValidator updateValidator,
+      UserService userService) {
+    this.repository = repository;
+    this.jobService = jobService;
+    this.taskDao = taskDao;
+    this.updateValidator = updateValidator;
+    this.userService = userService;
+  }
 
   public List<Task> getAllByJobAndStatus(
       String jobId, TaskStatus status, String userId, PageFromOne page, BoundedPageSize pageSize) {
