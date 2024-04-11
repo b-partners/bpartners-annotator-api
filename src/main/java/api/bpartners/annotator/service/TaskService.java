@@ -102,8 +102,7 @@ public class TaskService {
 
   public Task getAvailableTaskFromJobOrJobAndUserIdOrJobAndExternalUsers(
       String teamId, String jobId, String userId) {
-    List<String> geoJobsUsers =
-        userService.getAllGeoJobsUsers().stream().map(User::getId).toList();
+    List<String> geoJobsUsers = userService.getAllGeoJobsUsers().stream().map(User::getId).toList();
     Optional<Task> optionalTask =
         taskDao.findAvailableTaskFromJobOrJobAndUserIdOrJobAndExternalUserIds(
             jobId, userId, geoJobsUsers);

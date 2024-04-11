@@ -11,7 +11,6 @@ import static api.bpartners.annotator.endpoint.rest.model.TaskStatus.PENDING;
 import api.bpartners.annotator.endpoint.rest.model.Annotation;
 import api.bpartners.annotator.endpoint.rest.model.AnnotationBatch;
 import api.bpartners.annotator.endpoint.rest.model.AnnotationBatchReview;
-import api.bpartners.annotator.endpoint.rest.model.AnnotationNumberPerLabel;
 import api.bpartners.annotator.endpoint.rest.model.AnnotationReview;
 import api.bpartners.annotator.endpoint.rest.model.Job;
 import api.bpartners.annotator.endpoint.rest.model.Label;

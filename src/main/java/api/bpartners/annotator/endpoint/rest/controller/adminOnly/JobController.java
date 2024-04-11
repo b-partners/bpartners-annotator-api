@@ -62,7 +62,8 @@ public class JobController {
   }
 
   @GetMapping("/jobs/{jobId}/annotationStatistics")
-  public List<AnnotationNumberPerLabel> getJobLatestAnnotationStatistics(@PathVariable String jobId) {
+  public List<AnnotationNumberPerLabel> getJobLatestAnnotationStatistics(
+      @PathVariable String jobId) {
     var domain = service.getById(jobId);
     return annotationBatchService.getLatestAnnotationStatistics(domain);
   }

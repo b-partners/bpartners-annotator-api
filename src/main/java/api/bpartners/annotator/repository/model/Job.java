@@ -109,7 +109,9 @@ public class Job {
             if (!task.isToReview()) {
               remainingTasksNumber.incrementAndGet();
               String jobUserId = task.getUserId();
-              if (jobUserId == null || userId.equals(jobUserId) || externalAnnotatorUserId.contains(jobUserId)) {
+              if (jobUserId == null
+                  || userId.equals(jobUserId)
+                  || externalAnnotatorUserId.contains(jobUserId)) {
                 remainingTasksForUserId.incrementAndGet();
               }
             }
