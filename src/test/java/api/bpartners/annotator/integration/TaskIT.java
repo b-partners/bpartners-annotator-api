@@ -18,12 +18,12 @@ import api.bpartners.annotator.conf.FacadeIT;
 import api.bpartners.annotator.endpoint.rest.api.TasksApi;
 import api.bpartners.annotator.endpoint.rest.client.ApiClient;
 import api.bpartners.annotator.endpoint.rest.client.ApiException;
-import api.bpartners.annotator.endpoint.rest.model.CreateAnnotatedTask;
-import api.bpartners.annotator.endpoint.rest.model.Task;
+import api.bpartners.annotator.endpoint.rest.model.*;
 import api.bpartners.annotator.integration.conf.utils.TestMocks;
 import api.bpartners.annotator.integration.conf.utils.TestUtils;
 import api.bpartners.annotator.service.aws.JobOrTaskS3Service;
 import java.net.MalformedURLException;
+import java.time.Instant;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -33,6 +33,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 
 @Testcontainers
 public class TaskIT extends FacadeIT {
+  public static final String JOB_2_ID = "job_2_id";
   @LocalServerPort private int port;
   @MockBean public JobOrTaskS3Service fileService;
 
@@ -114,5 +115,42 @@ public class TaskIT extends FacadeIT {
     assertThrowsBadRequestException(
         () -> api.addAnnotatedTasksToAnnotatedJob(JOB_1_ID, tooLargeAnnotatedTaskPayload),
         "cannot add tasks to Job.Id = job_1_id only 5 tasks per save is supported.");
+  }
+
+  @Test
+  void admin_add_tasks_ok() throws ApiException {
+    ApiClient adminClient = anApiClient();
+    TasksApi api = new TasksApi(adminClient);
+    List<CreateAnnotatedTask> toCreate =
+        List.of(
+            new CreateAnnotatedTask()
+                .id("CreateAnnotatedTask1")
+                .filename("dummy")
+                .annotatorId("joe_doe_id")
+                .annotationBatch(
+                    new CreateAnnotationBatch()
+                        .id("CreateAnnotationBatch1")
+                        .creationDatetime(Instant.now())
+                        .annotations(
+                            List.of(
+                                new AnnotationBaseFields()
+                                    .id("AnnotationBaseFields1")
+                                    .userId("joe_doe_id")
+                                    .label(new Label().id("Label1").color("#DFFF00").name("ROOF"))
+                                    .polygon(
+                                        new Polygon()
+                                            .points(List.of(new Point().x(0.1).y(0.2))))))));
+
+    List<Task> actual = api.addAnnotatedTasksToAnnotatedJob(JOB_2_ID, toCreate);
+
+    assertEquals(
+        List.of(
+            new Task()
+                .id("CreateAnnotatedTask1")
+                .filename("dummy")
+                .userId("joe_doe_id")
+                .status(TO_CORRECT)
+                .imageUri("https://wwww.example.com")),
+        actual);
   }
 }
