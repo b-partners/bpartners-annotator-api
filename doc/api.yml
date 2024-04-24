@@ -1266,6 +1266,10 @@ components:
             $ref: "#/components/schemas/AnnotationReview"
         status:
           $ref: "#/components/schemas/ReviewStatus"
+        creationDatetime:
+          type: string
+          description: ignored as requestBody
+          format: date-time
     ExportFormat:
       type: string
       enum:

@@ -93,8 +93,8 @@ public class AnnotationBatchReviewIT extends FacadeIT {
         api.crupdateJobTaskAnnotationReview(
             JOB_1_ID, createdTask.getId(), BATCH_1_ID, toCreatePayload.getId(), updatedPayload);
 
-    assertEquals(toCreatePayload, actual);
-    assertEquals(updatedPayload, updated);
+    assertEquals(ignoreDateOf(toCreatePayload), ignoreDateOf(actual));
+    assertEquals(ignoreDateOf(updatedPayload), ignoreDateOf(updated));
   }
 
   Task createTask(Job job) {
@@ -137,5 +137,9 @@ public class AnnotationBatchReviewIT extends FacadeIT {
         .reviews(reviews)
         .status(REJECTED)
         .annotationBatchId(BATCH_2_ID);
+  }
+
+  private static AnnotationBatchReview ignoreDateOf(AnnotationBatchReview review) {
+    return review.creationDatetime(null);
   }
 }

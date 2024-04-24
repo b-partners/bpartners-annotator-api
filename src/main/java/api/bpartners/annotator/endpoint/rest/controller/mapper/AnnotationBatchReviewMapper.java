@@ -21,6 +21,7 @@ public class AnnotationBatchReviewMapper {
         .id(domain.getId())
         .annotationBatchId(domain.getAnnotationBatchId())
         .status(reviewStatusMapper.toRest(domain.getStatus()))
+        .creationDatetime(domain.getCreationDatetime())
         .reviews(reviews);
   }
 

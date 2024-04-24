@@ -164,7 +164,8 @@ public class TestMocks {
         .id(BATCH_REVIEW_1_ID)
         .annotationBatchId(BATCH_1_ID)
         .status(REJECTED)
-        .reviews(List.of(annotationReview1()));
+        .reviews(List.of(annotationReview1()))
+        .creationDatetime(Instant.parse("2023-11-30T06:37:51.384Z"));
   }
 
   public static AnnotationBatchReview batchReview2() {
