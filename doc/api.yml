@@ -1176,6 +1176,8 @@ components:
           $ref: '#/components/schemas/Label'
         polygon:
           $ref: '#/components/schemas/Polygon'
+        comment:
+          type: string
     Annotation:
       allOf:
         - $ref: '#/components/schemas/AnnotationBaseFields'

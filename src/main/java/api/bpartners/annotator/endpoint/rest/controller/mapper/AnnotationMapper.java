@@ -21,6 +21,7 @@ public class AnnotationMapper {
         .label(labelMapper.toRest(domain.getLabel()))
         .taskId(domain.getTaskId())
         .userId(domain.getUserId())
+        .comment(domain.getComment())
         .polygon(polygonMapper.toRest(domain.getPolygon()));
   }
 
@@ -47,6 +48,7 @@ public class AnnotationMapper {
         .userId(rest.getUserId())
         .batchId(annotationBatchId)
         .polygon(polygonMapper.toDomain(rest.getPolygon()))
+        .comment(rest.getComment())
         .build();
   }
 }

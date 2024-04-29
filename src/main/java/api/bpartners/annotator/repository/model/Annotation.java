@@ -37,6 +37,8 @@ public class Annotation implements Serializable {
   @JdbcTypeCode(JSON)
   private Polygon polygon;
 
+  private String comment;
+
   private String batchId;
 
   @Data

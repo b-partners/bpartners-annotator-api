@@ -1,0 +1,1 @@
+alter table if exists "annotation" add column if not exists comment varchar;
