@@ -26,4 +26,12 @@ VALUES ('annotation_1_id', 'task_1_id', 'joe_doe_id', 'label_1_id', 'batch_1_id'
              "y": 1.0
            }
          ]
+       }'),
+       ('annotation_4_id', 'task_11_id', 'joe_doe_id', 'label_1_id', 'batch_4_id', '{
+         "points": [
+           {
+             "x": 1.0,
+             "y": 1.0
+           }
+         ]
        }');
