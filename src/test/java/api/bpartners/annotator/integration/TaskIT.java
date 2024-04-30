@@ -8,18 +8,23 @@ import static api.bpartners.annotator.integration.conf.utils.TestMocks.JANE_DOE_
 import static api.bpartners.annotator.integration.conf.utils.TestMocks.JOB_1_ID;
 import static api.bpartners.annotator.integration.conf.utils.TestMocks.JOE_DOE_ID;
 import static api.bpartners.annotator.integration.conf.utils.TestMocks.TASK_1_ID;
+import static api.bpartners.annotator.integration.conf.utils.TestMocks.TEAM_1_ID;
 import static api.bpartners.annotator.integration.conf.utils.TestMocks.task1;
 import static api.bpartners.annotator.integration.conf.utils.TestUtils.assertThrowsBadRequestException;
+import static api.bpartners.annotator.integration.conf.utils.TestUtils.setUpCognito;
 import static api.bpartners.annotator.integration.conf.utils.TestUtils.setUpS3Service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import api.bpartners.annotator.conf.FacadeIT;
 import api.bpartners.annotator.endpoint.rest.api.TasksApi;
+import api.bpartners.annotator.endpoint.rest.api.UserTasksApi;
 import api.bpartners.annotator.endpoint.rest.client.ApiClient;
 import api.bpartners.annotator.endpoint.rest.client.ApiException;
 import api.bpartners.annotator.endpoint.rest.model.CreateAnnotatedTask;
 import api.bpartners.annotator.endpoint.rest.model.Task;
+import api.bpartners.annotator.endpoint.rest.model.UpdateTask;
+import api.bpartners.annotator.endpoint.rest.security.cognito.CognitoComponent;
 import api.bpartners.annotator.integration.conf.utils.TestMocks;
 import api.bpartners.annotator.integration.conf.utils.TestUtils;
 import api.bpartners.annotator.service.aws.JobOrTaskS3Service;
@@ -35,19 +40,25 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 public class TaskIT extends FacadeIT {
   @LocalServerPort private int port;
   @MockBean public JobOrTaskS3Service fileService;
+  @MockBean CognitoComponent cognitoComponent;
 
-  private ApiClient anApiClient() {
+  private ApiClient adminApiClient() {
     return TestUtils.anApiClient(null, TestMocks.ADMIN_API_KEY, port);
+  }
+
+  private ApiClient joeDoeClient() {
+    return TestUtils.anApiClient(TestMocks.JOE_DOE_TOKEN, null, port);
   }
 
   @BeforeEach
   void setUp() throws MalformedURLException {
+    setUpCognito(cognitoComponent);
     setUpS3Service(fileService);
   }
 
   @Test
   void admin_get_tasks_ok() throws ApiException {
-    ApiClient adminClient = anApiClient();
+    ApiClient adminClient = adminApiClient();
     TasksApi api = new TasksApi(adminClient);
 
     List<Task> actualTasks = api.getJobTasks(JOB_1_ID, 1, 20, null, null);
@@ -58,7 +69,7 @@ public class TaskIT extends FacadeIT {
 
   @Test
   void admin_get_tasks_filtered_ok() throws ApiException {
-    ApiClient adminClient = anApiClient();
+    ApiClient adminClient = adminApiClient();
     TasksApi api = new TasksApi(adminClient);
 
     List<Task> actualPendingTasks = api.getJobTasks(JOB_1_ID, 1, 10, PENDING, null);
@@ -88,7 +99,7 @@ public class TaskIT extends FacadeIT {
 
   @Test
   void admin_get_task_by_id() throws ApiException {
-    ApiClient adminClient = anApiClient();
+    ApiClient adminClient = adminApiClient();
     TasksApi api = new TasksApi(adminClient);
 
     Task actual = api.getJobTaskById(JOB_1_ID, TASK_1_ID);
@@ -98,7 +109,7 @@ public class TaskIT extends FacadeIT {
 
   @Test
   void admin_add_tasks_ko() {
-    ApiClient adminClient = anApiClient();
+    ApiClient adminClient = adminApiClient();
     TasksApi api = new TasksApi(adminClient);
 
     // refer to EnvConf/tasks.insert.limit.max
@@ -114,5 +125,38 @@ public class TaskIT extends FacadeIT {
     assertThrowsBadRequestException(
         () -> api.addAnnotatedTasksToAnnotatedJob(JOB_1_ID, tooLargeAnnotatedTaskPayload),
         "cannot add tasks to Job.Id = job_1_id only 5 tasks per save is supported.");
+  }
+
+  @Test
+  void admin_add_tasks_ok() {
+    ApiClient joeDoeClient = joeDoeClient();
+    UserTasksApi api = new UserTasksApi(joeDoeClient);
+    var task12Id = "task_12_id";
+    var task14Id = "task_14_id";
+
+    assertThrowsBadRequestException(
+        () ->
+            api.updateTask(
+                TEAM_1_ID,
+                JOB_1_ID,
+                task12Id,
+                new UpdateTask().id(task12Id).status(TO_CORRECT).userId(null)),
+        "userId is mandatory in order to update a task status to TO_CORRECT");
+    assertThrowsBadRequestException(
+        () ->
+            api.updateTask(
+                TEAM_1_ID,
+                JOB_1_ID,
+                task14Id,
+                new UpdateTask().id(task14Id).status(UNDER_COMPLETION).userId(null)),
+        "userId is mandatory in order to update a task status to UNDER_COMPLETION");
+    assertThrowsBadRequestException(
+        () ->
+            api.updateTask(
+                TEAM_1_ID,
+                JOB_1_ID,
+                task12Id,
+                new UpdateTask().id(task12Id).status(COMPLETED).userId(JOE_DOE_ID)),
+        "illegal transition: TO_CORRECT -> COMPLETED");
   }
 }
