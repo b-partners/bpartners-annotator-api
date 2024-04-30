@@ -1,5 +1,7 @@
 package api.bpartners.annotator.integration;
 
+import static api.bpartners.annotator.endpoint.rest.model.ExportFormat.COCO;
+import static api.bpartners.annotator.endpoint.rest.model.ExportFormat.VGG;
 import static api.bpartners.annotator.endpoint.rest.model.JobStatus.COMPLETED;
 import static api.bpartners.annotator.endpoint.rest.model.JobStatus.FAILED;
 import static api.bpartners.annotator.endpoint.rest.model.JobStatus.PENDING;
@@ -26,6 +28,9 @@ import static java.util.Collections.emptyList;
 import static java.util.UUID.randomUUID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.anyList;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 import api.bpartners.annotator.conf.FacadeIT;
 import api.bpartners.annotator.endpoint.event.EventProducer;
@@ -299,6 +304,19 @@ public class JobIT extends FacadeIT {
 
     assertTrue(savedTasks.containsAll(expectedTasks));
     return true;
+  }
+
+  @Test
+  void export_job_ok() throws ApiException {
+    ApiClient apiClient = anAdminApiClient();
+    JobsApi jobsApi = new JobsApi(apiClient);
+    String okContent = "ok";
+    var actual1 = jobsApi.exportJob(JOB_1_ID, VGG, "dummy@gmail.com");
+    var actual2 = jobsApi.exportJob(JOB_1_ID, COCO, "dummy@gmail.com");
+
+    verify(eventProducer, times(2)).accept(anyList());
+    assertEquals(okContent, actual1);
+    assertEquals(okContent, actual2);
   }
 
   private static CreateAnnotatedTask createAnnotatedTask(String id, List<Label> labels) {
