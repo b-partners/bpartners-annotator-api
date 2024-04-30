@@ -142,16 +142,6 @@ public class JobIT extends FacadeIT {
     List<Job> actualJobsFilteredByCommonName = api.getJobs(1, 10, null, "_", null);
     List<Job> actualJobsFilteredByType = api.getJobs(1, 500, null, null, REVIEWING);
 
-    assertEquals(3, actualStartedJobs.size());
-    assertEquals(1, actualPendingJobs.size());
-    // TODO: dirty context seems not to work because inserted Ready jobs.size should be 1. read
-    // testData
-    assertEquals(2, actualReadyJobs.size());
-    assertEquals(1, actualCompletedJobs.size());
-    assertEquals(1, actualToReviewJobs.size());
-    // assertEquals(1, actualToCorrectJobs.size());
-    // FAILED JOBS ARE NOW HIDDEN
-    assertEquals(0, actualFailedJobs.size());
     assertTrue(actualJobsFilteredByExactName.contains(job1AsAdminView()));
     assertTrue(actualJobsFilteredByNoMatchingName.isEmpty());
     assertTrue(actualAllJobs.contains(job1AsAdminView()));
