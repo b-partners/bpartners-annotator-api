@@ -677,7 +677,7 @@ paths:
         - UserAnnotations
         - UserTasks # deprecated
       summary: annotates a task and sets the task status to COMPLETED
-      operationId: annotateAndCompleteTask
+      operationId: annotateAndSetTaskToReview
       parameters:
         - name: userId
           in: path
