@@ -1,5 +1,7 @@
 package api.bpartners.annotator.integration.conf.utils;
 
+import static api.bpartners.annotator.integration.conf.utils.TestMocks.JANE_DOE_EMAIL;
+import static api.bpartners.annotator.integration.conf.utils.TestMocks.JANE_DOE_TOKEN;
 import static api.bpartners.annotator.integration.conf.utils.TestMocks.JOE_DOE_EMAIL;
 import static api.bpartners.annotator.integration.conf.utils.TestMocks.JOE_DOE_TOKEN;
 import static api.bpartners.annotator.integration.conf.utils.TestMocks.MOCK_PRESIGNED_URL;
@@ -34,6 +36,7 @@ public class TestUtils {
 
   public static void setUpCognito(CognitoComponent cognitoComponent) {
     when(cognitoComponent.getEmailByToken(JOE_DOE_TOKEN)).thenReturn(JOE_DOE_EMAIL);
+    when(cognitoComponent.getEmailByToken(JANE_DOE_TOKEN)).thenReturn(JANE_DOE_EMAIL);
   }
 
   public static void setUpS3Service(JobOrTaskS3Service fileService) throws MalformedURLException {

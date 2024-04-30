@@ -174,7 +174,7 @@ public class JobIT extends FacadeIT {
     assertEquals(job1AsAdminView(), actual);
     assertEquals(
         List.of(
-            new AnnotationNumberPerLabel().labelName("POOL").numberOfAnnotations(1L),
+            new AnnotationNumberPerLabel().labelName("POOL").numberOfAnnotations(2L),
             new AnnotationNumberPerLabel().labelName("VELUX").numberOfAnnotations(1L)),
         actualAnnotationStatistics);
   }

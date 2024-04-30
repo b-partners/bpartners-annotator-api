@@ -5,9 +5,11 @@ import static api.bpartners.annotator.endpoint.rest.model.ReviewStatus.ACCEPTED;
 import static api.bpartners.annotator.endpoint.rest.model.ReviewStatus.REJECTED;
 import static api.bpartners.annotator.integration.conf.utils.TestMocks.ANNOTATION_1_ID;
 import static api.bpartners.annotator.integration.conf.utils.TestMocks.BATCH_1_ID;
+import static api.bpartners.annotator.integration.conf.utils.TestMocks.BATCH_4_ID;
 import static api.bpartners.annotator.integration.conf.utils.TestMocks.BATCH_REVIEW_1_ID;
 import static api.bpartners.annotator.integration.conf.utils.TestMocks.JOB_1_ID;
 import static api.bpartners.annotator.integration.conf.utils.TestMocks.JOE_DOE_ID;
+import static api.bpartners.annotator.integration.conf.utils.TestMocks.TASK_11_ID;
 import static api.bpartners.annotator.integration.conf.utils.TestMocks.TASK_1_ID;
 import static api.bpartners.annotator.integration.conf.utils.TestMocks.TEAM_2_ID;
 import static api.bpartners.annotator.integration.conf.utils.TestMocks.batchReview1;
@@ -44,8 +46,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.server.LocalServerPort;
 
 public class AnnotationBatchReviewIT extends FacadeIT {
-  public static final String TASK_11_ID = "task_11_id";
-  public static final String BATCH_4_ID = "batch_4_id";
   public static final String BATCH_REVIEW_3_ID = "batch_review_3_id";
   @LocalServerPort private int port;
   @Autowired TaskRepository taskRepository;

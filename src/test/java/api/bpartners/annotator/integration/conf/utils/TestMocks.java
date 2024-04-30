@@ -26,7 +26,9 @@ import java.util.List;
 public class TestMocks {
   public static final String ADMIN_API_KEY = "dummy";
   public static final String JOE_DOE_TOKEN = "joe_doe_token";
+  public static final String JANE_DOE_TOKEN = "jane_doe_token";
   public static final String JOE_DOE_EMAIL = "joe@email.com";
+  public static final String JANE_DOE_EMAIL = "jane@email.com";
 
   public static final String TEAM_1_ID = "team_1_id";
 
@@ -45,6 +47,9 @@ public class TestMocks {
   public static final String BATCH_2_ID = "batch_2_id";
   public static final String GEOJOBS_USER_ID = "geo-jobs_user_id";
   public static final String GEOJOBS_TEAM_ID = "geo_jobs_team_id";
+  public static final String TASK_11_ID = "task_11_id";
+  public static final String TASK_21_ID = "task_21_id";
+  public static final String BATCH_4_ID = "batch_4_id";
 
   public static Team team1() {
     return new Team().id(TEAM_1_ID).name("joe_team");
