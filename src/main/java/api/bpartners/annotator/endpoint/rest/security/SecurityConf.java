@@ -104,6 +104,8 @@ public class SecurityConf {
                     .hasRole(ADMIN.getRole())
                     .requestMatchers(GET, "/users")
                     .hasRole(ADMIN.getRole())
+                    .requestMatchers(PUT, "/users/*/team")
+                    .hasRole(ADMIN.getRole())
                     .requestMatchers(GET, "/jobs")
                     .hasRole(ADMIN.getRole())
                     .requestMatchers(GET, "/jobs/*")
