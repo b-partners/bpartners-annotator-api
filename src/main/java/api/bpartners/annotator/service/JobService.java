@@ -11,6 +11,7 @@ import static org.springframework.data.domain.Pageable.unpaged;
 import static org.springframework.data.domain.Sort.Order.asc;
 
 import api.bpartners.annotator.endpoint.event.EventProducer;
+import api.bpartners.annotator.endpoint.event.gen.AnnotationStatisticsComputationTriggered;
 import api.bpartners.annotator.endpoint.event.gen.JobCreated;
 import api.bpartners.annotator.endpoint.rest.model.JobType;
 import api.bpartners.annotator.model.BoundedPageSize;
@@ -22,6 +23,8 @@ import api.bpartners.annotator.repository.jpa.JobRepository;
 import api.bpartners.annotator.repository.model.Job;
 import api.bpartners.annotator.repository.model.Task;
 import api.bpartners.annotator.repository.model.enums.JobStatus;
+import jakarta.mail.internet.AddressException;
+import jakarta.mail.internet.InternetAddress;
 import java.util.Collection;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -184,5 +187,18 @@ public class JobService {
     }
 
     return save(persisted);
+  }
+
+  public void fireAnnotationStatisticsComputationEvent(String jobId, String emailCC) {
+    InternetAddress cc = null;
+    if (emailCC != null) {
+      try {
+        cc = new InternetAddress(emailCC);
+      } catch (AddressException e) {
+        throw new BadRequestException("invalid address " + cc);
+      }
+    }
+
+    eventProducer.accept(List.of(new AnnotationStatisticsComputationTriggered(jobId, cc)));
   }
 }

@@ -40,7 +40,6 @@ import api.bpartners.annotator.endpoint.rest.api.TeamJobsApi;
 import api.bpartners.annotator.endpoint.rest.client.ApiClient;
 import api.bpartners.annotator.endpoint.rest.client.ApiException;
 import api.bpartners.annotator.endpoint.rest.model.AnnotationBaseFields;
-import api.bpartners.annotator.endpoint.rest.model.AnnotationNumberPerLabel;
 import api.bpartners.annotator.endpoint.rest.model.CreateAnnotatedTask;
 import api.bpartners.annotator.endpoint.rest.model.CreateAnnotationBatch;
 import api.bpartners.annotator.endpoint.rest.model.CrupdateJob;
@@ -163,15 +162,19 @@ public class JobIT extends FacadeIT {
     JobsApi api = new JobsApi(adminClient);
 
     Job actual = api.getJob(JOB_1_ID);
-    List<AnnotationNumberPerLabel> actualAnnotationStatistics =
-        api.getJobLatestAnnotationStatistics(JOB_1_ID);
 
     assertEquals(job1AsAdminView(), actual);
-    assertEquals(
-        List.of(
-            new AnnotationNumberPerLabel().labelName("POOL").numberOfAnnotations(2L),
-            new AnnotationNumberPerLabel().labelName("VELUX").numberOfAnnotations(1L)),
-        actualAnnotationStatistics);
+  }
+
+  @Test
+  void admin_get_annotation_statistics_ok() throws ApiException {
+    ApiClient adminClient = anAdminApiClient();
+    JobsApi api = new JobsApi(adminClient);
+
+    String actual = api.getJobLatestAnnotationStatisticsByMail(JOB_1_ID, "dummy@gmail.com");
+
+    verify(eventProducer, times(1)).accept(anyList());
+    assertEquals("ok", actual);
   }
 
   @Test

@@ -6,7 +6,6 @@ import static org.springframework.http.MediaType.TEXT_PLAIN_VALUE;
 
 import api.bpartners.annotator.endpoint.rest.controller.mapper.JobMapper;
 import api.bpartners.annotator.endpoint.rest.controller.mapper.JobStatusMapper;
-import api.bpartners.annotator.endpoint.rest.model.AnnotationNumberPerLabel;
 import api.bpartners.annotator.endpoint.rest.model.CrupdateJob;
 import api.bpartners.annotator.endpoint.rest.model.ExportFormat;
 import api.bpartners.annotator.endpoint.rest.model.Job;
@@ -15,7 +14,6 @@ import api.bpartners.annotator.endpoint.rest.model.JobType;
 import api.bpartners.annotator.endpoint.rest.validator.CrupdateJobIdValidator;
 import api.bpartners.annotator.model.BoundedPageSize;
 import api.bpartners.annotator.model.PageFromOne;
-import api.bpartners.annotator.service.AnnotationBatchService;
 import api.bpartners.annotator.service.JobExport.ExportService;
 import api.bpartners.annotator.service.JobService;
 import java.util.List;
@@ -37,7 +35,6 @@ public class JobController {
   private final JobStatusMapper statusMapper;
   private final ExportService exportService;
   private final CrupdateJobIdValidator crupdateJobIdValidator;
-  private final AnnotationBatchService annotationBatchService;
 
   @GetMapping("/jobs")
   public List<Job> getJobs(
@@ -58,11 +55,15 @@ public class JobController {
     return mapper.toRest(service.getById(jobId));
   }
 
-  @GetMapping("/jobs/{jobId}/annotationStatistics")
-  public List<AnnotationNumberPerLabel> getJobLatestAnnotationStatistics(
-      @PathVariable String jobId) {
-    var domain = service.getById(jobId);
-    return annotationBatchService.getLatestAnnotationStatistics(domain);
+  @GetMapping(
+      value = "/jobs/{jobId}/annotationStatistics",
+      produces = {TEXT_PLAIN_VALUE})
+  public ResponseEntity<String> getJobLatestAnnotationStatisticsByMail(
+      @PathVariable String jobId, @RequestParam(required = false) String emailCC) {
+    service.fireAnnotationStatisticsComputationEvent(jobId, emailCC);
+    HttpHeaders headers = new HttpHeaders();
+    headers.setContentType(TEXT_PLAIN);
+    return new ResponseEntity<>("ok", headers, OK);
   }
 
   @PutMapping("/jobs/{jobId}")

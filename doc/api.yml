@@ -150,20 +150,28 @@ paths:
     get:
       tags:
         - Jobs
-      operationId: getJobLatestAnnotationStatistics
+      operationId: getJobLatestAnnotationStatisticsByMail
       parameters:
         - name: jobId
           in: path
           required: true
           schema:
             type: string
+        - name: emailCC
+          in: query
+          required: false
+          schema:
+            type: string
+            format: email
       responses:
         '200':
-          description: The created or updated job
+          description: ok
           content:
-            application/json:
+            text/plain:
               schema:
-                $ref: '#/components/schemas/AnnotationStatistics'
+                type: string
+        '400':
+          $ref: "#/components/responses/400"
         '500':
           $ref: '#/components/responses/500'
   '/jobs/{jobId}/export':
@@ -196,6 +204,7 @@ paths:
               application/json:
                 schema:
                   type: string
+                  format: email
         responses:
           "200":
             description: OK response for mail sending initiation
