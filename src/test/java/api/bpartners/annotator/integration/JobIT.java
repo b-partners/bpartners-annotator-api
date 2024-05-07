@@ -61,6 +61,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 
 @Testcontainers
 public class JobIT extends FacadeIT {
+  public static final String JOB_5_ID = "job_5_id";
   @LocalServerPort private int port;
   @MockBean public CognitoComponent cognitoComponent;
   @MockBean public EventProducer eventProducer;
@@ -92,6 +93,21 @@ public class JobIT extends FacadeIT {
         .teamId("team_1_id")
         .type(LABELLING)
         .labels(List.of(new Label().id("label_5_id").name("POOL").color("#00ff00")));
+  }
+
+  public static CrupdateJob crupdateJob5() {
+    return new CrupdateJob()
+        .id(JOB_5_ID)
+        .status(STARTED)
+        .name("job_5")
+        .folderPath("images/5/")
+        .imagesHeight(1024)
+        .imagesWidth(1024)
+        .ownerEmail("admin@email.com")
+        .bucketName("bucket_5_name")
+        .teamId("team_1_id")
+        .type(LABELLING)
+        .labels(List.of(new Label().id(randomUUID().toString()).name("POOL").color("#00ff00")));
   }
 
   static Job from(CrupdateJob crupdateJob, TaskStatistics taskStatistics) {
@@ -178,7 +194,7 @@ public class JobIT extends FacadeIT {
   }
 
   @Test
-  void admin_crupdate_job_ok() throws ApiException {
+  void admin_create_job_ok() throws ApiException {
     ApiClient adminClient = anAdminApiClient();
     JobsApi api = new JobsApi(adminClient);
 
@@ -213,6 +229,18 @@ public class JobIT extends FacadeIT {
     assertEquals(toCreate.getId(), actual.getId());
     assertEquals(expectedAfterUpdate, updated);
     // Update//
+  }
+
+  @Test
+  void admin_update_job_ko() {
+    ApiClient adminClient = anAdminApiClient();
+    JobsApi api = new JobsApi(adminClient);
+
+    CrupdateJob invalidJob5StatusChanged = crupdateJob5().status(TO_CORRECT);
+
+    assertThrowsBadRequestException(
+        () -> api.saveJob(invalidJob5StatusChanged.getId(), invalidJob5StatusChanged),
+        "illegal transition: STARTED -> TO_CORRECT");
   }
 
   @Test
