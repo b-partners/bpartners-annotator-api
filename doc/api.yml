@@ -181,6 +181,7 @@ paths:
           - Admin
         operationId: exportJob
         description: exports a job to COCO or VGG format
+        summary: exports a job to COCO or VGG format
         parameters:
           - name: jobId
             required: true
@@ -354,7 +355,7 @@ paths:
         - Tasks
         - Admin
       security: [ apiKeyHeader: [ ] ]
-      summary: gets information about a task
+      summary: gets information about tasks
       operationId: getJobTasks
       parameters:
         - name: jobId
@@ -457,7 +458,7 @@ paths:
         - Annotations
         - Admin
       security: [ apiKeyHeader: [ ] ]
-      summary: gets annotations made on a task
+      summary: get list of annotation batch on a task
       operationId: getAnnotationBatchesByJobTask
       parameters:
         - name: jobId
@@ -528,6 +529,7 @@ paths:
       tags:
         - Annotations
         - Admin
+      summary: get all reviews of an annotation batch
       description: get all reviews of an annotation batch
       operationId: getJobTaskAnnotationBatchReviews
       parameters:
@@ -564,6 +566,7 @@ paths:
       tags:
         - Annotations
         - Admin
+      summary: get a specific review
       description: get a specific review
       operationId: getJobTaskAnnotationBatchReview
       parameters:
@@ -602,6 +605,7 @@ paths:
       tags:
         - Annotations
         - Admin
+      summary: create or update review concerning an annotation
       description: create or update(if id is given) review concerning an annotation
       operationId: crupdateJobTaskAnnotationReview
       parameters:
@@ -647,7 +651,7 @@ paths:
       security: [ BearerAuth: [ ] ]
       tags:
         - UserAnnotations
-      summary: gets annotations made on a task
+      summary: gets user annotations made on a task
       operationId: getUserTaskAnnotationBatches
       parameters:
         - name: userId
@@ -913,6 +917,7 @@ paths:
         - Users
         - Admin
       security: [ apiKeyHeader: [ ] ]
+      summary: get all users
       description: get all users.
       operationId: getUsers
       parameters:
@@ -938,6 +943,7 @@ paths:
         - Users
         - Admin
       security: [ apiKeyHeader: [ ] ]
+      summary: Create users
       description: create users
       operationId: create users
       requestBody:
