@@ -1,4 +1,4 @@
-package api.bpartners.annotator.endpoint.event.gen;
+package api.bpartners.annotator.endpoint.event.model;
 
 import api.bpartners.annotator.endpoint.rest.model.ExportFormat;
 import api.bpartners.annotator.repository.model.Job;
@@ -12,6 +12,8 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+import java.time.Duration;
+
 @Generated("EventBridge")
 @NoArgsConstructor
 @AllArgsConstructor
@@ -19,7 +21,7 @@ import lombok.ToString;
 @Data
 @EqualsAndHashCode
 @ToString
-public class JobExportInitiated {
+public class JobExportInitiated extends PojaEvent{
   @JsonProperty("job")
   private Job job;
 
@@ -28,4 +30,14 @@ public class JobExportInitiated {
 
   @JsonProperty("emailCC")
   private InternetAddress emailCC;
+
+  @Override
+  public Duration maxConsumerDuration() {
+    return Duration.ofMinutes(2);
+  }
+
+  @Override
+  public Duration maxConsumerBackoffBetweenRetries() {
+    return Duration.ofMinutes(1);
+  }
 }

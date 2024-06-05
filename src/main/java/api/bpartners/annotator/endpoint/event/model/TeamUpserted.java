@@ -1,8 +1,9 @@
-package api.bpartners.annotator.endpoint.event.gen;
+package api.bpartners.annotator.endpoint.event.model;
 
+import api.bpartners.annotator.repository.model.Team;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.mail.internet.InternetAddress;
 import java.io.Serializable;
+import java.time.Duration;
 import javax.annotation.processing.Generated;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,10 +19,17 @@ import lombok.ToString;
 @Data
 @EqualsAndHashCode
 @ToString
-public class AnnotationStatisticsComputationTriggered implements Serializable {
-  @JsonProperty("job_id")
-  private String jobId;
+public class TeamUpserted extends PojaEvent {
+  @JsonProperty("team")
+  private Team team;
 
-  @JsonProperty("email_cc")
-  private InternetAddress emailCC;
+  @Override
+  public Duration maxConsumerDuration() {
+    return Duration.ofMinutes(3);
+  }
+
+  @Override
+  public Duration maxConsumerBackoffBetweenRetries() {
+    return Duration.ofMinutes(1);
+  }
 }

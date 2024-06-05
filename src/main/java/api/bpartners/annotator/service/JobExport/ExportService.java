@@ -5,7 +5,7 @@ import static api.bpartners.annotator.endpoint.rest.model.ExportFormat.VGG;
 import static org.springframework.transaction.annotation.Propagation.REQUIRED;
 
 import api.bpartners.annotator.endpoint.event.EventProducer;
-import api.bpartners.annotator.endpoint.event.gen.JobExportInitiated;
+import api.bpartners.annotator.endpoint.event.model.JobExportInitiated;
 import api.bpartners.annotator.endpoint.rest.model.ExportFormat;
 import api.bpartners.annotator.model.exception.BadRequestException;
 import api.bpartners.annotator.repository.model.Job;

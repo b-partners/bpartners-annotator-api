@@ -7,7 +7,7 @@ import static api.bpartners.annotator.service.utils.TemplateResolverUtils.parseT
 import static java.util.UUID.randomUUID;
 
 import api.bpartners.annotator.endpoint.event.EventProducer;
-import api.bpartners.annotator.endpoint.event.gen.JobCreated;
+import api.bpartners.annotator.endpoint.event.model.JobCreated;
 import api.bpartners.annotator.mail.Email;
 import api.bpartners.annotator.mail.Mailer;
 import api.bpartners.annotator.model.TokennedCustomS3ObjectList;

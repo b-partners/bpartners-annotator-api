@@ -5,7 +5,7 @@ aurora_min_capacity: 2
 aurora_scale_point: 60
 aurora_sleep: 900
 aws_account_id: '205205101409'
-cli_version: 12.7.1
+cli_version: 13.3.1
 codeartifact_domain_name: npm-bpartners-imagery-app
 codeartifact_repository_name: annotator-imagery-store
 custom_java_deps: poja-custom-java-deps.txt
@@ -30,7 +30,7 @@ ssm_subnet2_id: /bpartners-imagery/private/subnet2/id
 ts_client_api_url_env_var_name: REACT_APP_BPARTNERS_ANNOTATOR_API_URL
 ts_client_default_openapi_server_url: annotator-api.preprod.bpartners.app
 with_codeql: 'false'
-with_database: postgres
+with_database: aurora-postgres
 with_gen_clients: 'true'
 with_own_vpc: 'true'
 with_publish_to_npm_registry: 'true'

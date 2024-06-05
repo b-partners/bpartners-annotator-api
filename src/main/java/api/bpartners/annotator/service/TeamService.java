@@ -3,7 +3,7 @@ package api.bpartners.annotator.service;
 import static java.util.stream.Collectors.toList;
 
 import api.bpartners.annotator.endpoint.event.EventProducer;
-import api.bpartners.annotator.endpoint.event.gen.TeamUpserted;
+import api.bpartners.annotator.endpoint.event.model.TeamUpserted;
 import api.bpartners.annotator.model.BoundedPageSize;
 import api.bpartners.annotator.model.PageFromOne;
 import api.bpartners.annotator.model.exception.NotFoundException;

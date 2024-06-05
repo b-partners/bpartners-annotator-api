@@ -9,7 +9,6 @@ Globals:
     Tracing: Active
     Architectures:
       - x86_64
-    Timeout: 600
     EventInvokeConfig:
       MaximumRetryAttempts: 0
     AutoPublishAlias: live
@@ -39,7 +38,7 @@ Globals:
         AWS_COGNITO_USERPOOL_CLIENTSECRET: !Sub '{{resolve:ssm:/bpartners-annotator/${Env}/cognito/userpool-client-secret}}'
         GEOJOBS_USER_INFO: !Sub '{{resolve:ssm:/bpartners-annotator/${Env}/geojobs/userinfo}}'
         TASKS_INSERT_LIMIT_MAX: !Sub '{{resolve:ssm:/bpartners-annotator/${Env}/max-tasks-insert-nb}}'
-
+        
 
 Parameters:
   Env:
@@ -58,6 +57,7 @@ Resources:
     Properties:
       Handler: api.bpartners.annotator.ApiEventHandler::handleRequest
       MemorySize: 512
+      Timeout: 30
       Role: !Sub '{{resolve:ssm:/bpartners-annotator/${Env}/execution/role-arn}}'
       
       Events:
@@ -74,6 +74,7 @@ Resources:
     Properties:
       Handler: api.bpartners.annotator.MailboxEventHandler::handleRequest
       MemorySize: 512
+      Timeout: 600 #note(sqs-visibility)
       Role: !Sub '{{resolve:ssm:/bpartners-annotator/${Env}/execution/role-arn}}'
       
       Events:

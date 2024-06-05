@@ -1,6 +1,7 @@
-package api.bpartners.annotator.endpoint.event;
+package api.bpartners.annotator.endpoint.event.consumer;
 
 import api.bpartners.annotator.PojaGenerated;
+import api.bpartners.annotator.endpoint.event.consumer.model.TypedEvent;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Consumer;
@@ -16,15 +17,15 @@ import org.springframework.stereotype.Component;
 @AllArgsConstructor
 @Component
 @Slf4j
-public class EventServiceInvoker implements Consumer<EventConsumer.TypedEvent> {
+public class EventServiceInvoker implements Consumer<TypedEvent> {
 
   private final ApplicationContext applicationContext;
 
   @SneakyThrows
   @Override
-  public void accept(EventConsumer.TypedEvent typedEvent) {
+  public void accept(TypedEvent typedEvent) {
     var typeName = typedEvent.typeName();
-    var eventClasses = getAllClasses("api.bpartners.annotator.endpoint.event.gen");
+    var eventClasses = getAllClasses("api.bpartners.annotator.endpoint.event.model");
     for (var clazz : eventClasses) {
       if (clazz.getTypeName().equals(typeName)) {
         var serviceClazz = Class.forName(getEventService(typeName));

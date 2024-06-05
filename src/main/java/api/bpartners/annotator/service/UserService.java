@@ -3,8 +3,8 @@ package api.bpartners.annotator.service;
 import static java.util.stream.Collectors.toList;
 
 import api.bpartners.annotator.endpoint.event.EventProducer;
-import api.bpartners.annotator.endpoint.event.gen.UserTeamUpdated;
-import api.bpartners.annotator.endpoint.event.gen.UserUpserted;
+import api.bpartners.annotator.endpoint.event.model.UserTeamUpdated;
+import api.bpartners.annotator.endpoint.event.model.UserUpserted;
 import api.bpartners.annotator.endpoint.rest.security.model.Role;
 import api.bpartners.annotator.model.BoundedPageSize;
 import api.bpartners.annotator.model.PageFromOne;

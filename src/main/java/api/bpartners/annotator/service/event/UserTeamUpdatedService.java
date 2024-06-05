@@ -1,6 +1,6 @@
 package api.bpartners.annotator.service.event;
 
-import api.bpartners.annotator.endpoint.event.gen.UserTeamUpdated;
+import api.bpartners.annotator.endpoint.event.model.UserTeamUpdated;
 import api.bpartners.annotator.endpoint.rest.security.cognito.CognitoComponent;
 import java.util.function.Consumer;
 import lombok.AllArgsConstructor;

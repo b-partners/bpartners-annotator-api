@@ -3,7 +3,7 @@ package api.bpartners.annotator.service.event;
 import static api.bpartners.annotator.service.utils.TemplateResolverUtils.parseTemplateResolver;
 import static java.util.UUID.randomUUID;
 
-import api.bpartners.annotator.endpoint.event.gen.JobExportInitiated;
+import api.bpartners.annotator.endpoint.event.model.JobExportInitiated;
 import api.bpartners.annotator.endpoint.rest.model.ExportFormat;
 import api.bpartners.annotator.file.FileWriter;
 import api.bpartners.annotator.mail.Email;

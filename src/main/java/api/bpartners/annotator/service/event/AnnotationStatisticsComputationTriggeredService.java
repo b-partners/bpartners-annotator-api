@@ -4,7 +4,7 @@ import static api.bpartners.annotator.service.event.JobExportInitiatedService.JS
 import static api.bpartners.annotator.service.utils.TemplateResolverUtils.parseTemplateResolver;
 import static java.util.UUID.randomUUID;
 
-import api.bpartners.annotator.endpoint.event.gen.AnnotationStatisticsComputationTriggered;
+import api.bpartners.annotator.endpoint.event.model.AnnotationStatisticsComputationTriggered;
 import api.bpartners.annotator.endpoint.rest.model.AnnotationNumberPerLabel;
 import api.bpartners.annotator.file.FileWriter;
 import api.bpartners.annotator.mail.Email;

@@ -11,8 +11,8 @@ import static org.springframework.data.domain.Pageable.unpaged;
 import static org.springframework.data.domain.Sort.Order.asc;
 
 import api.bpartners.annotator.endpoint.event.EventProducer;
-import api.bpartners.annotator.endpoint.event.gen.AnnotationStatisticsComputationTriggered;
-import api.bpartners.annotator.endpoint.event.gen.JobCreated;
+import api.bpartners.annotator.endpoint.event.model.AnnotationStatisticsComputationTriggered;
+import api.bpartners.annotator.endpoint.event.model.JobCreated;
 import api.bpartners.annotator.endpoint.rest.model.JobType;
 import api.bpartners.annotator.model.BoundedPageSize;
 import api.bpartners.annotator.model.PageFromOne;

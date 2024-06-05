@@ -1,7 +1,7 @@
 package api.bpartners.annotator.service.event;
 
 import api.bpartners.annotator.PojaGenerated;
-import api.bpartners.annotator.endpoint.event.gen.UuidCreated;
+import api.bpartners.annotator.endpoint.event.model.UuidCreated;
 import api.bpartners.annotator.repository.DummyUuidRepository;
 import api.bpartners.annotator.repository.model.DummyUuid;
 import java.util.function.Consumer;
