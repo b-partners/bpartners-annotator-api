@@ -1,7 +1,6 @@
 package api.bpartners.annotator.endpoint.event.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.io.Serializable;
 import java.time.Duration;
 import javax.annotation.processing.Generated;
 import lombok.AllArgsConstructor;

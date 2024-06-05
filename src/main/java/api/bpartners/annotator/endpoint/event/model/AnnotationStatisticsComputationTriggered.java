@@ -2,7 +2,6 @@ package api.bpartners.annotator.endpoint.event.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.mail.internet.InternetAddress;
-import java.io.Serializable;
 import java.time.Duration;
 import javax.annotation.processing.Generated;
 import lombok.AllArgsConstructor;

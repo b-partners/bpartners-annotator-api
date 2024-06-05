@@ -4,6 +4,7 @@ import api.bpartners.annotator.endpoint.rest.model.ExportFormat;
 import api.bpartners.annotator.repository.model.Job;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.mail.internet.InternetAddress;
+import java.time.Duration;
 import javax.annotation.processing.Generated;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,8 +13,6 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-import java.time.Duration;
-
 @Generated("EventBridge")
 @NoArgsConstructor
 @AllArgsConstructor
@@ -21,7 +20,7 @@ import java.time.Duration;
 @Data
 @EqualsAndHashCode
 @ToString
-public class JobExportInitiated extends PojaEvent{
+public class JobExportInitiated extends PojaEvent {
   @JsonProperty("job")
   private Job job;
 
