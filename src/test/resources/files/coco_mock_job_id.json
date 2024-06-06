@@ -1,0 +1,40 @@
+{
+  "info": {
+    "description": "test_name"
+  },
+  "images": [
+    {
+      "id": "task_id",
+      "height": 256,
+      "width": 256,
+      "file_name": "filename.jpg"
+    }
+  ],
+  "annotations": [
+    {
+      "id": "annotation_id",
+      "segmentation": [
+        [
+          1.0,
+          1.0
+        ]
+      ],
+      "area": 0.0,
+      "iscrowd": false,
+      "image_id": "task_id",
+      "category_id": "label_id",
+      "bbox": [
+        1.0,
+        1.0,
+        0.0,
+        0.0
+      ]
+    }
+  ],
+  "categories": [
+    {
+      "id": "label_id",
+      "name": "label_name"
+    }
+  ]
+}

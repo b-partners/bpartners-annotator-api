@@ -14,8 +14,11 @@ import api.bpartners.annotator.endpoint.rest.client.ApiClient;
 import api.bpartners.annotator.endpoint.rest.client.ApiException;
 import api.bpartners.annotator.endpoint.rest.security.cognito.CognitoComponent;
 import api.bpartners.annotator.service.aws.JobOrTaskS3Service;
+import jakarta.mail.internet.InternetAddress;
 import java.net.MalformedURLException;
 import java.net.URL;
+import lombok.SneakyThrows;
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.function.Executable;
 
 public class TestUtils {
@@ -56,5 +59,10 @@ public class TestUtils {
     String responseBody = apiException.getResponseBody();
     assertEquals(
         "{" + "\"type\":\"400 BAD_REQUEST\"," + "\"message\":\"" + message + "\"}", responseBody);
+  }
+
+  @SneakyThrows
+  public static @NotNull InternetAddress getInternetAddress(String email) {
+    return new InternetAddress(email);
   }
 }

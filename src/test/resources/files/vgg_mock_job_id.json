@@ -1,0 +1,25 @@
+{
+  "filename.jpg": {
+    "size": null,
+    "filename": "filename.jpg",
+    "regions": {
+      "0": {
+        "shape_attributes": {
+          "name": "polygon",
+          "all_points_x": [
+            1.0
+          ],
+          "all_points_y": [
+            1.0
+          ]
+        },
+        "region_attributes": {
+          "label": "label_name"
+        }
+      }
+    },
+    "fileref": null,
+    "base64_img_data": null,
+    "file_attributes": {}
+  }
+}

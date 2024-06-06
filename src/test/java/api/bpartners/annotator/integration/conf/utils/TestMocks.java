@@ -7,6 +7,7 @@ import static api.bpartners.annotator.endpoint.rest.model.JobType.REVIEWING;
 import static api.bpartners.annotator.endpoint.rest.model.ReviewStatus.ACCEPTED;
 import static api.bpartners.annotator.endpoint.rest.model.ReviewStatus.REJECTED;
 import static api.bpartners.annotator.endpoint.rest.model.TaskStatus.PENDING;
+import static api.bpartners.annotator.repository.model.enums.JobStatus.COMPLETED;
 
 import api.bpartners.annotator.endpoint.rest.model.Annotation;
 import api.bpartners.annotator.endpoint.rest.model.AnnotationBatch;
@@ -19,6 +20,7 @@ import api.bpartners.annotator.endpoint.rest.model.Polygon;
 import api.bpartners.annotator.endpoint.rest.model.Task;
 import api.bpartners.annotator.endpoint.rest.model.TaskStatistics;
 import api.bpartners.annotator.endpoint.rest.model.Team;
+import api.bpartners.annotator.repository.model.enums.TaskStatus;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -50,6 +52,8 @@ public class TestMocks {
   public static final String TASK_11_ID = "task_11_id";
   public static final String TASK_21_ID = "task_21_id";
   public static final String BATCH_4_ID = "batch_4_id";
+  private static final String USER_ID = "userId";
+  private static final String TASK_ID = "task_id";
 
   public static Team team1() {
     return new Team().id(TEAM_1_ID).name("joe_team");
@@ -179,5 +183,68 @@ public class TestMocks {
         .annotationBatchId(BATCH_2_ID)
         .status(ACCEPTED)
         .reviews(List.of());
+  }
+
+  public static api.bpartners.annotator.repository.model.Job aTestJob(String id) {
+    return api.bpartners.annotator.repository.model.Job.builder()
+        .id(id)
+        .bucketName("test_bucket")
+        .folderPath("test_folder_path/")
+        .name("test_name")
+        .ownerEmail("test@test.com")
+        .status(COMPLETED)
+        .teamId("test_team_id")
+        .type(LABELLING)
+        .tasks(List.of(aTestTask()))
+        .imagesHeight(256)
+        .imagesWidth(256)
+        .labels(List.of(aTestLabel()))
+        .build();
+  }
+
+  public static api.bpartners.annotator.repository.model.Task aTestTask() {
+    return api.bpartners.annotator.repository.model.Task.builder()
+        .id(TASK_ID)
+        .filename("filename.jpg")
+        .job(null)
+        .status(TaskStatus.COMPLETED)
+        .userId(USER_ID)
+        .build();
+  }
+
+  public static api.bpartners.annotator.repository.model.Label aTestLabel() {
+    return api.bpartners.annotator.repository.model.Label.builder()
+        .id("label_id")
+        .name("label_name")
+        .color("#123123")
+        .build();
+  }
+
+  public static api.bpartners.annotator.repository.model.AnnotationBatch aTestAnnotationBatch() {
+    String batchId = "batch_id";
+    return api.bpartners.annotator.repository.model.AnnotationBatch.builder()
+        .id(batchId)
+        .annotations(List.of(aTestAnnotation(batchId)))
+        .annotatorId(USER_ID)
+        .creationTimestamp(Instant.MIN)
+        .task(aTestTask())
+        .build();
+  }
+
+  public static api.bpartners.annotator.repository.model.Annotation aTestAnnotation(
+      String batchId) {
+    return api.bpartners.annotator.repository.model.Annotation.builder()
+        .id("annotation_id")
+        .label(aTestLabel())
+        .taskId(TASK_ID)
+        .userId(USER_ID)
+        .batchId(batchId)
+        .polygon(
+            api.bpartners.annotator.repository.model.Annotation.Polygon.builder()
+                .points(
+                    List.of(
+                        new api.bpartners.annotator.repository.model.Annotation.Point(1.0, 1.0)))
+                .build())
+        .build();
   }
 }
