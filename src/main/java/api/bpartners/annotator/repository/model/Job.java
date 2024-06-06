@@ -29,7 +29,6 @@ import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.SQLRestriction;
-import org.hibernate.proxy.HibernateProxy;
 
 @Entity
 @Getter
@@ -126,26 +125,33 @@ public class Job {
   }
 
   @Override
-  public final boolean equals(Object o) {
+  public boolean equals(Object o) {
     if (this == o) return true;
-    if (o == null) return false;
-    Class<?> oEffectiveClass =
-        o instanceof HibernateProxy
-            ? ((HibernateProxy) o).getHibernateLazyInitializer().getPersistentClass()
-            : o.getClass();
-    Class<?> thisEffectiveClass =
-        this instanceof HibernateProxy
-            ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass()
-            : this.getClass();
-    if (thisEffectiveClass != oEffectiveClass) return false;
-    Job job = (Job) o;
-    return getId() != null && Objects.equals(getId(), job.getId());
+    if (!(o instanceof Job job)) return false;
+    return imagesHeight == job.imagesHeight
+        && imagesWidth == job.imagesWidth
+        && Objects.equals(id, job.id)
+        && Objects.equals(name, job.name)
+        && Objects.equals(bucketName, job.bucketName)
+        && Objects.equals(folderPath, job.folderPath)
+        && Objects.equals(ownerEmail, job.ownerEmail)
+        && status == job.status
+        && Objects.equals(teamId, job.teamId)
+        && type == job.type;
   }
 
   @Override
-  public final int hashCode() {
-    return this instanceof HibernateProxy
-        ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass().hashCode()
-        : getClass().hashCode();
+  public int hashCode() {
+    return Objects.hash(
+        id,
+        name,
+        bucketName,
+        folderPath,
+        ownerEmail,
+        status,
+        teamId,
+        type,
+        imagesHeight,
+        imagesWidth);
   }
 }
