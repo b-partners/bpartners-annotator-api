@@ -12,6 +12,7 @@ import api.bpartners.annotator.repository.model.Job;
 import api.bpartners.annotator.service.JobExport.ExportService;
 import api.bpartners.annotator.service.utils.ByteWriter;
 import jakarta.mail.internet.InternetAddress;
+import java.io.File;
 import java.nio.file.Files;
 import java.util.List;
 import java.util.function.Consumer;
@@ -30,7 +31,6 @@ public class JobExportInitiatedService implements Consumer<JobExportInitiated> {
   private final ByteWriter byteWriter;
   private final FileWriter fileWriter;
 
-  @SneakyThrows
   @Override
   @Transactional
   public void accept(JobExportInitiated jobExportInitiated) {
@@ -41,15 +41,13 @@ public class JobExportInitiatedService implements Consumer<JobExportInitiated> {
     var exportedAsBytes = byteWriter.apply(exported);
     var inFile =
         fileWriter.write(
-            exportedAsBytes,
-            Files.createTempDirectory(randomUUID().toString()).toFile(),
-            linkedJob.getName() + JSON_FILE_EXTENSION);
+            exportedAsBytes, createTempDirectory(), linkedJob.getName() + JSON_FILE_EXTENSION);
     String subject = "[Bpartners-Annotator] Exportation de job sous format " + exportFormat;
     String htmlBody = parseTemplateResolver("job_export_finished", configureContext(linkedJob));
 
     mailer.accept(
         new Email(
-            new InternetAddress(linkedJob.getOwnerEmail()),
+            getInternetAddress(linkedJob),
             cc == null ? List.of() : List.of(cc),
             List.of(),
             subject,
@@ -57,7 +55,17 @@ public class JobExportInitiatedService implements Consumer<JobExportInitiated> {
             List.of(inFile)));
   }
 
-  private Context configureContext(Job job) {
+  @SneakyThrows
+  private static InternetAddress getInternetAddress(Job linkedJob) {
+    return new InternetAddress(linkedJob.getOwnerEmail());
+  }
+
+  @SneakyThrows
+  private static File createTempDirectory() {
+    return Files.createTempDirectory(randomUUID().toString()).toFile();
+  }
+
+  private static Context configureContext(Job job) {
     Context context = new Context();
     context.setVariable("job", job);
     return context;
