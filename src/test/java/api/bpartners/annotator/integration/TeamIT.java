@@ -18,10 +18,8 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.server.LocalServerPort;
-import org.testcontainers.junit.jupiter.Testcontainers;
 
-@Testcontainers
-public class TeamIT extends FacadeIT {
+class TeamIT extends FacadeIT {
   @LocalServerPort private int port;
   @MockBean public EventProducer eventProducer;
 
@@ -29,11 +27,11 @@ public class TeamIT extends FacadeIT {
     return TestUtils.anApiClient(null, TestMocks.ADMIN_API_KEY, port);
   }
 
-  static CreateTeam createTeam() {
+  private static CreateTeam createTeam() {
     return new CreateTeam().name("mock_name");
   }
 
-  static Team createIdLessTeamFrom(CreateTeam createTeam) {
+  private static Team createIdLessTeamFrom(CreateTeam createTeam) {
     return new Team().id(null).name(createTeam.getName());
   }
 

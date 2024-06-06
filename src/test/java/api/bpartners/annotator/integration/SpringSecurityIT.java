@@ -11,15 +11,11 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
-import org.testcontainers.junit.jupiter.Testcontainers;
 
-@AutoConfigureMockMvc
-@Testcontainers
-public class SpringSecurityIT extends FacadeIT {
+class SpringSecurityIT extends FacadeIT {
 
   @LocalServerPort private int port;
 

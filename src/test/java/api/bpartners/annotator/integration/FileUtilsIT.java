@@ -14,8 +14,8 @@ import java.nio.file.Files;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-public class FileUtilsIT extends FacadeIT {
-  public static final String TXT_EXTENSION = ".txt";
+class FileUtilsIT extends FacadeIT {
+  private static final String TXT_EXTENSION = ".txt";
   @Autowired FileWriter fileWriter;
   @Autowired ExtensionGuesser extensionGuesser;
   @Autowired ByteWriter byteWriter;

@@ -1,4 +1,4 @@
-package api.bpartners.annotator.integration;
+package api.bpartners.annotator.service.event;
 
 import static api.bpartners.annotator.endpoint.rest.model.ExportFormat.COCO;
 import static api.bpartners.annotator.endpoint.rest.model.ExportFormat.VGG;
@@ -24,7 +24,6 @@ import api.bpartners.annotator.repository.model.Label;
 import api.bpartners.annotator.repository.model.Task;
 import api.bpartners.annotator.repository.model.enums.TaskStatus;
 import api.bpartners.annotator.service.AnnotationBatchService;
-import api.bpartners.annotator.service.event.JobExportInitiatedService;
 import jakarta.mail.internet.InternetAddress;
 import java.io.File;
 import java.time.Instant;
@@ -37,7 +36,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.core.io.FileSystemResource;
 
-public class JobExportInitiatedServiceIT extends FacadeIT {
+class JobExportInitiatedServiceIT extends FacadeIT {
   private static final String COCO_JOB_ID = "COCO_JOB_ID";
   private static final String VGG_JOB_ID = "VGG_JOB_ID";
   private static final String USER_ID = "userId";

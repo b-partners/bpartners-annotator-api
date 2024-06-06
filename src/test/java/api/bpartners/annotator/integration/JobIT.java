@@ -57,10 +57,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.server.LocalServerPort;
-import org.testcontainers.junit.jupiter.Testcontainers;
 
-@Testcontainers
-public class JobIT extends FacadeIT {
+class JobIT extends FacadeIT {
   @LocalServerPort private int port;
   @MockBean public CognitoComponent cognitoComponent;
   @MockBean public EventProducer eventProducer;
@@ -80,7 +78,7 @@ public class JobIT extends FacadeIT {
     return TestUtils.anApiClient(JOE_DOE_TOKEN, null, port);
   }
 
-  public static CrupdateJob crupdateJob1() {
+  private static CrupdateJob crupdateJob1() {
     return new CrupdateJob()
         .id(randomUUID().toString())
         .status(PENDING)
@@ -94,7 +92,7 @@ public class JobIT extends FacadeIT {
         .labels(List.of(new Label().id("label_5_id").name("POOL").color("#00ff00")));
   }
 
-  static Job from(CrupdateJob crupdateJob, TaskStatistics taskStatistics) {
+  private static Job from(CrupdateJob crupdateJob, TaskStatistics taskStatistics) {
     return new Job()
         .id(crupdateJob.getId())
         .taskStatistics(taskStatistics)
@@ -268,7 +266,8 @@ public class JobIT extends FacadeIT {
                     .completedTasksByUserId(0L))));
   }
 
-  boolean annotator_can_get_job(String teamId, String jobId, Job expected) throws ApiException {
+  private boolean annotator_can_get_job(String teamId, String jobId, Job expected)
+      throws ApiException {
     ApiClient annotatorClient = anAnnotatorApiClient();
     TeamJobsApi annotatorApi = new TeamJobsApi(annotatorClient);
 
@@ -278,7 +277,8 @@ public class JobIT extends FacadeIT {
     return true;
   }
 
-  boolean admin_can_add_annotated_tasks(String jobId, List<Label> labels) throws ApiException {
+  private boolean admin_can_add_annotated_tasks(String jobId, List<Label> labels)
+      throws ApiException {
     ApiClient apiClient = anAdminApiClient();
     TasksApi tasksApi = new TasksApi(apiClient);
     // refer to EnvConf/tasks.insert.limit.max
@@ -288,11 +288,11 @@ public class JobIT extends FacadeIT {
         List.of(
             createAnnotatedTask(randomUUID().toString(), labels),
             createAnnotatedTask(randomUUID().toString(), labels));
-    List<Task> expectedTasks = actualPayload.stream().map(this::toTask).toList();
+    List<Task> expectedTasks = actualPayload.stream().map(JobIT::toTask).toList();
 
     var savedTasks =
         tasksApi.addAnnotatedTasksToAnnotatedJob(jobId, actualPayload).stream()
-            .map(this::ignoreTaskIds)
+            .map(JobIT::ignoreTaskIds)
             .toList();
 
     assertTrue(savedTasks.containsAll(expectedTasks));
@@ -329,7 +329,7 @@ public class JobIT extends FacadeIT {
                             .userId(GEOJOBS_USER_ID))));
   }
 
-  public static CrupdateJob crupdateReviewingJob(String id, List<Label> labels) {
+  private static CrupdateJob crupdateReviewingJob(String id, List<Label> labels) {
     return new CrupdateJob()
         .id(id)
         .type(REVIEWING)
@@ -344,11 +344,11 @@ public class JobIT extends FacadeIT {
         .name(id);
   }
 
-  public static Label creatableDummyLabel() {
+  private static Label creatableDummyLabel() {
     return new Label().id(randomUUID().toString()).name("dummy_label").color("#00ff00");
   }
 
-  CrupdateJob from(Job job) {
+  private static CrupdateJob from(Job job) {
     return new CrupdateJob()
         .id(job.getId())
         .type(job.getType())
@@ -363,13 +363,13 @@ public class JobIT extends FacadeIT {
         .teamId(job.getTeamId());
   }
 
-  Job job1AsAdminView() {
+  private static Job job1AsAdminView() {
     Job job1 = job1();
     job1.setTaskStatistics(job1.getTaskStatistics().remainingTasksForUserId(9L));
     return job1;
   }
 
-  Task toTask(CreateAnnotatedTask task) {
+  private static Task toTask(CreateAnnotatedTask task) {
     return new Task()
         .id(null)
         .filename(task.getFilename())
@@ -378,7 +378,7 @@ public class JobIT extends FacadeIT {
         .userId(task.getAnnotatorId());
   }
 
-  Task ignoreTaskIds(Task task) {
+  private static Task ignoreTaskIds(Task task) {
     task.setId(null);
     return task;
   }

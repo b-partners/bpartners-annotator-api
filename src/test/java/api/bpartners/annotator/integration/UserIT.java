@@ -28,21 +28,17 @@ import api.bpartners.annotator.integration.conf.utils.TestUtils;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.server.LocalServerPort;
-import org.testcontainers.junit.jupiter.Testcontainers;
 
-@Testcontainers
-@AutoConfigureMockMvc
-public class UserIT extends FacadeIT {
+class UserIT extends FacadeIT {
   public static final String TEST_USER_ID = "test_user_id";
   @MockBean private CognitoComponent cognitoComponent;
 
   @LocalServerPort private int port;
   @MockBean EventProducer eventProducerMock;
 
-  static User restJoeDoeUser() {
+  private static User restJoeDoeUser() {
     return new User()
         .id("joe_doe_id")
         .email("joe@email.com")
@@ -50,7 +46,7 @@ public class UserIT extends FacadeIT {
         .role(UserRole.ANNOTATOR);
   }
 
-  static User testUser() {
+  private static User testUser() {
     return new User()
         .id(TEST_USER_ID)
         .email("test@email.com")

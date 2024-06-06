@@ -33,11 +33,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.server.LocalServerPort;
-import org.testcontainers.junit.jupiter.Testcontainers;
 
-@Testcontainers
-public class AnnotationIT extends FacadeIT {
-  public static final String ANNOTATION_4_ID = "annotation_4_id";
+class AnnotationIT extends FacadeIT {
+  private static final String ANNOTATION_4_ID = "annotation_4_id";
   @LocalServerPort private int port;
   @MockBean CognitoComponent cognitoComponentMock;
 

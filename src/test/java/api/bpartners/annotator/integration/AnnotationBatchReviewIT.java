@@ -45,7 +45,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.server.LocalServerPort;
 
-public class AnnotationBatchReviewIT extends FacadeIT {
+class AnnotationBatchReviewIT extends FacadeIT {
   public static final String BATCH_REVIEW_3_ID = "batch_review_3_id";
   @LocalServerPort private int port;
   @Autowired TaskRepository taskRepository;
@@ -194,7 +194,7 @@ public class AnnotationBatchReviewIT extends FacadeIT {
         "Reviews are mandatory for rejected batch review " + toCreatePayload.getId());
   }
 
-  Task createTask(Job job) {
+  private Task createTask(Job job) {
     return taskRepository.save(
         Task.builder()
             .id(randomUUID().toString())
@@ -205,7 +205,7 @@ public class AnnotationBatchReviewIT extends FacadeIT {
             .build());
   }
 
-  Job createJob(Label label) {
+  private Job createJob(Label label) {
     return jobRepository.save(
         Job.builder()
             .id(randomUUID().toString())
@@ -219,7 +219,7 @@ public class AnnotationBatchReviewIT extends FacadeIT {
             .build());
   }
 
-  Label createLabel() {
+  private Label createLabel() {
     return labelRepository.save(
         Label.builder()
             .id(randomUUID().toString())
@@ -228,7 +228,7 @@ public class AnnotationBatchReviewIT extends FacadeIT {
             .build());
   }
 
-  AnnotationBatchReview creatableReview(
+  private static AnnotationBatchReview creatableReview(
       String batchId, ReviewStatus status, List<AnnotationReview> reviews) {
     return new AnnotationBatchReview()
         .id(randomUUID().toString())

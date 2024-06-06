@@ -24,10 +24,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.server.LocalServerPort;
-import org.testcontainers.junit.jupiter.Testcontainers;
 
-@Testcontainers
-public class UserTasksIT extends FacadeIT {
+class UserTasksIT extends FacadeIT {
   @LocalServerPort private int port;
   @MockBean private CognitoComponent cognitoComponent;
   @MockBean public JobOrTaskS3Service fileService;
