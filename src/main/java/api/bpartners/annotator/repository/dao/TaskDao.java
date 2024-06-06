@@ -29,15 +29,13 @@ public class TaskDao {
 
   public List<Task> findAllByJobIdAndStatusAndUserId(
       String jobId, TaskStatus status, String userId, Pageable pageable) {
+    assert jobId != null : ("JOB ID must not be null");
     CriteriaBuilder cb = entityManager.getCriteriaBuilder();
     CriteriaQuery<Task> query = cb.createQuery(Task.class);
     Root<Task> taskRoot = query.from(Task.class);
-
     List<Predicate> predicates = new ArrayList<>();
 
-    if (jobId != null) {
-      predicates.add(cb.equal(taskRoot.get("job").get("id"), jobId));
-    }
+    predicates.add(cb.equal(taskRoot.get("job").get("id"), jobId));
 
     if (status != null) {
       predicates.add(cb.equal(taskRoot.get("status"), status));

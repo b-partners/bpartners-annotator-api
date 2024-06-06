@@ -54,6 +54,8 @@ public class TestMocks {
   public static final String BATCH_4_ID = "batch_4_id";
   private static final String USER_ID = "userId";
   private static final String TASK_ID = "task_id";
+  public static final String NOT_EXISTING_USER_ID = "NOT_EXISTING_USER_ID";
+  public static final String NOT_EXISTING_JOB_ID = "NOT_EXISTING_JOB_ID";
 
   public static Team team1() {
     return new Team().id(TEAM_1_ID).name("joe_team");
