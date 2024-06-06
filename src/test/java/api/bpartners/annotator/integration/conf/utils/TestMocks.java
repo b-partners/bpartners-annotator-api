@@ -56,6 +56,7 @@ public class TestMocks {
   private static final String TASK_ID = "task_id";
   public static final String NOT_EXISTING_USER_ID = "NOT_EXISTING_USER_ID";
   public static final String NOT_EXISTING_JOB_ID = "NOT_EXISTING_JOB_ID";
+  public static final String TEST_MAIL = "mail@test.com";
 
   public static Team team1() {
     return new Team().id(TEAM_1_ID).name("joe_team");

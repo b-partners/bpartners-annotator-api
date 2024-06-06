@@ -2,6 +2,7 @@ package api.bpartners.annotator.service.event;
 
 import static api.bpartners.annotator.endpoint.rest.model.ExportFormat.COCO;
 import static api.bpartners.annotator.endpoint.rest.model.ExportFormat.VGG;
+import static api.bpartners.annotator.integration.conf.utils.TestMocks.TEST_MAIL;
 import static api.bpartners.annotator.integration.conf.utils.TestMocks.aTestAnnotationBatch;
 import static api.bpartners.annotator.integration.conf.utils.TestMocks.aTestJob;
 import static api.bpartners.annotator.integration.conf.utils.TestUtils.getInternetAddress;
@@ -33,7 +34,6 @@ import org.springframework.core.io.FileSystemResource;
 class JobExportInitiatedServiceIT extends FacadeIT {
   private static final String COCO_JOB_ID = "COCO_JOB_ID";
   private static final String VGG_JOB_ID = "VGG_JOB_ID";
-  private static final String TEST_MAIL = "mail@test.com";
   @Autowired private JobExportInitiatedService subject;
   @MockBean private Mailer mailerMock;
   @MockBean private AnnotationBatchService annotationBatchServiceMock;
