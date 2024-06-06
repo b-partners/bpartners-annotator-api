@@ -1,6 +1,5 @@
 package api.bpartners.annotator.repository.model;
 
-import static api.bpartners.annotator.repository.model.enums.ReviewStatus.ACCEPTED;
 import static api.bpartners.annotator.repository.model.enums.ReviewStatus.REJECTED;
 import static jakarta.persistence.EnumType.STRING;
 import static org.hibernate.type.SqlTypes.NAMED_ENUM;
@@ -16,15 +15,20 @@ import jakarta.persistence.OneToMany;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.Objects;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.JdbcTypeCode;
 
 @Entity
-@Data
+@Getter
+@Setter
+@ToString
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -46,15 +50,26 @@ public class AnnotationBatchReview {
   }
 
   @OneToMany(cascade = CascadeType.ALL, mappedBy = "annotationBatchReviewId")
+  @ToString.Exclude
   private List<AnnotationReview> reviews;
-
-  @JsonIgnore
-  public boolean isAccepted() {
-    return ACCEPTED.equals(this.status);
-  }
 
   @JsonIgnore
   public boolean isRejected() {
     return REJECTED.equals(this.status);
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (!(o instanceof AnnotationBatchReview that)) return false;
+    return Objects.equals(id, that.id)
+        && status == that.status
+        && Objects.equals(annotationBatchId, that.annotationBatchId)
+        && Objects.equals(creationDatetime, that.creationDatetime);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(id, status, annotationBatchId, creationDatetime);
   }
 }
