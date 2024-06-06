@@ -4,7 +4,6 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -26,8 +25,4 @@ public class AnnotationReview {
   @CreationTimestamp
   @Column(columnDefinition = "TIMESTAMP WITHOUT TIMEZONE")
   private Instant creationDatetime;
-
-  public Instant getCreationDatetime() {
-    return creationDatetime.truncatedTo(ChronoUnit.MILLIS);
-  }
 }
