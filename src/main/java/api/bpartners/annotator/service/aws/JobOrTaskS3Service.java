@@ -27,7 +27,6 @@ public class JobOrTaskS3Service {
 
   public URL getPresignedUrl(String bucketName, String key) {
     try (S3Presigner urlPresigner = S3Presigner.builder().region(conf.getRegion()).build()) {
-
       PresignedGetObjectRequest presignedGetObjectRequest =
           urlPresigner.presignGetObject(
               builder ->

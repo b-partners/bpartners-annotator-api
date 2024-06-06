@@ -18,9 +18,6 @@ public class JobValidator implements Consumer<CrupdateJob> {
   @Override
   public void accept(CrupdateJob crupdateJob) {
     StringBuilder exceptionMessageBuilder = new StringBuilder();
-    if (crupdateJob.getId() == null) {
-      exceptionMessageBuilder.append("ID is mandatory.");
-    }
     if (!isValidFolderPath(crupdateJob.getFolderPath())) {
       exceptionMessageBuilder
           .append("folder path: ")

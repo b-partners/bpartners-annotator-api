@@ -219,13 +219,48 @@ class JobIT extends FacadeIT {
     JobsApi api = new JobsApi(adminClient);
     String randomUUID = randomUUID().toString();
     CrupdateJob invalidCrupdateJob =
-        crupdateJob1().id(randomUUID).folderPath("/a").ownerEmail(null).labels(emptyList());
+        crupdateJob1()
+            .id(randomUUID)
+            .folderPath("/a")
+            .ownerEmail(null)
+            .imagesHeight(null)
+            .imagesWidth(null)
+            .labels(emptyList());
 
     assertThrowsBadRequestException(
         () -> api.saveJob(randomUUID, invalidCrupdateJob),
         "folder path: /a does not follow regex ^(?!/).+/$."
             + "Owner Email is mandatory."
+            + "Images Height is mandatory."
+            + "Images Width is mandatory."
             + "Labels are mandatory.");
+  }
+
+  @Test
+  void admin_create_job_ko_2() {
+    ApiClient adminClient = anAdminApiClient();
+    JobsApi api = new JobsApi(adminClient);
+    String randomUUID = randomUUID().toString();
+
+    String invalidEmail = "email AZEZ@";
+    CrupdateJob invalidCrupdateJob2 = crupdateJob1().id(randomUUID).ownerEmail(invalidEmail);
+    assertThrowsBadRequestException(
+        () -> api.saveJob(randomUUID, invalidCrupdateJob2),
+        "email address : "
+            + invalidEmail
+            + "does not follow regex ^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\\\.[a-zA-Z]{2,}$.");
+  }
+
+  @Test
+  void admin_create_job_ko_3() {
+    ApiClient adminClient = anAdminApiClient();
+    JobsApi api = new JobsApi(adminClient);
+    String randomUUID = randomUUID().toString();
+    CrupdateJob invalidCrupdateJob3 = crupdateJob1().id(randomUUID().toString());
+
+    assertThrowsBadRequestException(
+        () -> api.saveJob(randomUUID, invalidCrupdateJob3),
+        "payload Id and pathVariable Id doesn't match.");
   }
 
   @Test
