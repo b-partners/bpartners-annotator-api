@@ -19,6 +19,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.annotations.JdbcTypeCode;
 
 @Entity
@@ -27,11 +28,13 @@ import org.hibernate.annotations.JdbcTypeCode;
 @AllArgsConstructor
 @Getter
 @Setter
+@ToString
 public class Task {
   @Id private String id;
 
   @ManyToOne
   @JoinColumn(name = "job_id", updatable = false)
+  @ToString.Exclude
   private Job job;
 
   @Column(name = "filename")
@@ -55,43 +58,17 @@ public class Task {
   }
 
   @Override
-  public String toString() {
-    return "Task{"
-        + "id='"
-        + id
-        + '\''
-        +
-        // ignore job for LazyInitialization
-        ", filename='"
-        + filename
-        + '\''
-        + ", status="
-        + status
-        + ", userId='"
-        + userId
-        + '\''
-        + '}';
-  }
-
-  @Override
   public boolean equals(Object o) {
     if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
-
-    Task task = (Task) o;
-
-    if (!id.equals(task.id)) return false;
-    if (!filename.equals(task.filename)) return false;
-    if (status != task.status) return false;
-    return Objects.equals(userId, task.userId);
+    if (!(o instanceof Task task)) return false;
+    return Objects.equals(id, task.id)
+        && Objects.equals(filename, task.filename)
+        && status == task.status
+        && Objects.equals(userId, task.userId);
   }
 
   @Override
   public int hashCode() {
-    int result = id.hashCode();
-    result = 31 * result + filename.hashCode();
-    result = 31 * result + status.hashCode();
-    result = 31 * result + (userId != null ? userId.hashCode() : 0);
-    return result;
+    return Objects.hash(id, filename, status, userId);
   }
 }
