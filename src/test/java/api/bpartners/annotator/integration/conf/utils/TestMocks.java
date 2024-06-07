@@ -35,6 +35,7 @@ public class TestMocks {
   public static final String TEAM_1_ID = "team_1_id";
 
   public static final String JOB_1_ID = "job_1_id";
+  public static final String JOB_3_ID = "job_3_id";
 
   public static final String TASK_1_ID = "task_1_id";
   public static final String MOCK_PRESIGNED_URL = "https://wwww.example.com";
@@ -51,6 +52,8 @@ public class TestMocks {
   public static final String GEOJOBS_TEAM_ID = "geo_jobs_team_id";
   public static final String TASK_11_ID = "task_11_id";
   public static final String TASK_21_ID = "task_21_id";
+  public static final String TASK_22_ID = "task_22_id";
+  public static final String TASK_23_ID = "task_23_id";
   public static final String BATCH_4_ID = "batch_4_id";
   private static final String USER_ID = "userId";
   private static final String TASK_ID = "task_id";

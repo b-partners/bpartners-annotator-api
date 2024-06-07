@@ -19,4 +19,6 @@ VALUES ('task_1_id', 'job_1_id', 'PENDING', 'image_1', null),
        ('task_18_id', 'job_2_id', 'PENDING', 'image_2', null),
        ('task_19_id', 'job_2_id', 'PENDING', 'image_1', null),
        ('task_20_id', 'job_2_id', 'PENDING', 'image_2', null),
-       ('task_21_id', 'job_5_id', 'UNDER_COMPLETION', 'image_1', 'john_doe_id');
+       ('task_21_id', 'job_5_id', 'UNDER_COMPLETION', 'image_1', 'john_doe_id'),
+       ('task_22_id', 'job_5_id', 'COMPLETED', 'image_1', 'john_doe_id'),
+       ('task_23_id', 'job_3_id', 'COMPLETED', 'image_1', 'john_doe_id');

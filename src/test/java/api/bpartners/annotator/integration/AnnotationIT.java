@@ -3,14 +3,18 @@ package api.bpartners.annotator.integration;
 import static api.bpartners.annotator.integration.conf.utils.TestMocks.BATCH_1_ID;
 import static api.bpartners.annotator.integration.conf.utils.TestMocks.BATCH_4_ID;
 import static api.bpartners.annotator.integration.conf.utils.TestMocks.JOB_1_ID;
+import static api.bpartners.annotator.integration.conf.utils.TestMocks.JOB_3_ID;
 import static api.bpartners.annotator.integration.conf.utils.TestMocks.JOE_DOE_ID;
 import static api.bpartners.annotator.integration.conf.utils.TestMocks.TASK_11_ID;
 import static api.bpartners.annotator.integration.conf.utils.TestMocks.TASK_1_ID;
 import static api.bpartners.annotator.integration.conf.utils.TestMocks.TASK_21_ID;
+import static api.bpartners.annotator.integration.conf.utils.TestMocks.TASK_22_ID;
+import static api.bpartners.annotator.integration.conf.utils.TestMocks.TASK_23_ID;
 import static api.bpartners.annotator.integration.conf.utils.TestMocks.annotationBatch1;
 import static api.bpartners.annotator.integration.conf.utils.TestMocks.annotationBatch2;
 import static api.bpartners.annotator.integration.conf.utils.TestMocks.label1;
 import static api.bpartners.annotator.integration.conf.utils.TestMocks.polygon;
+import static api.bpartners.annotator.integration.conf.utils.TestUtils.assertThrowsBadRequestException;
 import static api.bpartners.annotator.integration.conf.utils.TestUtils.setUpCognito;
 import static java.util.UUID.randomUUID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -50,10 +54,6 @@ class AnnotationIT extends FacadeIT {
 
   private ApiClient joeDoeApiClient() {
     return TestUtils.anApiClient(TestMocks.JOE_DOE_TOKEN, null, port);
-  }
-
-  private ApiClient janeDoeApiClient() {
-    return TestUtils.anApiClient(TestMocks.JANE_DOE_TOKEN, null, port);
   }
 
   @Test
@@ -113,6 +113,37 @@ class AnnotationIT extends FacadeIT {
         annotatorApi.annotateAndSetTaskToReview(JOE_DOE_ID, currentTaskId, payloadId, payload);
 
     assertEquals(payload, ignoreGeneratedValues(actual));
+  }
+
+  @Test
+  void add_annotation_batch_ko() {
+    ApiClient joeDoeClient = joeDoeApiClient();
+    UserAnnotationsApi annotatorApi = new UserAnnotationsApi(joeDoeClient);
+    var payloadId = randomUUID().toString();
+    String currentTaskId = TASK_23_ID;
+    String currentTaskId2 = TASK_22_ID;
+    AnnotationBatch payload =
+        new AnnotationBatch()
+            .id(payloadId)
+            .annotations(
+                List.of(
+                    new Annotation()
+                        .id(randomUUID().toString())
+                        .taskId(currentTaskId)
+                        .userId(JOE_DOE_ID)
+                        .polygon(polygon())
+                        .comment(null)
+                        .label(label1())))
+            .creationDatetime(null);
+
+    assertThrowsBadRequestException(
+        () ->
+            annotatorApi.annotateAndSetTaskToReview(JOE_DOE_ID, currentTaskId, payloadId, payload),
+        "cannot annotate not (started or to_correct) job.Id = " + JOB_3_ID);
+    assertThrowsBadRequestException(
+        () ->
+            annotatorApi.annotateAndSetTaskToReview(JOE_DOE_ID, currentTaskId2, payloadId, payload),
+        "Task.Id = " + currentTaskId2 + " is already COMPLETED");
   }
 
   private static AnnotationBatch annotationBatch4() {
