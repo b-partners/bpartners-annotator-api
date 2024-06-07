@@ -40,6 +40,7 @@ public class JobCreatedService implements Consumer<JobCreated> {
   @Transactional
   @Override
   public void accept(JobCreated jobCreated) {
+    // TODO: test using localstack
     String bucketName = jobCreated.getJob().getBucketName();
     String prefix = jobCreated.getJob().getFolderPath();
     String continuationToken = jobCreated.getNextContinuationToken();
