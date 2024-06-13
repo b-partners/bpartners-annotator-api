@@ -10,7 +10,6 @@ import api.bpartners.annotator.endpoint.rest.model.ExportFormat;
 import api.bpartners.annotator.model.exception.BadRequestException;
 import api.bpartners.annotator.repository.model.Job;
 import api.bpartners.annotator.service.AnnotationBatchService;
-import api.bpartners.annotator.service.JobService;
 import jakarta.mail.internet.InternetAddress;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -22,7 +21,6 @@ import org.springframework.transaction.annotation.Transactional;
 @AllArgsConstructor
 public class ExportService {
   private final EventProducer eventProducer;
-  private final JobService jobService;
   private final VggExportService vggExportService;
   private final CocoExportService cocoExportService;
   private final AnnotationBatchService annotationBatchService;

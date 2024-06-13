@@ -25,6 +25,12 @@ public class VggExportService {
     return vgg;
   }
 
+  public VGG export(Job job, AnnotationBatch batch) {
+    VGG vgg = new VGG();
+    vgg.put(batch.getTask().getFilename(), toVggAnnotation(batch));
+    return vgg;
+  }
+
   private static VGG.Annotation toVggAnnotation(AnnotationBatch batch) {
     var vggAnnotation = new VGG.Annotation();
     // <-- UNUSED_DATA put at default value

@@ -31,7 +31,7 @@ public class JobExportInitiated extends PojaEvent {
 
   @Override
   public Duration maxConsumerDuration() {
-    return Duration.ofMinutes(10);
+    return Duration.ofMinutes(1);
   }
 
   @Override

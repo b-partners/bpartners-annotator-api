@@ -31,6 +31,23 @@ public class CocoExportService {
     return coco;
   }
 
+  public COCO export(Job job, AnnotationBatch batch) {
+    COCO coco = new COCO();
+
+    coco.setInfo(getCocoInfos(job));
+    coco.setImages(extractImageDetails(job));
+    coco.setCategories(extractCategories(job));
+
+    List<COCO.Annotation> cocoAnnotations = extractCocoAnnotation(batch);
+    coco.setAnnotations(cocoAnnotations);
+
+    return coco;
+  }
+
+  private List<COCO.Annotation> extractCocoAnnotation(AnnotationBatch annotationBatch) {
+    return annotationBatch.getAnnotations().stream().map(this::getCocoAnnotation).toList();
+  }
+
   private List<COCO.Annotation> extractCocoAnnotations(List<AnnotationBatch> latestPerTaskByJobId) {
     return latestPerTaskByJobId.stream()
         .map(AnnotationBatch::getAnnotations)
