@@ -2,7 +2,6 @@ package api.bpartners.annotator.endpoint.event.model;
 
 import api.bpartners.annotator.endpoint.rest.model.ExportFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.mail.internet.InternetAddress;
 import java.time.Duration;
 import javax.annotation.processing.Generated;
 import lombok.AllArgsConstructor;
@@ -19,18 +18,21 @@ import lombok.ToString;
 @Data
 @EqualsAndHashCode
 @ToString
-public class JobExportInitiated extends PojaEvent {
-  @JsonProperty("id")
-  private String id;
-
+public class AnnotationBatchExportInitiated extends PojaEvent {
   @JsonProperty("job_id")
   private String jobId;
 
   @JsonProperty("exportFormat")
   private ExportFormat exportFormat;
 
-  @JsonProperty("emailCC")
-  private InternetAddress emailCC;
+  @JsonProperty("annotation_batch_id")
+  private String annotationBatchId;
+
+  @JsonProperty("begin_page")
+  private long beginPage;
+
+  @JsonProperty("page_size")
+  private long pageSize;
 
   @Override
   public Duration maxConsumerDuration() {

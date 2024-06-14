@@ -1,6 +1,5 @@
 package api.bpartners.annotator.service.event;
 
-import static api.bpartners.annotator.service.event.JobExportInitiatedService.JSON_FILE_EXTENSION;
 import static api.bpartners.annotator.service.utils.TemplateResolverUtils.parseTemplateResolver;
 import static java.util.UUID.randomUUID;
 
@@ -27,6 +26,7 @@ import org.thymeleaf.context.Context;
 @AllArgsConstructor
 public class AnnotationStatisticsComputationTriggeredService
     implements Consumer<AnnotationStatisticsComputationTriggered> {
+  public static final String JSON_EXTENSION = ".json";
   private final AnnotationBatchService annotationBatchService;
   private final JobService jobService;
   private final Mailer mailer;
@@ -51,7 +51,7 @@ public class AnnotationStatisticsComputationTriggeredService
         fileWriter.write(
             statisticsAsBytes,
             Files.createTempDirectory(randomUUID().toString()).toFile(),
-            linkedJob.getName() + "_statistics_" + JSON_FILE_EXTENSION);
+            linkedJob.getName() + "_statistics_" + JSON_EXTENSION);
     mailer.accept(
         new Email(
             new InternetAddress(linkedJob.getOwnerEmail()),

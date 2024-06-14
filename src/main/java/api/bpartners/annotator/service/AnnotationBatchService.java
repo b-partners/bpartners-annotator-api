@@ -126,6 +126,10 @@ public class AnnotationBatchService {
     return repository.findLatestPerTaskByJobId(jobId);
   }
 
+  public int countLatestBatchPerTaskByJobId(String jobId) {
+    return repository.countLatestAnnotationBatchBy(jobId);
+  }
+
   public List<AnnotationNumberPerLabel> getLatestAnnotationStatistics(Job domain) {
     List<AnnotationBatch> latestPerTaskByJobId = findLatestPerTaskByJobId(domain.getId());
     Map<Label, Long> countedLabelMap = computeAnnotationStatistics(latestPerTaskByJobId);

@@ -4,6 +4,7 @@ import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.MediaType.TEXT_PLAIN;
 import static org.springframework.http.MediaType.TEXT_PLAIN_VALUE;
 
+import api.bpartners.annotator.endpoint.rest.controller.mapper.InternetAddressMapper;
 import api.bpartners.annotator.endpoint.rest.controller.mapper.JobMapper;
 import api.bpartners.annotator.endpoint.rest.controller.mapper.JobStatusMapper;
 import api.bpartners.annotator.endpoint.rest.model.CrupdateJob;
@@ -79,7 +80,7 @@ public class JobController {
       @PathVariable String jobId,
       @RequestParam("format") ExportFormat exportFormat,
       @RequestParam(required = false) String emailCC) {
-    exportService.initiateJobExport(jobId, exportFormat, emailCC);
+    exportService.initiateJobExport(jobId, exportFormat, InternetAddressMapper.from(emailCC));
     HttpHeaders headers = new HttpHeaders();
     headers.setContentType(TEXT_PLAIN);
     return new ResponseEntity<>("ok", headers, OK);

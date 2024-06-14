@@ -5,6 +5,7 @@ import static api.bpartners.annotator.endpoint.rest.model.ExportFormat.VGG;
 import static api.bpartners.annotator.integration.conf.utils.TestMocks.aTestAnnotationBatch;
 import static api.bpartners.annotator.integration.conf.utils.TestMocks.aTestJob;
 import static api.bpartners.annotator.integration.conf.utils.TestUtils.getInternetAddress;
+import static java.util.UUID.randomUUID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.verify;
@@ -53,7 +54,10 @@ class ExportServiceIT extends FacadeIT {
         .accept(
             List.of(
                 new JobExportInitiated(
-                    TEST_JOB.getId(), exportFormat, getInternetAddress(testMail))));
+                    randomUUID().toString(),
+                    TEST_JOB.getId(),
+                    exportFormat,
+                    getInternetAddress(testMail))));
   }
 
   @Test

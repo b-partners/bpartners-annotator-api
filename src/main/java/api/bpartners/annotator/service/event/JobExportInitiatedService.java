@@ -1,75 +1,78 @@
 package api.bpartners.annotator.service.event;
 
-import static api.bpartners.annotator.service.utils.TemplateResolverUtils.parseTemplateResolver;
 import static java.util.UUID.randomUUID;
 
+import api.bpartners.annotator.endpoint.event.EventProducer;
+import api.bpartners.annotator.endpoint.event.model.AnnotationBatchExportInitiated;
 import api.bpartners.annotator.endpoint.event.model.JobExportInitiated;
 import api.bpartners.annotator.endpoint.rest.model.ExportFormat;
-import api.bpartners.annotator.file.FileWriter;
-import api.bpartners.annotator.mail.Email;
-import api.bpartners.annotator.mail.Mailer;
 import api.bpartners.annotator.repository.model.Job;
-import api.bpartners.annotator.service.JobExport.ExportService;
+import api.bpartners.annotator.service.AnnotationBatchService;
 import api.bpartners.annotator.service.JobService;
-import api.bpartners.annotator.service.utils.ByteWriter;
-import jakarta.mail.internet.InternetAddress;
-import java.io.File;
-import java.nio.file.Files;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
-import lombok.AllArgsConstructor;
-import lombok.SneakyThrows;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.thymeleaf.context.Context;
 
 @Service
-@AllArgsConstructor
 public class JobExportInitiatedService implements Consumer<JobExportInitiated> {
-  public static final String JSON_FILE_EXTENSION = ".json";
-  private final Mailer mailer;
-  private final ExportService exportService;
-  private final ByteWriter byteWriter;
-  private final FileWriter fileWriter;
   private final JobService jobService;
+  private final AnnotationBatchService annotationBatchService;
+  private final EventProducer eventProducer;
+  private final int batchSize;
+
+  public JobExportInitiatedService(
+      JobService jobService,
+      AnnotationBatchService annotationBatchService,
+      EventProducer eventProducer,
+      @Value("JOB_ANNOTATION_EXPORT_MAX_BATCH_SIZE") int batchSize) {
+    this.jobService = jobService;
+    this.annotationBatchService = annotationBatchService;
+    this.eventProducer = eventProducer;
+    this.batchSize = batchSize;
+  }
 
   @Override
   @Transactional
   public void accept(JobExportInitiated jobExportInitiated) {
-    Job linkedJob = jobService.getById(jobExportInitiated.getJobId());
+    String jobId = jobExportInitiated.getJobId();
+    var job = jobService.getById(jobId);
+    var folderPath = createAnnotationBatchExportFolderPathFrom(job);
+    //save jobExportInitiatedInfo
+    fireAnnotationBatchExportInitiatedEvents(jobExportInitiated, jobId);
+  }
+
+  private void fireAnnotationBatchExportInitiatedEvents(
+      JobExportInitiated jobExportInitiated, String jobId) {
+    int batchCount = annotationBatchService.countLatestBatchPerTaskByJobId(jobId);
+    List<AnnotationBatchExportInitiated> exportBatchList = new ArrayList<>();
+    int numberOfPages = calculatePages(batchCount, batchSize);
     ExportFormat exportFormat = jobExportInitiated.getExportFormat();
-    InternetAddress cc = jobExportInitiated.getEmailCC();
-    var exported = exportService.exportJob(linkedJob, exportFormat);
-    var exportedAsBytes = byteWriter.apply(exported);
-    var inFile =
-        fileWriter.write(
-            exportedAsBytes, createTempDirectory(), linkedJob.getName() + JSON_FILE_EXTENSION);
-    String subject = "[Bpartners-Annotator] Exportation de job sous format " + exportFormat;
-    String htmlBody = parseTemplateResolver("job_export_finished", configureContext(linkedJob));
-
-    mailer.accept(
-        new Email(
-            getInternetAddress(linkedJob),
-            cc == null ? List.of() : List.of(cc),
-            List.of(),
-            subject,
-            htmlBody,
-            List.of(inFile)));
+    for (int i = 0; i < numberOfPages; i++) {
+      exportBatchList.add(
+          AnnotationBatchExportInitiated.builder()
+              .jobId(jobId)
+              .beginPage(i)
+              .exportFormat(exportFormat)
+              .pageSize(batchCount)
+              .build());
+    }
+    // TODO: waiting for eventProducer to accept List<PojaEvent>
+    eventProducer.accept(Arrays.asList(exportBatchList.toArray()));
   }
 
-  @SneakyThrows
-  private static InternetAddress getInternetAddress(Job linkedJob) {
-    return new InternetAddress(linkedJob.getOwnerEmail());
+  private static String createAnnotationBatchExportFolderPathFrom(Job job) {
+    return job.getName().endsWith("/")
+        ? (job.getName())
+        : (job.getName() + "/") + randomUUID() + "/";
   }
 
-  @SneakyThrows
-  private static File createTempDirectory() {
-    return Files.createTempDirectory(randomUUID().toString()).toFile();
-  }
-
-  private static Context configureContext(Job job) {
-    Context context = new Context();
-    context.setVariable("job", job);
-    return context;
+  private static int calculatePages(int nbOfElements, int batchSize) {
+    int fullPages = nbOfElements / batchSize;
+    int remainder = nbOfElements % batchSize;
+    return fullPages + (remainder != 0 ? 1 : 0);
   }
 }
