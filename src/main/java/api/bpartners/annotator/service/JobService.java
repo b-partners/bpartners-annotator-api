@@ -7,12 +7,15 @@ import static api.bpartners.annotator.repository.model.enums.JobStatus.PENDING;
 import static api.bpartners.annotator.repository.model.enums.JobStatus.STARTED;
 import static api.bpartners.annotator.repository.model.enums.JobStatus.TO_CORRECT;
 import static api.bpartners.annotator.repository.model.enums.JobStatus.TO_REVIEW;
+import static java.util.UUID.randomUUID;
 import static org.springframework.data.domain.Pageable.unpaged;
 import static org.springframework.data.domain.Sort.Order.asc;
 
 import api.bpartners.annotator.endpoint.event.EventProducer;
 import api.bpartners.annotator.endpoint.event.model.AnnotationStatisticsComputationTriggered;
 import api.bpartners.annotator.endpoint.event.model.JobCreated;
+import api.bpartners.annotator.endpoint.event.model.JobExportInitiated;
+import api.bpartners.annotator.endpoint.rest.model.ExportFormat;
 import api.bpartners.annotator.endpoint.rest.model.JobType;
 import api.bpartners.annotator.model.BoundedPageSize;
 import api.bpartners.annotator.model.PageFromOne;
@@ -48,13 +51,13 @@ public class JobService {
     return JobCreated.builder().nextContinuationToken(nextContinuationToken).job(job).build();
   }
 
-  public List<Job> getAnnotatorReadableJobs(
+  public final List<Job> getAnnotatorReadableJobs(
       String teamId, String name, JobType type, PageFromOne page, BoundedPageSize pageSize) {
     return getAllByTeamAndStatusesAndName(
         teamId, name, type, ANNOTATOR_READABLE_JOB_STATUSES, page, pageSize);
   }
 
-  public List<Job> getAllByTeamAndStatusesAndName(
+  public final List<Job> getAllByTeamAndStatusesAndName(
       String teamId,
       String name,
       JobType type,
@@ -70,7 +73,8 @@ public class JobService {
     return dao.findAllByCriteria(teamId, name, type, statuses, pageable);
   }
 
-  public Job getByTeamAndIdAndStatuses(String teamId, String id, Collection<JobStatus> statuses) {
+  public final Job getByTeamAndIdAndStatuses(
+      String teamId, String id, Collection<JobStatus> statuses) {
     return repository
         .findByTeamIdAndIdAndStatusIn(teamId, id, statuses)
         .orElseThrow(
@@ -85,14 +89,14 @@ public class JobService {
                         + " ) not found"));
   }
 
-  public List<Job> getAllByStatusAndName(
+  public final List<Job> getAllByStatusAndName(
       PageFromOne page, BoundedPageSize pageSize, JobType type, JobStatus status, String name) {
     Pageable pageable = PageRequest.of(page.getValue() - 1, pageSize.getValue(), JOB_SORT);
     return dao.findAllByCriteria(
         null, name, type, status == null ? null : List.of(status), pageable);
   }
 
-  public Job getById(String id) {
+  public final Job getById(String id) {
     return repository
         .findById(id)
         .orElseThrow(() -> new NotFoundException("Job identified by id = " + id + " not found"));
@@ -112,17 +116,17 @@ public class JobService {
     return updateJob(job);
   }
 
-  public Job updateJobStatus(String jobId, JobStatus status) {
+  public final Job updateJobStatus(String jobId, JobStatus status) {
     Job persisted = getById(jobId);
     persisted.setStatus(status);
     return updateJob(persisted);
   }
 
-  public Job setToReview(String jobId) {
+  public final Job setToReview(String jobId) {
     return updateJobStatus(jobId, TO_REVIEW);
   }
 
-  public Job rejectForCorrection(String jobId) {
+  public final Job rejectForCorrection(String jobId) {
     return updateJobStatus(jobId, TO_CORRECT);
   }
 
@@ -136,38 +140,44 @@ public class JobService {
     return repository.save(job);
   }
 
-  public JobStatus checkJobStatusTransition(Job currentJob, Job newJob) {
+  public final JobStatus checkJobStatusTransition(Job currentJob, Job newJob) {
     JobStatus current = currentJob.getStatus();
     JobStatus next = newJob.getStatus();
     BadRequestException exception =
         new BadRequestException(String.format("illegal transition: %s -> %s", current, next));
     return switch (current) {
-      case PENDING -> switch (next) {
-        case PENDING, READY, FAILED -> next;
-        case STARTED, TO_REVIEW, TO_CORRECT, COMPLETED -> throw exception;
-      };
-      case READY -> switch (next) {
-        case READY, STARTED, FAILED -> next;
-        case PENDING, TO_REVIEW, TO_CORRECT, COMPLETED -> throw exception;
-      };
-      case STARTED -> switch (next) {
-        case STARTED, TO_REVIEW, TO_CORRECT, FAILED -> next;
-        case PENDING, READY, COMPLETED -> throw exception;
-      };
-      case TO_CORRECT -> switch (next) {
-        case TO_CORRECT, STARTED, TO_REVIEW, COMPLETED, FAILED -> next;
-        case PENDING, READY -> throw exception;
-      };
-      case TO_REVIEW -> switch (next) {
-        case TO_REVIEW, TO_CORRECT, COMPLETED, FAILED -> next;
-        case PENDING, READY, STARTED -> throw exception;
-      };
-      case FAILED -> throw new BadRequestException(
-          "Failed Job cannot be changed, create new Job instead");
-      case COMPLETED -> switch (next) {
-        case COMPLETED, TO_REVIEW, TO_CORRECT -> next;
-        case PENDING, READY, STARTED, FAILED -> throw exception;
-      };
+      case PENDING ->
+          switch (next) {
+            case PENDING, READY, FAILED -> next;
+            case STARTED, TO_REVIEW, TO_CORRECT, COMPLETED -> throw exception;
+          };
+      case READY ->
+          switch (next) {
+            case READY, STARTED, FAILED -> next;
+            case PENDING, TO_REVIEW, TO_CORRECT, COMPLETED -> throw exception;
+          };
+      case STARTED ->
+          switch (next) {
+            case STARTED, TO_REVIEW, TO_CORRECT, FAILED -> next;
+            case PENDING, READY, COMPLETED -> throw exception;
+          };
+      case TO_CORRECT ->
+          switch (next) {
+            case TO_CORRECT, STARTED, TO_REVIEW, COMPLETED, FAILED -> next;
+            case PENDING, READY -> throw exception;
+          };
+      case TO_REVIEW ->
+          switch (next) {
+            case TO_REVIEW, TO_CORRECT, COMPLETED, FAILED -> next;
+            case PENDING, READY, STARTED -> throw exception;
+          };
+      case FAILED ->
+          throw new BadRequestException("Failed Job cannot be changed, create new Job instead");
+      case COMPLETED ->
+          switch (next) {
+            case COMPLETED, TO_REVIEW, TO_CORRECT -> next;
+            case PENDING, READY, STARTED, FAILED -> throw exception;
+          };
     };
   }
 
@@ -189,7 +199,7 @@ public class JobService {
     return save(persisted);
   }
 
-  public void fireAnnotationStatisticsComputationEvent(String jobId, String emailCC) {
+  public final void fireAnnotationStatisticsComputationEvent(String jobId, String emailCC) {
     InternetAddress cc = null;
     if (emailCC != null) {
       try {
@@ -200,5 +210,11 @@ public class JobService {
     }
 
     eventProducer.accept(List.of(new AnnotationStatisticsComputationTriggered(jobId, cc)));
+  }
+
+  public final void initiateJobExport(
+      String jobId, ExportFormat exportFormat, InternetAddress emailCC) {
+    eventProducer.accept(
+        List.of(new JobExportInitiated(randomUUID().toString(), jobId, exportFormat, emailCC)));
   }
 }
