@@ -29,10 +29,10 @@ public class AnnotationBatchExportInitiated extends PojaEvent {
   private String annotationBatchId;
 
   @JsonProperty("begin_page")
-  private long beginPage;
+  private int beginPage;
 
   @JsonProperty("page_size")
-  private long pageSize;
+  private int pageSize;
 
   @Override
   public Duration maxConsumerDuration() {

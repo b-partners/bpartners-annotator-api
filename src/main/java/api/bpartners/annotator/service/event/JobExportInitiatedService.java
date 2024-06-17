@@ -41,7 +41,7 @@ public class JobExportInitiatedService implements Consumer<JobExportInitiated> {
     String jobId = jobExportInitiated.getJobId();
     var job = jobService.getById(jobId);
     var folderPath = createAnnotationBatchExportFolderPathFrom(job);
-    //save jobExportInitiatedInfo
+    // save jobExportInitiatedInfo
     fireAnnotationBatchExportInitiatedEvents(jobExportInitiated, jobId);
   }
 

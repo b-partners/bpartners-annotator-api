@@ -1,5 +1,6 @@
 package api.bpartners.annotator.service.JobExport;
 
+import api.bpartners.annotator.endpoint.rest.model.ExportFormat;
 import api.bpartners.annotator.repository.model.AnnotationBatch;
 import api.bpartners.annotator.repository.model.Job;
 import api.bpartners.annotator.service.JobExport.model.COCO;
@@ -14,19 +15,10 @@ public class ExportService {
   private final CocoExportService cocoExportService;
   private final VggExportService vggExportService;
 
-  public COCO exportCoco(Job job, AnnotationBatch annotationBatch) {
-    return cocoExportService.export(job, annotationBatch);
-  }
-
-  public COCO exportCoco(Job job, List<AnnotationBatch> annotationBatches) {
-    return cocoExportService.export(job, annotationBatches);
-  }
-
-  public VGG exportVgg(Job job, AnnotationBatch annotationBatch) {
-    return vggExportService.export(job, annotationBatch);
-  }
-
-  public VGG exportVgg(Job job, List<AnnotationBatch> annotationBatches) {
-    return vggExportService.export(job, annotationBatches);
+  public Object export(Job job, ExportFormat format, List<AnnotationBatch> annotationBatches) {
+    return switch (format) {
+      case COCO -> cocoExportService.export(job, annotationBatches);
+      case VGG -> vggExportService.export(job, annotationBatches);
+    };
   }
 }

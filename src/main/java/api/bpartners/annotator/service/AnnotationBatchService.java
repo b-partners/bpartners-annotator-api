@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
+import org.hibernate.validator.constraints.Range;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -123,6 +124,9 @@ public class AnnotationBatchService {
   }
 
   public List<AnnotationBatch> findLatestPerTaskByJobId(String jobId) {
+    return repository.findLatestPerTaskByJobId(jobId);
+  }
+  public List<AnnotationBatch> findLatestPerTaskByJobIdPaginated(String jobId,  int page, int pageSize) {
     return repository.findLatestPerTaskByJobId(jobId);
   }
 
