@@ -127,7 +127,7 @@ public class AnnotationBatchService {
     return repository.findLatestPerTaskByJobId(jobId);
   }
   public List<AnnotationBatch> findLatestPerTaskByJobIdPaginated(String jobId,  int page, int pageSize) {
-    return repository.findLatestPerTaskByJobId(jobId);
+    return repository.findLatestPerTaskByJobId(jobId, page, pageSize);
   }
 
   public int countLatestBatchPerTaskByJobId(String jobId) {

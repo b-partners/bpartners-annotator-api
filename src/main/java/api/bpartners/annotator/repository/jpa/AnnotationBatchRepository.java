@@ -56,6 +56,7 @@ public interface AnnotationBatchRepository extends JpaRepository<AnnotationBatch
 						) max_ct on max_ct.latest_creation_timestamp = a.creation_timestamp
 						where j.id = :jobId
 						order by a.creation_timestamp
+						offset :page * :pageSize
 						limit :pageSize
 						""")
   List<AnnotationBatch> findLatestPerTaskByJobId(

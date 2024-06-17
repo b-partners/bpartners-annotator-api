@@ -54,9 +54,10 @@ public class JobExportInitiatedService implements Consumer<JobExportInitiated> {
     for (int i = 0; i < numberOfPages; i++) {
       exportBatchList.add(
           AnnotationBatchExportInitiated.builder()
+              .id(randomUUID().toString())
               .jobId(jobId)
-              .beginPage(i)
               .exportFormat(exportFormat)
+              .beginPage(i)
               .pageSize(batchCount)
               .build());
     }

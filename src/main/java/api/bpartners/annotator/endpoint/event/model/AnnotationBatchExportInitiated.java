@@ -19,14 +19,17 @@ import lombok.ToString;
 @EqualsAndHashCode
 @ToString
 public class AnnotationBatchExportInitiated extends PojaEvent {
+  @JsonProperty("id")
+  private String id;
+
   @JsonProperty("job_id")
   private String jobId;
 
+  @JsonProperty("job_export_id")
+  private String jobExportId;
+
   @JsonProperty("exportFormat")
   private ExportFormat exportFormat;
-
-  @JsonProperty("annotation_batch_id")
-  private String annotationBatchId;
 
   @JsonProperty("begin_page")
   private int beginPage;
