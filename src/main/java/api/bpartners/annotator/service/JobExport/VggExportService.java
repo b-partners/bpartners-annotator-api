@@ -1,6 +1,6 @@
 package api.bpartners.annotator.service.JobExport;
 
-import api.bpartners.annotator.model.VGG;
+import api.bpartners.annotator.service.JobExport.model.VGG;
 import api.bpartners.annotator.repository.model.Annotation;
 import api.bpartners.annotator.repository.model.AnnotationBatch;
 import api.bpartners.annotator.repository.model.Job;
@@ -15,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 @Service
 @AllArgsConstructor
-public class VggExportService {
+class VggExportService {
   public VGG export(Job job, List<AnnotationBatch> batches) {
     VGG vgg = new VGG();
     batches.forEach(

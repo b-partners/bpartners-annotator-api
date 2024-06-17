@@ -77,15 +77,15 @@ class ExportServiceIT extends FacadeIT {
   }
 
   @SneakyThrows
-  private api.bpartners.annotator.model.VGG getVggTestFile(Job job) {
+  private api.bpartners.annotator.service.JobExport.model.VGG getVggTestFile(Job job) {
     var is = getResourceInputStream("files/vgg_" + job.getId() + ".json");
-    return objectMapper.readValue(is, api.bpartners.annotator.model.VGG.class);
+    return objectMapper.readValue(is, api.bpartners.annotator.service.JobExport.model.VGG.class);
   }
 
   @SneakyThrows
-  private api.bpartners.annotator.model.COCO getCocoTestFile(Job job) {
+  private api.bpartners.annotator.service.JobExport.model.COCO getCocoTestFile(Job job) {
     var is = getResourceInputStream("files/coco_" + job.getId() + ".json");
-    return objectMapper.readValue(is, api.bpartners.annotator.model.COCO.class);
+    return objectMapper.readValue(is, api.bpartners.annotator.service.JobExport.model.COCO.class);
   }
 
   private InputStream getResourceInputStream(String filename) {

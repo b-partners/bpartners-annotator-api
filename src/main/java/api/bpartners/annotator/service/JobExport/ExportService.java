@@ -1,11 +1,9 @@
 package api.bpartners.annotator.service.JobExport;
 
-import static java.util.UUID.randomUUID;
-
-import api.bpartners.annotator.endpoint.event.EventProducer;
-import api.bpartners.annotator.endpoint.event.model.JobExportInitiated;
-import api.bpartners.annotator.endpoint.rest.model.ExportFormat;
-import jakarta.mail.internet.InternetAddress;
+import api.bpartners.annotator.repository.model.AnnotationBatch;
+import api.bpartners.annotator.repository.model.Job;
+import api.bpartners.annotator.service.JobExport.model.COCO;
+import api.bpartners.annotator.service.JobExport.model.VGG;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -13,10 +11,22 @@ import org.springframework.stereotype.Service;
 @Service
 @AllArgsConstructor
 public class ExportService {
-  private final EventProducer eventProducer;
+  private final CocoExportService cocoExportService;
+  private final VggExportService vggExportService;
 
-  public void initiateJobExport(String jobId, ExportFormat exportFormat, InternetAddress emailCC) {
-    eventProducer.accept(
-        List.of(new JobExportInitiated(randomUUID().toString(), jobId, exportFormat, emailCC)));
+  public COCO exportCoco(Job job, AnnotationBatch annotationBatch) {
+    return cocoExportService.export(job, annotationBatch);
+  }
+
+  public COCO exportCoco(Job job, List<AnnotationBatch> annotationBatches) {
+    return cocoExportService.export(job, annotationBatches);
+  }
+
+  public VGG exportVgg(Job job, AnnotationBatch annotationBatch) {
+    return vggExportService.export(job, annotationBatch);
+  }
+
+  public VGG exportVgg(Job job, List<AnnotationBatch> annotationBatches) {
+    return vggExportService.export(job, annotationBatches);
   }
 }

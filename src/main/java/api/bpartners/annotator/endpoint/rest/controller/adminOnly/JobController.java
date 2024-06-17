@@ -15,7 +15,6 @@ import api.bpartners.annotator.endpoint.rest.model.JobType;
 import api.bpartners.annotator.endpoint.rest.validator.CrupdateJobIdValidator;
 import api.bpartners.annotator.model.BoundedPageSize;
 import api.bpartners.annotator.model.PageFromOne;
-import api.bpartners.annotator.service.JobExport.ExportService;
 import api.bpartners.annotator.service.JobService;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -34,8 +33,8 @@ public class JobController {
   private final JobService service;
   private final JobMapper mapper;
   private final JobStatusMapper statusMapper;
-  private final ExportService exportService;
   private final CrupdateJobIdValidator crupdateJobIdValidator;
+  private final JobService jobService;
 
   @GetMapping("/jobs")
   public List<Job> getJobs(
@@ -80,7 +79,7 @@ public class JobController {
       @PathVariable String jobId,
       @RequestParam("format") ExportFormat exportFormat,
       @RequestParam(required = false) String emailCC) {
-    exportService.initiateJobExport(jobId, exportFormat, InternetAddressMapper.from(emailCC));
+    jobService.initiateJobExport(jobId, exportFormat, InternetAddressMapper.from(emailCC));
     HttpHeaders headers = new HttpHeaders();
     headers.setContentType(TEXT_PLAIN);
     return new ResponseEntity<>("ok", headers, OK);

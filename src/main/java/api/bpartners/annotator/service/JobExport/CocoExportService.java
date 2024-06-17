@@ -1,6 +1,6 @@
 package api.bpartners.annotator.service.JobExport;
 
-import api.bpartners.annotator.model.COCO;
+import api.bpartners.annotator.service.JobExport.model.COCO;
 import api.bpartners.annotator.repository.model.Annotation;
 import api.bpartners.annotator.repository.model.AnnotationBatch;
 import api.bpartners.annotator.repository.model.Job;
@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @AllArgsConstructor
 @Transactional
-public class CocoExportService {
+class CocoExportService {
   public COCO export(Job job, List<AnnotationBatch> batches) {
     COCO coco = new COCO();
 

@@ -1,4 +1,4 @@
-package api.bpartners.annotator.model;
+package api.bpartners.annotator.service.JobExport.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.math.BigDecimal;
