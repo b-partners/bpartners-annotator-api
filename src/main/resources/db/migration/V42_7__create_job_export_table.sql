@@ -17,6 +17,7 @@ create table job_export
     id          varchar primary key default uuid_generate_v4(),
     job_id      varchar references job (id) not null,
     email_owner varchar                     not null,
+    export_format      export_format               not null,
     email_cc    varchar
 );
 create table job_export_status

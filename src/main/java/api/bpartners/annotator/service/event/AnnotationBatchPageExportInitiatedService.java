@@ -2,10 +2,11 @@ package api.bpartners.annotator.service.event;
 
 import static java.util.UUID.randomUUID;
 
-import api.bpartners.annotator.endpoint.event.model.AnnotationBatchExportInitiated;
+import api.bpartners.annotator.endpoint.event.model.AnnotationBatchPageExportInitiated;
 import api.bpartners.annotator.file.BucketComponent;
 import api.bpartners.annotator.file.FileWriter;
 import api.bpartners.annotator.service.AnnotationBatchService;
+import api.bpartners.annotator.service.JobExport.AnnotationBatchPageExportService;
 import api.bpartners.annotator.service.JobExport.ExportService;
 import api.bpartners.annotator.service.JobService;
 import api.bpartners.annotator.service.utils.ByteWriter;
@@ -20,43 +21,41 @@ import org.springframework.stereotype.Service;
 @Service
 @AllArgsConstructor
 @Slf4j
-public class AnnotationBatchExportInitiatedService
-    implements Consumer<AnnotationBatchExportInitiated> {
+public class AnnotationBatchPageExportInitiatedService
+    implements Consumer<AnnotationBatchPageExportInitiated> {
   public static final String JSON_FILE_EXTENSION = ".json";
   private final ExportService exportService;
   private final JobService jobService;
   private final AnnotationBatchService annotationBatchService;
+  private final AnnotationBatchPageExportService annotationBatchPageExportService;
   private final FileWriter fileWriter;
   private final ByteWriter byteWriter;
   private final BucketComponent bucketComponent;
 
   @Override
-  public void accept(AnnotationBatchExportInitiated annotationBatchExportInitiated) {
-    String jobId = annotationBatchExportInitiated.getJobId();
+  public void accept(AnnotationBatchPageExportInitiated annotationBatchPageExportInitiated) {
+    String jobId = annotationBatchPageExportInitiated.getJobId();
     var job = jobService.getById(jobId);
+    String id = annotationBatchPageExportInitiated.getId();
+    var annotationBatchPageExport = annotationBatchPageExportService.findById(id);
+    String bucketKey = annotationBatchPageExport.getBucketKey();
     var batches =
         annotationBatchService.findLatestPerTaskByJobIdPaginated(
             jobId,
-            annotationBatchExportInitiated.getBeginPage(),
-            annotationBatchExportInitiated.getPageSize());
+            annotationBatchPageExportInitiated.getBeginPage(),
+            annotationBatchPageExportInitiated.getPageSize());
     Object exported =
-        exportService.export(job, annotationBatchExportInitiated.getExportFormat(), batches);
+        exportService.export(job, annotationBatchPageExportInitiated.getExportFormat(), batches);
     var exportedAsBytes = byteWriter.apply(exported);
-    var inFile =
-        fileWriter.write(
-            exportedAsBytes, createTempDirectory(), job.getName() + JSON_FILE_EXTENSION);
-    String bucketKey = getBucketKey("", annotationBatchExportInitiated);
+    var inFile = fileWriter.write(exportedAsBytes, createTempDirectory(), bucketKey);
     bucketComponent.upload(inFile, bucketKey);
-    log.info("successfully exported {} to {}", annotationBatchExportInitiated.getId(), bucketKey);
+
+    var completed = annotationBatchPageExportService.complete(id);
+    log.info("successfully exported {} to {}", id, bucketKey);
   }
 
   @SneakyThrows
   private static File createTempDirectory() {
     return Files.createTempDirectory(randomUUID().toString()).toFile();
-  }
-
-  private static String getBucketKey(
-      String jobExportFolderPath, AnnotationBatchExportInitiated annotationBatchExportInitiated) {
-    return jobExportFolderPath + annotationBatchExportInitiated.getId() + JSON_FILE_EXTENSION;
   }
 }

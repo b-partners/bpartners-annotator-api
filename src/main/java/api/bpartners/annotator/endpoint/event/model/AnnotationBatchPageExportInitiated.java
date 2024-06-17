@@ -18,7 +18,7 @@ import lombok.ToString;
 @Data
 @EqualsAndHashCode
 @ToString
-public class AnnotationBatchExportInitiated extends PojaEvent {
+public class AnnotationBatchPageExportInitiated extends PojaEvent {
   @JsonProperty("id")
   private String id;
 

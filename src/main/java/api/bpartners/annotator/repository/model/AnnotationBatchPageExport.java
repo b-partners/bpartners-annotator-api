@@ -25,27 +25,27 @@ import org.hibernate.annotations.JdbcTypeCode;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class JobExport implements Statusable<JobExportStatus> {
+public class AnnotationBatchPageExport implements Statusable<AnnotationBatchPageExportStatus> {
   @Id private String id;
   private String jobId;
-  private String emailOwner;
-  private String emailCC;
-  private String folderPath;
+  private int beginPage;
+  private int pageSize;
+  private String bucketKey;
 
   @Enumerated(STRING)
   @JdbcTypeCode(NAMED_ENUM)
   private ExportFormat exportFormat;
 
   @OneToMany(mappedBy = "jobId")
-  private List<JobExportStatus> statuses;
+  private List<AnnotationBatchPageExportStatus> statuses;
 
   @Override
-  public List<JobExportStatus> getStatusHistory() {
+  public List<AnnotationBatchPageExportStatus> getStatusHistory() {
     return statuses == null ? List.of() : statuses;
   }
 
   @Override
-  public void setStatusHistory(List<JobExportStatus> statusHistory) {
+  public void setStatusHistory(List<AnnotationBatchPageExportStatus> statusHistory) {
     if (statusHistory == null) {
       this.statuses = new ArrayList<>();
     }
@@ -53,7 +53,7 @@ public class JobExport implements Statusable<JobExportStatus> {
   }
 
   @Override
-  public JobExportStatus from(Status status) {
-    return JobExportStatus.from(id, status);
+  public AnnotationBatchPageExportStatus from(Status status) {
+    return AnnotationBatchPageExportStatus.from(id, status);
   }
 }

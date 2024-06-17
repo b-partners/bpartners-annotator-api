@@ -1,9 +1,12 @@
-create table annotation_batch_export
+create table annotation_batch_page_export
 (
-    id       varchar primary key default uuid_generate_v4(),
-    job_id   varchar references job (id)              not null,
-    batch_id varchar references annotation_batch (id) not null,
-    task_id  varchar references task (id)             not null
+    id            varchar primary key default uuid_generate_v4(),
+    job_id        varchar references job (id)              not null,
+    batch_id      varchar references annotation_batch (id) not null,
+    export_format export_format                            not null,
+    job_export_id varchar references job_export (id)       not null,
+    begin_page    int                                      not null check ( begin_page >= 0 ),
+    page_size     int                                      not null check ( page_size >= 0 )
 );
 create table annotation_batch_export_status
 (
