@@ -35,16 +35,16 @@ public class ExportService {
   }
 
   @Transactional(propagation = REQUIRED, readOnly = true, rollbackFor = Exception.class)
-  public Object exportJob(Job job, ExportFormat format) {
+  public List<Object> exportJob(Job job, ExportFormat format) {
     var batches = annotationBatchService.findLatestPerTaskByJobId(job.getId());
     var subBatches = partition(batches);
     return switch (format) {
       case VGG -> subBatches.parallelStream()
           .map(batch -> vggExportService.export(job, batch))
-          .toList();
+          .collect(Collectors.toUnmodifiableList());
       case COCO -> subBatches.parallelStream()
           .map(batch -> cocoExportService.export(job, batch))
-          .toList();
+          .collect(Collectors.toUnmodifiableList());
     };
   }
 
