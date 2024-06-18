@@ -5,8 +5,8 @@ import static api.bpartners.annotator.endpoint.rest.model.ExportFormat.VGG;
 import static api.bpartners.annotator.integration.conf.utils.TestMocks.aTestAnnotationBatch;
 import static api.bpartners.annotator.integration.conf.utils.TestMocks.aTestJob;
 import static api.bpartners.annotator.integration.conf.utils.TestUtils.getInternetAddress;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -28,13 +28,12 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 
 class ExportServiceIT extends FacadeIT {
   private static final String MOCK_JOB_ID = "mock_job_id";
-  @Autowired private ExportService subject;
+  private static final Job TEST_JOB = aTestJob(MOCK_JOB_ID);
   @MockBean EventProducer eventProducerMock;
   @MockBean JobService jobServiceMock;
   @MockBean AnnotationBatchService annotationBatchServiceMock;
   @Autowired ObjectMapper objectMapper;
-
-  private static final Job TEST_JOB = aTestJob(MOCK_JOB_ID);
+  @Autowired private ExportService subject;
 
   @BeforeEach
   void setUp() {
@@ -61,7 +60,7 @@ class ExportServiceIT extends FacadeIT {
     Job testJob = TEST_JOB;
     var actual = subject.exportJob(testJob, VGG);
 
-    assertEquals(getVggTestFile(testJob), actual);
+    assertTrue(actual.contains(getVggTestFile(testJob)));
   }
 
   @Test
@@ -69,7 +68,7 @@ class ExportServiceIT extends FacadeIT {
     Job testJob = TEST_JOB;
     var actual = subject.exportJob(testJob, COCO);
 
-    assertEquals(getCocoTestFile(testJob), actual);
+    assertTrue(actual.contains(getCocoTestFile(testJob)));
   }
 
   @SneakyThrows

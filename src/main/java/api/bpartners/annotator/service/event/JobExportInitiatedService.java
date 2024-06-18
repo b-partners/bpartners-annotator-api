@@ -8,14 +8,12 @@ import api.bpartners.annotator.endpoint.rest.model.ExportFormat;
 import api.bpartners.annotator.file.FileWriter;
 import api.bpartners.annotator.mail.Email;
 import api.bpartners.annotator.mail.Mailer;
-import api.bpartners.annotator.model.exception.ApiException;
 import api.bpartners.annotator.repository.model.Job;
 import api.bpartners.annotator.service.JobExport.ExportService;
 import api.bpartners.annotator.service.JobService;
 import api.bpartners.annotator.service.utils.ByteWriter;
 import jakarta.mail.internet.InternetAddress;
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.Files;
 import java.util.List;
 import java.util.function.Consumer;
@@ -41,7 +39,7 @@ public class JobExportInitiatedService implements Consumer<JobExportInitiated> {
     Job linkedJob = jobService.getById(jobExportInitiated.getJobId());
     ExportFormat exportFormat = jobExportInitiated.getExportFormat();
     InternetAddress cc = jobExportInitiated.getEmailCC();
-    // TODO: Handle list of annotations
+    // Require improvement to handle the list of object
     List<Object> exported = exportService.exportJob(linkedJob, exportFormat);
     var files = writeAsFiles(linkedJob, exported);
     String subject = "[Bpartners-Annotator] Exportation de job sous format " + exportFormat;
@@ -62,16 +60,11 @@ public class JobExportInitiatedService implements Consumer<JobExportInitiated> {
     return annotations.parallelStream()
         .map(
             annotation -> {
-              try {
-                var annotationBytes = byteWriter.apply(annotation);
-                var tempDirectory = Files.createTempDirectory(randomUUID().toString());
-                return fileWriter.write(
-                    annotationBytes,
-                    tempDirectory.toFile(),
-                    linkedJob.getName() + JSON_FILE_EXTENSION);
-              } catch (IOException e) {
-                throw new ApiException(ApiException.ExceptionType.SERVER_EXCEPTION, e.getMessage());
-              }
+              var annotationBytes = byteWriter.apply(annotation);
+              return fileWriter.write(
+                  annotationBytes,
+                  createTempDirectory(),
+                  linkedJob.getName() + JSON_FILE_EXTENSION);
             })
         .toList();
   }

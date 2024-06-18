@@ -5,6 +5,7 @@ import static org.springframework.transaction.annotation.Propagation.REQUIRED;
 import api.bpartners.annotator.endpoint.event.EventProducer;
 import api.bpartners.annotator.endpoint.event.model.JobExportInitiated;
 import api.bpartners.annotator.endpoint.rest.model.ExportFormat;
+import api.bpartners.annotator.model.exception.BadRequestException;
 import api.bpartners.annotator.repository.model.AnnotationBatch;
 import api.bpartners.annotator.repository.model.Job;
 import api.bpartners.annotator.service.AnnotationBatchService;
@@ -40,11 +41,14 @@ public class ExportService {
     var subBatches = partition(batches);
     return switch (format) {
       case VGG -> subBatches.parallelStream()
+          .filter(batch -> !batch.isEmpty())
           .map(batch -> vggExportService.export(job, batch))
           .collect(Collectors.toUnmodifiableList());
       case COCO -> subBatches.parallelStream()
+          .filter(batch -> !batch.isEmpty())
           .map(batch -> cocoExportService.export(job, batch))
           .collect(Collectors.toUnmodifiableList());
+      case null -> throw new BadRequestException("unknown export format " + format);
     };
   }
 
