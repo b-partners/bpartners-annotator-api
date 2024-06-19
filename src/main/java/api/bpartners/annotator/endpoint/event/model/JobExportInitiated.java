@@ -23,6 +23,9 @@ public class JobExportInitiated extends PojaEvent {
   @JsonProperty("job_id")
   private String jobId;
 
+  @JsonProperty("subset_id")
+  private String subSetId;
+
   @JsonProperty("exportFormat")
   private ExportFormat exportFormat;
 

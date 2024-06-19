@@ -2,11 +2,14 @@ package api.bpartners.annotator.service;
 
 import static api.bpartners.annotator.endpoint.rest.model.ExportFormat.COCO;
 import static api.bpartners.annotator.endpoint.rest.model.ExportFormat.VGG;
+import static api.bpartners.annotator.integration.conf.utils.TestMocks.MOCK_SUBSET_ID;
 import static api.bpartners.annotator.integration.conf.utils.TestMocks.aTestAnnotationBatch;
 import static api.bpartners.annotator.integration.conf.utils.TestMocks.aTestJob;
+import static api.bpartners.annotator.integration.conf.utils.TestMocks.mockSubset;
 import static api.bpartners.annotator.integration.conf.utils.TestUtils.getInternetAddress;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -32,6 +35,7 @@ class ExportServiceIT extends FacadeIT {
   @MockBean EventProducer eventProducerMock;
   @MockBean JobService jobServiceMock;
   @MockBean AnnotationBatchService annotationBatchServiceMock;
+  @MockBean AnnotationBatchSubsetService annotationBatchSubsetServiceMock;
   @Autowired ObjectMapper objectMapper;
   @Autowired private ExportService subject;
 
@@ -40,6 +44,8 @@ class ExportServiceIT extends FacadeIT {
     when(jobServiceMock.getById(MOCK_JOB_ID)).thenReturn(TEST_JOB);
     when(annotationBatchServiceMock.findLatestPerTaskByJobId(MOCK_JOB_ID))
         .thenReturn(List.of(aTestAnnotationBatch()));
+    when(annotationBatchSubsetServiceMock.getSubSetById(any())).thenReturn(mockSubset());
+    when(annotationBatchSubsetServiceMock.save(any())).thenReturn(mockSubset());
   }
 
   @Test
@@ -52,23 +58,23 @@ class ExportServiceIT extends FacadeIT {
         .accept(
             List.of(
                 new JobExportInitiated(
-                    TEST_JOB.getId(), exportFormat, getInternetAddress(testMail))));
+                    TEST_JOB.getId(), MOCK_SUBSET_ID, exportFormat, getInternetAddress(testMail))));
   }
 
   @Test
   void export_vgg_job_ok() {
     Job testJob = TEST_JOB;
-    var actual = subject.exportJob(testJob, VGG);
+    var actual = subject.exportJob(testJob, VGG, MOCK_SUBSET_ID);
 
-    assertTrue(actual.contains(getVggTestFile(testJob)));
+    assertEquals(getVggTestFile(testJob), actual);
   }
 
   @Test
   void export_coco_job_ok() {
     Job testJob = TEST_JOB;
-    var actual = subject.exportJob(testJob, COCO);
+    var actual = subject.exportJob(testJob, COCO, MOCK_SUBSET_ID);
 
-    assertTrue(actual.contains(getCocoTestFile(testJob)));
+    assertEquals(getCocoTestFile(testJob), actual);
   }
 
   @SneakyThrows
@@ -92,7 +98,7 @@ class ExportServiceIT extends FacadeIT {
     ExportFormat invalidExportFormat = null;
     assertThrows(
         BadRequestException.class,
-        () -> subject.exportJob(TEST_JOB, invalidExportFormat),
+        () -> subject.exportJob(TEST_JOB, invalidExportFormat, MOCK_SUBSET_ID),
         "unknown export format " + invalidExportFormat);
   }
 }

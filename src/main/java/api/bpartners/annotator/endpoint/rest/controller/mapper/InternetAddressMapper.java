@@ -4,7 +4,9 @@ import api.bpartners.annotator.model.exception.BadRequestException;
 import jakarta.mail.internet.AddressException;
 import jakarta.mail.internet.InternetAddress;
 
-public class EmailAddressMapper {
+public class InternetAddressMapper {
+  private InternetAddressMapper() {}
+
   public static InternetAddress from(String address) {
     try {
       return new InternetAddress(address);

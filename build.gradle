@@ -184,6 +184,9 @@ dependencies {
 
     implementation 'org.apache.tika:tika-core:2.9.1'
 
+    // https://mvnrepository.com/artifact/com.google.guava/guava
+    implementation 'com.google.guava:guava:33.2.0-jre'
+
     implementation 'org.reflections:reflections:0.10.2'
 
     compileOnly 'org.projectlombok:lombok'

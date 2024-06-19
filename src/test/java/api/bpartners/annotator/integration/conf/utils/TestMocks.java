@@ -20,6 +20,7 @@ import api.bpartners.annotator.endpoint.rest.model.Polygon;
 import api.bpartners.annotator.endpoint.rest.model.Task;
 import api.bpartners.annotator.endpoint.rest.model.TaskStatistics;
 import api.bpartners.annotator.endpoint.rest.model.Team;
+import api.bpartners.annotator.repository.model.AnnotationBatchSubset;
 import api.bpartners.annotator.repository.model.enums.TaskStatus;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -31,6 +32,7 @@ public class TestMocks {
   public static final String JANE_DOE_TOKEN = "jane_doe_token";
   public static final String JOE_DOE_EMAIL = "joe@email.com";
   public static final String JANE_DOE_EMAIL = "jane@email.com";
+  public static final String MOCK_SUBSET_ID = "mock_subset_id";
 
   public static final String TEAM_1_ID = "team_1_id";
 
@@ -235,6 +237,10 @@ public class TestMocks {
         .creationTimestamp(Instant.MIN)
         .task(aTestTask())
         .build();
+  }
+
+  public static AnnotationBatchSubset mockSubset() {
+    return new AnnotationBatchSubset(MOCK_SUBSET_ID, JOB_1_ID, List.of(aTestAnnotationBatch()));
   }
 
   public static api.bpartners.annotator.repository.model.Annotation aTestAnnotation(

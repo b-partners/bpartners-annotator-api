@@ -2,9 +2,11 @@ package api.bpartners.annotator.service.event;
 
 import static api.bpartners.annotator.endpoint.rest.model.ExportFormat.COCO;
 import static api.bpartners.annotator.endpoint.rest.model.ExportFormat.VGG;
+import static api.bpartners.annotator.integration.conf.utils.TestMocks.MOCK_SUBSET_ID;
 import static api.bpartners.annotator.integration.conf.utils.TestMocks.TEST_MAIL;
 import static api.bpartners.annotator.integration.conf.utils.TestMocks.aTestAnnotationBatch;
 import static api.bpartners.annotator.integration.conf.utils.TestMocks.aTestJob;
+import static api.bpartners.annotator.integration.conf.utils.TestMocks.mockSubset;
 import static api.bpartners.annotator.integration.conf.utils.TestUtils.getInternetAddress;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
@@ -21,6 +23,7 @@ import api.bpartners.annotator.mail.Mailer;
 import api.bpartners.annotator.model.exception.BadRequestException;
 import api.bpartners.annotator.repository.model.Job;
 import api.bpartners.annotator.service.AnnotationBatchService;
+import api.bpartners.annotator.service.AnnotationBatchSubsetService;
 import api.bpartners.annotator.service.JobService;
 import jakarta.mail.internet.InternetAddress;
 import java.io.File;
@@ -38,6 +41,7 @@ class JobExportInitiatedServiceIT extends FacadeIT {
   @Autowired private JobExportInitiatedService subject;
   @MockBean private Mailer mailerMock;
   @MockBean private AnnotationBatchService annotationBatchServiceMock;
+  @MockBean AnnotationBatchSubsetService annotationBatchSubsetServiceMock;
   @MockBean private FileWriter fileWriter;
   @MockBean private JobService jobService;
 
@@ -80,6 +84,8 @@ class JobExportInitiatedServiceIT extends FacadeIT {
     when(fileWriter.apply(any(), any())).thenReturn(mockFile);
     when(jobService.getById(COCO_JOB_ID)).thenReturn(aTestJob(COCO_JOB_ID));
     when(jobService.getById(VGG_JOB_ID)).thenReturn(aTestJob(VGG_JOB_ID));
+    when(annotationBatchSubsetServiceMock.getSubSetById(any())).thenReturn(mockSubset());
+    when(annotationBatchSubsetServiceMock.save(any())).thenReturn(mockSubset());
   }
 
   private @NotNull File getMockFile() {
@@ -95,7 +101,7 @@ class JobExportInitiatedServiceIT extends FacadeIT {
     Job linkedJob = aTestJob(COCO_JOB_ID);
     String mailSubject = "[Bpartners-Annotator] Exportation de job sous format " + exportFormat;
 
-    subject.accept(new JobExportInitiated(linkedJob.getId(), exportFormat, cc));
+    subject.accept(new JobExportInitiated(linkedJob.getId(), MOCK_SUBSET_ID, exportFormat, cc));
 
     // verify(byteWriter.apply());
     verify(mailerMock, times(1))
@@ -116,7 +122,7 @@ class JobExportInitiatedServiceIT extends FacadeIT {
     Job linkedJob = aTestJob(VGG_JOB_ID);
     String mailSubject = "[Bpartners-Annotator] Exportation de job sous format " + exportFormat;
 
-    subject.accept(new JobExportInitiated(linkedJob.getId(), exportFormat, cc));
+    subject.accept(new JobExportInitiated(linkedJob.getId(), MOCK_SUBSET_ID, exportFormat, cc));
 
     verify(mailerMock, times(1))
         .accept(
@@ -137,7 +143,9 @@ class JobExportInitiatedServiceIT extends FacadeIT {
 
     assertThrows(
         BadRequestException.class,
-        () -> subject.accept(new JobExportInitiated(linkedJob.getId(), invalidExportFormat, cc)),
+        () ->
+            subject.accept(
+                new JobExportInitiated(linkedJob.getId(), MOCK_SUBSET_ID, invalidExportFormat, cc)),
         "unknown export format " + invalidExportFormat);
   }
 }

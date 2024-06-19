@@ -8,7 +8,6 @@ import api.bpartners.annotator.endpoint.rest.model.ExportFormat;
 import api.bpartners.annotator.file.FileWriter;
 import api.bpartners.annotator.mail.Email;
 import api.bpartners.annotator.mail.Mailer;
-import api.bpartners.annotator.repository.model.AnnotationBatch;
 import api.bpartners.annotator.repository.model.Job;
 import api.bpartners.annotator.service.JobExport.ExportService;
 import api.bpartners.annotator.service.JobService;
@@ -40,12 +39,12 @@ public class JobExportInitiatedService implements Consumer<JobExportInitiated> {
     Job linkedJob = jobService.getById(jobExportInitiated.getJobId());
     ExportFormat exportFormat = jobExportInitiated.getExportFormat();
     InternetAddress cc = jobExportInitiated.getEmailCC();
-    List<AnnotationBatch> batches = List.of(); // Get a paginate list of batches
-    var exported = exportService.exportJob(linkedJob, exportFormat, batches);
+    String subsetId = jobExportInitiated.getSubSetId();
+    var exported = exportService.exportJob(linkedJob, exportFormat, subsetId);
     var exportedAsBytes = byteWriter.apply(exported);
+    var filename = linkedJob.getName() + subsetId;
     var inFile =
-        fileWriter.write(
-            exportedAsBytes, createTempDirectory(), linkedJob.getName() + JSON_FILE_EXTENSION);
+        fileWriter.write(exportedAsBytes, createTempDirectory(), filename + JSON_FILE_EXTENSION);
     String subject = "[Bpartners-Annotator] Exportation de job sous format " + exportFormat;
     String htmlBody = parseTemplateResolver("job_export_finished", configureContext(linkedJob));
 
