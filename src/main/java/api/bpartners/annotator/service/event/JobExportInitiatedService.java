@@ -8,6 +8,7 @@ import api.bpartners.annotator.endpoint.rest.model.ExportFormat;
 import api.bpartners.annotator.file.FileWriter;
 import api.bpartners.annotator.mail.Email;
 import api.bpartners.annotator.mail.Mailer;
+import api.bpartners.annotator.repository.model.AnnotationBatch;
 import api.bpartners.annotator.repository.model.Job;
 import api.bpartners.annotator.service.JobExport.ExportService;
 import api.bpartners.annotator.service.JobService;
@@ -39,9 +40,12 @@ public class JobExportInitiatedService implements Consumer<JobExportInitiated> {
     Job linkedJob = jobService.getById(jobExportInitiated.getJobId());
     ExportFormat exportFormat = jobExportInitiated.getExportFormat();
     InternetAddress cc = jobExportInitiated.getEmailCC();
-    // Require improvement to handle the list of object
-    List<Object> exported = exportService.exportJob(linkedJob, exportFormat);
-    var files = writeAsFiles(linkedJob, exported);
+    List<AnnotationBatch> batches = List.of(); // Get a paginate list of batches
+    var exported = exportService.exportJob(linkedJob, exportFormat, batches);
+    var exportedAsBytes = byteWriter.apply(exported);
+    var inFile =
+        fileWriter.write(
+            exportedAsBytes, createTempDirectory(), linkedJob.getName() + JSON_FILE_EXTENSION);
     String subject = "[Bpartners-Annotator] Exportation de job sous format " + exportFormat;
     String htmlBody = parseTemplateResolver("job_export_finished", configureContext(linkedJob));
 
@@ -52,21 +56,7 @@ public class JobExportInitiatedService implements Consumer<JobExportInitiated> {
             List.of(),
             subject,
             htmlBody,
-            files));
-  }
-
-  @SneakyThrows
-  private List<File> writeAsFiles(Job linkedJob, List<Object> annotations) {
-    return annotations.parallelStream()
-        .map(
-            annotation -> {
-              var annotationBytes = byteWriter.apply(annotation);
-              return fileWriter.write(
-                  annotationBytes,
-                  createTempDirectory(),
-                  linkedJob.getName() + JSON_FILE_EXTENSION);
-            })
-        .toList();
+            List.of(inFile)));
   }
 
   @SneakyThrows
