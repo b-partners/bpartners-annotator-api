@@ -22,8 +22,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @AllArgsConstructor
 public class ExportService {
-  private static final int PARTITION_SIZE = 200;
-  private static final int MAX_HANDLED_BATCH_SIZE = 200;
+  private static final int PARTITION_SIZE = 1200;
+  private static final int MAX_HANDLED_BATCH_SIZE = 1500;
   private final EventProducer eventProducer;
   private final VggExportService vggExportService;
   private final CocoExportService cocoExportService;
