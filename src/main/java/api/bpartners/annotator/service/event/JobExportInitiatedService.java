@@ -39,12 +39,13 @@ public class JobExportInitiatedService implements Consumer<JobExportInitiated> {
     Job linkedJob = jobService.getById(jobExportInitiated.getJobId());
     ExportFormat exportFormat = jobExportInitiated.getExportFormat();
     InternetAddress cc = jobExportInitiated.getEmailCC();
-    // Require improvement to handle the list of object
-    List<Object> exported = exportService.exportJob(linkedJob, exportFormat);
-    var files = writeAsFiles(linkedJob, exported);
+    var exported = exportService.exportJob(linkedJob, exportFormat);
+    var annotationAsBytes = byteWriter.apply(exported);
+    var file =
+        fileWriter.write(
+            annotationAsBytes, createTempDirectory(), linkedJob.getName() + JSON_FILE_EXTENSION);
     String subject = "[Bpartners-Annotator] Exportation de job sous format " + exportFormat;
     String htmlBody = parseTemplateResolver("job_export_finished", configureContext(linkedJob));
-
     mailer.accept(
         new Email(
             getInternetAddress(linkedJob),
@@ -52,21 +53,7 @@ public class JobExportInitiatedService implements Consumer<JobExportInitiated> {
             List.of(),
             subject,
             htmlBody,
-            files));
-  }
-
-  @SneakyThrows
-  private List<File> writeAsFiles(Job linkedJob, List<Object> annotations) {
-    return annotations.parallelStream()
-        .map(
-            annotation -> {
-              var annotationBytes = byteWriter.apply(annotation);
-              return fileWriter.write(
-                  annotationBytes,
-                  createTempDirectory(),
-                  linkedJob.getName() + JSON_FILE_EXTENSION);
-            })
-        .toList();
+            List.of(file)));
   }
 
   @SneakyThrows
