@@ -5,8 +5,8 @@ import static api.bpartners.annotator.endpoint.rest.model.ExportFormat.VGG;
 import static api.bpartners.annotator.integration.conf.utils.TestMocks.aTestAnnotationBatch;
 import static api.bpartners.annotator.integration.conf.utils.TestMocks.aTestJob;
 import static api.bpartners.annotator.integration.conf.utils.TestUtils.getInternetAddress;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -60,7 +60,7 @@ class ExportServiceIT extends FacadeIT {
     Job testJob = TEST_JOB;
     var actual = subject.exportJob(testJob, VGG);
 
-    assertTrue(actual.contains(getVggTestFile(testJob)));
+    assertEquals(getVggTestFile(testJob), actual);
   }
 
   @Test
@@ -68,7 +68,7 @@ class ExportServiceIT extends FacadeIT {
     Job testJob = TEST_JOB;
     var actual = subject.exportJob(testJob, COCO);
 
-    assertTrue(actual.contains(getCocoTestFile(testJob)));
+    assertEquals(getCocoTestFile(testJob), actual);
   }
 
   @SneakyThrows

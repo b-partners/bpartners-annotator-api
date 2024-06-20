@@ -73,8 +73,8 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       Handler: api.bpartners.annotator.MailboxEventHandler::handleRequest
-      MemorySize: 512
-      Timeout: 600 #note(sqs-visibility)
+      MemorySize: 4096
+      Timeout: 900 #note(sqs-visibility)
       Role: !Sub '{{resolve:ssm:/bpartners-annotator/${Env}/execution/role-arn}}'
 
       Events:
