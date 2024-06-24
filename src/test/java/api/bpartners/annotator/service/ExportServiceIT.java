@@ -58,7 +58,7 @@ class ExportServiceIT extends FacadeIT {
   @Test
   void export_vgg_job_ok() {
     Job testJob = TEST_JOB;
-    var actual = subject.exportJob(testJob, VGG);
+    var actual = subject.exportJob(testJob, List.of(aTestAnnotationBatch()), VGG);
 
     assertEquals(getVggTestFile(testJob), actual);
   }
@@ -66,7 +66,7 @@ class ExportServiceIT extends FacadeIT {
   @Test
   void export_coco_job_ok() {
     Job testJob = TEST_JOB;
-    var actual = subject.exportJob(testJob, COCO);
+    var actual = subject.exportJob(testJob, List.of(aTestAnnotationBatch()), COCO);
 
     assertEquals(getCocoTestFile(testJob), actual);
   }
@@ -92,7 +92,7 @@ class ExportServiceIT extends FacadeIT {
     ExportFormat invalidExportFormat = null;
     assertThrows(
         BadRequestException.class,
-        () -> subject.exportJob(TEST_JOB, invalidExportFormat),
+        () -> subject.exportJob(TEST_JOB, List.of(), invalidExportFormat),
         "unknown export format " + invalidExportFormat);
   }
 }

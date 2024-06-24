@@ -1,5 +1,6 @@
 package api.bpartners.annotator.service.event;
 
+import static api.bpartners.annotator.service.event.ExportTaskCreatedService.JSON_FILE_EXTENSION;
 import static api.bpartners.annotator.service.utils.TemplateResolverUtils.parseTemplateResolver;
 import static java.util.UUID.randomUUID;
 
@@ -50,7 +51,7 @@ public class AnnotationStatisticsComputationTriggeredService
         fileWriter.write(
             statisticsAsBytes,
             Files.createTempDirectory(randomUUID().toString()).toFile(),
-            linkedJob.getName() + "_statistics_" + ".json");
+            linkedJob.getName() + "_statistics_" + JSON_FILE_EXTENSION);
     mailer.accept(
         new Email(
             new InternetAddress(linkedJob.getOwnerEmail()),
