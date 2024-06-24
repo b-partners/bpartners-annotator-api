@@ -24,7 +24,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
 @Entity
-@Table(name = "\"export_job\"")
+@Table(name = "\"export_task\"")
 @AllArgsConstructor
 @Builder
 @NoArgsConstructor
@@ -34,10 +34,10 @@ public class ExportTask {
   private String jobId;
   @CreationTimestamp private Instant submissionInstant;
 
-  @OneToMany(cascade = ALL, mappedBy = "taskId")
+  @OneToMany(cascade = ALL, mappedBy = "exportTaskId")
   private List<AnnotationBatch> annotationBatches;
 
-  @OneToMany(cascade = ALL, mappedBy = "jobId", fetch = EAGER)
+  @OneToMany(cascade = ALL, mappedBy = "taskId", fetch = EAGER)
   @Builder.Default
   private List<ExportTaskStatus> statusHistory = new ArrayList<>();
 

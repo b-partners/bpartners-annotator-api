@@ -12,7 +12,9 @@ import api.bpartners.annotator.repository.model.ExportTask;
 import api.bpartners.annotator.repository.model.ExportTaskStatus;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Service;
 
+@Service
 @AllArgsConstructor
 public class ExportTaskStatusService {
   private final ExportTaskStatusRepository repository;

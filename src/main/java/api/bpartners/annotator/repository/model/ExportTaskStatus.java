@@ -19,7 +19,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.JdbcTypeCode;
 
 @Entity
-@Table(name = "\"job_status\"")
+@Table(name = "\"export_task_status\"")
 @AllArgsConstructor
 @Builder
 @NoArgsConstructor

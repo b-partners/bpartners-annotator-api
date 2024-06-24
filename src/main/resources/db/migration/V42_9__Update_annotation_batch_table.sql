@@ -1,0 +1,1 @@
+ALTER TABLE IF EXISTS "annotation_batch" ADD COLUMN "export_task_id" VARCHAR REFERENCES "export_task"(id);
