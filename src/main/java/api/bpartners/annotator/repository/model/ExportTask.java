@@ -52,15 +52,7 @@ public class ExportTask {
         : statusHistory.stream()
             .sorted(comparing(ExportTaskStatus::getCreationDatetime, naturalOrder()).reversed())
             .toList()
-            .get(0);
-  }
-
-  public void setStatusHistory(List<ExportTaskStatus> statusHistory) {
-    if (statusHistory == null) {
-      this.statusHistory = new ArrayList<>();
-      return;
-    }
-    this.statusHistory = statusHistory;
+            .getFirst();
   }
 
   public boolean isPending() {

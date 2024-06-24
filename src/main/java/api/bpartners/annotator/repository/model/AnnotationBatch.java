@@ -27,6 +27,8 @@ public class AnnotationBatch {
   @JoinColumn(name = "task_id")
   private Task task;
 
+  private String exportTaskId;
+
   private String annotatorId;
 
   @OneToMany(mappedBy = "batchId", cascade = CascadeType.ALL)
