@@ -55,6 +55,16 @@ public class ExportTask {
             .getFirst();
   }
 
+  public void hasNewStatus(ExportTaskStatus status) {
+    var statusHistory = getStatusHistory();
+    if (statusHistory.isEmpty()) {
+      statusHistory.add(status);
+    } else {
+      statusHistory.add(getStatus().to(status));
+    }
+    this.setStatusHistory(statusHistory);
+  }
+
   public boolean isPending() {
     return PENDING.equals(getStatus().getProgression());
   }

@@ -6,8 +6,8 @@ import api.bpartners.annotator.endpoint.event.EventProducer;
 import api.bpartners.annotator.endpoint.event.model.JobExportInitiated;
 import api.bpartners.annotator.endpoint.rest.model.ExportFormat;
 import api.bpartners.annotator.model.exception.BadRequestException;
+import api.bpartners.annotator.repository.model.AnnotationBatch;
 import api.bpartners.annotator.repository.model.Job;
-import api.bpartners.annotator.service.AnnotationBatchService;
 import jakarta.mail.internet.InternetAddress;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -21,7 +21,6 @@ public class ExportService {
   private final EventProducer eventProducer;
   private final VggExportService vggExportService;
   private final CocoExportService cocoExportService;
-  private final AnnotationBatchService annotationBatchService;
 
   @SneakyThrows
   public void initiateJobExport(String jobId, ExportFormat exportFormat, String emailCC) {
@@ -30,8 +29,7 @@ public class ExportService {
   }
 
   @Transactional(propagation = REQUIRED, readOnly = true, rollbackFor = Exception.class)
-  public Object exportJob(Job job, ExportFormat format) {
-    var batches = annotationBatchService.findLatestPerTaskByJobId(job.getId());
+  public Object exportJob(Job job, List<AnnotationBatch> batches, ExportFormat format) {
     return switch (format) {
       case VGG -> vggExportService.export(job, batches);
       case COCO -> cocoExportService.export(job, batches);
