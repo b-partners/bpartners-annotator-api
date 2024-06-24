@@ -1,6 +1,5 @@
 package api.bpartners.annotator.service.event;
 
-import static java.time.Instant.now;
 import static java.util.UUID.randomUUID;
 
 import api.bpartners.annotator.endpoint.event.EventProducer;
@@ -9,7 +8,6 @@ import api.bpartners.annotator.endpoint.event.model.JobExportInitiated;
 import api.bpartners.annotator.endpoint.rest.model.ExportFormat;
 import api.bpartners.annotator.repository.model.AnnotationBatch;
 import api.bpartners.annotator.repository.model.ExportTask;
-import api.bpartners.annotator.repository.model.ExportTaskStatus;
 import api.bpartners.annotator.service.AnnotationBatchService;
 import api.bpartners.annotator.service.ExportTaskService;
 import com.google.common.collect.Lists;
@@ -65,16 +63,8 @@ public class JobExportInitiatedService implements Consumer<JobExportInitiated> {
         .id(taskId)
         .jobId(jobId)
         .annotationBatches(toSave)
-        .statusHistory(List.of(createExportTaskStatus(taskId)))
-        .build();
-  }
-
-  private ExportTaskStatus createExportTaskStatus(String taskId) {
-    return ExportTaskStatus.builder()
-        .taskId(taskId)
-        .creationDatetime(now())
-        .progression(ExportTaskStatus.ProgressionStatus.PENDING)
-        .health(ExportTaskStatus.HealthStatus.UNKNOWN)
+        // no need to set status as default getStatus will return pending unknown on empty
+        .statusHistory(List.of())
         .build();
   }
 }

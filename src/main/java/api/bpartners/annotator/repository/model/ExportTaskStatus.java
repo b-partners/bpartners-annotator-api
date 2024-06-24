@@ -43,6 +43,22 @@ public class ExportTaskStatus implements Serializable {
 
   @CreationTimestamp private Instant creationDatetime;
 
+  public ExportTaskStatus to(ExportTaskStatus newStatus) {
+    if (newStatus.creationDatetime.isBefore(creationDatetime)) {
+      return this;
+    }
+    var errorMessage = String.format("Illegal status transition: old=%s, new=%s", this, newStatus);
+    var oldHealth = health;
+    var newHealth = newStatus.getHealth();
+    oldHealth.to(newHealth, errorMessage);
+
+    var oldProgression = progression;
+    var newProgression = newStatus.getProgression();
+    oldProgression.to(newProgression, newHealth, errorMessage);
+
+    return newStatus;
+  }
+
   public enum ProgressionStatus {
     PENDING,
     PROCESSING,
