@@ -23,10 +23,10 @@ public class JobExportInitiated extends PojaEvent {
   @JsonProperty("job_id")
   private String jobId;
 
-  @JsonProperty("exportFormat")
+  @JsonProperty("export_format")
   private ExportFormat exportFormat;
 
-  @JsonProperty("emailCC")
+  @JsonProperty("email_cc")
   private InternetAddress emailCC;
 
   @Override

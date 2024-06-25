@@ -37,7 +37,7 @@ public class ExportTask {
   @OneToMany(cascade = ALL, mappedBy = "exportTaskId")
   private List<AnnotationBatch> annotationBatches;
 
-  @OneToMany(cascade = ALL, mappedBy = "taskId", fetch = EAGER)
+  @OneToMany(cascade = ALL, mappedBy = "taskId")
   @Builder.Default
   private List<ExportTaskStatus> statusHistory = new ArrayList<>();
 
@@ -65,12 +65,4 @@ public class ExportTask {
     this.setStatusHistory(statusHistory);
   }
 
-  public boolean isPending() {
-    return PENDING.equals(getStatus().getProgression());
-  }
-
-  public boolean isSucceeded() {
-    return FINISHED.equals(getStatus().getProgression())
-        && SUCCEEDED.equals(getStatus().getHealth());
-  }
 }
