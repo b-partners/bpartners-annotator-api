@@ -39,20 +39,21 @@ public class ExportService {
     return switch (format) {
       case VGG -> vggExportService.export(job, batches);
       case COCO -> cocoExportService.export(job, batches);
-      case null -> throw new BadRequestException("unknown export format " + null);
+      default -> throw new BadRequestException("unknown export format " + format);
     };
   }
 
   public Object export(Job job, String taskId, ExportFormat format) {
     var task = exportTaskService.getTaskById(taskId);
+    exportTaskStatusService.process(task);
+    Object exported;
     try {
-      exportTaskStatusService.process(task);
-      var exported = exportJob(job, task.getAnnotationBatches(), format);
-      exportTaskStatusService.succeed(task);
-      return exported;
+      exported = exportJob(job, task.getAnnotationBatches(), format);
     } catch (RuntimeException e) {
       exportTaskStatusService.fail(task);
       throw new ApiException(SERVER_EXCEPTION, e.getMessage());
     }
+    exportTaskStatusService.succeed(task);
+    return exported;
   }
 }

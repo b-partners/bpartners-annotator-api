@@ -1,10 +1,10 @@
 package api.bpartners.annotator.service;
 
-import static api.bpartners.annotator.repository.model.ExportTaskStatus.HealthStatus.FAILED;
-import static api.bpartners.annotator.repository.model.ExportTaskStatus.HealthStatus.SUCCEEDED;
-import static api.bpartners.annotator.repository.model.ExportTaskStatus.HealthStatus.UNKNOWN;
-import static api.bpartners.annotator.repository.model.ExportTaskStatus.ProgressionStatus.FINISHED;
-import static api.bpartners.annotator.repository.model.ExportTaskStatus.ProgressionStatus.PROCESSING;
+import static api.bpartners.annotator.model.Status.HealthStatus.FAILED;
+import static api.bpartners.annotator.model.Status.HealthStatus.SUCCEEDED;
+import static api.bpartners.annotator.model.Status.HealthStatus.UNKNOWN;
+import static api.bpartners.annotator.model.Status.ProgressionStatus.FINISHED;
+import static api.bpartners.annotator.model.Status.ProgressionStatus.PROCESSING;
 import static java.time.Instant.now;
 
 import api.bpartners.annotator.repository.jpa.ExportTaskStatusRepository;

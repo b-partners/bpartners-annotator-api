@@ -1,12 +1,9 @@
 package api.bpartners.annotator.repository.model;
 
-import static api.bpartners.annotator.repository.model.ExportTaskStatus.HealthStatus.UNKNOWN;
-import static api.bpartners.annotator.repository.model.ExportTaskStatus.ProgressionStatus.PENDING;
 import static jakarta.persistence.CascadeType.ALL;
-import static java.time.Instant.now;
-import static java.util.Comparator.comparing;
-import static java.util.Comparator.naturalOrder;
 
+import api.bpartners.annotator.model.Status;
+import api.bpartners.annotator.model.Statusable;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
@@ -26,7 +23,7 @@ import org.hibernate.annotations.CreationTimestamp;
 @Builder
 @NoArgsConstructor
 @Data
-public class ExportTask {
+public class ExportTask implements Statusable<ExportTaskStatus> {
   @Id private String id;
   private String jobId;
   @CreationTimestamp private Instant submissionInstant;
@@ -38,27 +35,14 @@ public class ExportTask {
   @Builder.Default
   private List<ExportTaskStatus> statusHistory = new ArrayList<>();
 
-  public ExportTaskStatus getStatus() {
-    return statusHistory.isEmpty()
-        ? ExportTaskStatus.builder()
-            .taskId(this.jobId)
-            .progression(PENDING)
-            .health(UNKNOWN)
-            .creationDatetime(now())
-            .build()
-        : statusHistory.stream()
-            .sorted(comparing(ExportTaskStatus::getCreationDatetime, naturalOrder()).reversed())
-            .toList()
-            .getFirst();
-  }
-
-  public void hasNewStatus(ExportTaskStatus status) {
-    var statusHistory = getStatusHistory();
-    if (statusHistory.isEmpty()) {
-      statusHistory.add(status);
-    } else {
-      statusHistory.add(getStatus().to(status));
-    }
-    this.setStatusHistory(statusHistory);
+  @Override
+  public ExportTaskStatus from(Status status) {
+    return ExportTaskStatus.builder()
+        .id(status.getId())
+        .taskId(id)
+        .health(status.getHealth())
+        .progression(status.getProgression())
+        .creationDatetime(status.getCreationDatetime())
+        .build();
   }
 }

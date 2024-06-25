@@ -29,7 +29,6 @@ public class AnnotationStatisticsComputationTriggeredService
   private final AnnotationBatchService annotationBatchService;
   private final JobService jobService;
   private final Mailer mailer;
-  private final ByteWriter byteWriter;
   private final ByteWriter writer;
 
   @SneakyThrows
@@ -45,7 +44,7 @@ public class AnnotationStatisticsComputationTriggeredService
 
     List<AnnotationNumberPerLabel> latestAnnotationStatistics =
         annotationBatchService.getLatestAnnotationStatistics(linkedJob);
-    var statisticsAsBytes = byteWriter.apply(latestAnnotationStatistics);
+    var statisticsAsBytes = writer.apply(latestAnnotationStatistics);
     var inFile =
         writer.writeAsFile(
             statisticsAsBytes,

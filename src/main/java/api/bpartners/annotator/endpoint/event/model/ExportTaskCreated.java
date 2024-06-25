@@ -26,10 +26,10 @@ public class ExportTaskCreated extends PojaEvent {
   @JsonProperty("task_id")
   private String taskId;
 
-  @JsonProperty("exportFormat")
+  @JsonProperty("export_format")
   private ExportFormat exportFormat;
 
-  @JsonProperty("emailCC")
+  @JsonProperty("email_cc")
   private InternetAddress emailCC;
 
   @Override
