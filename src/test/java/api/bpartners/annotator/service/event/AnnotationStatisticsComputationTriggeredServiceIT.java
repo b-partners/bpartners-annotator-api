@@ -11,12 +11,12 @@ import static org.mockito.Mockito.when;
 
 import api.bpartners.annotator.conf.FacadeIT;
 import api.bpartners.annotator.endpoint.event.model.AnnotationStatisticsComputationTriggered;
-import api.bpartners.annotator.file.FileWriter;
 import api.bpartners.annotator.mail.Email;
 import api.bpartners.annotator.mail.Mailer;
 import api.bpartners.annotator.repository.model.Job;
 import api.bpartners.annotator.service.AnnotationBatchService;
 import api.bpartners.annotator.service.JobService;
+import api.bpartners.annotator.service.utils.ByteWriter;
 import jakarta.mail.internet.InternetAddress;
 import java.io.File;
 import java.util.List;
@@ -33,7 +33,7 @@ class AnnotationStatisticsComputationTriggeredServiceIT extends FacadeIT {
   private static final Job TEST_JOB = aTestJob(MOCK_JOB_ID);
   @MockBean private Mailer mailerMock;
   @MockBean private AnnotationBatchService annotationBatchServiceMock;
-  @MockBean private FileWriter fileWriter;
+  @MockBean private ByteWriter writer;
   @MockBean private JobService jobServiceMock;
 
   @BeforeEach
@@ -42,8 +42,8 @@ class AnnotationStatisticsComputationTriggeredServiceIT extends FacadeIT {
     when(jobServiceMock.getById(MOCK_JOB_ID)).thenReturn(TEST_JOB);
     when(annotationBatchServiceMock.findLatestPerTaskByJobId(any(String.class)))
         .thenReturn(List.of(aTestAnnotationBatch()));
-    when(fileWriter.write(any(), any(), any())).thenReturn(mockFile);
-    when(fileWriter.apply(any(), any())).thenReturn(mockFile);
+    when(writer.writeAsFile(any(), any(), any())).thenReturn(mockFile);
+    when(writer.writeAsFile(any(), any())).thenReturn(mockFile);
   }
 
   private @NotNull File getMockFile() {

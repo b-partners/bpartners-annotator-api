@@ -6,7 +6,6 @@ import static java.util.UUID.randomUUID;
 
 import api.bpartners.annotator.endpoint.event.model.AnnotationStatisticsComputationTriggered;
 import api.bpartners.annotator.endpoint.rest.model.AnnotationNumberPerLabel;
-import api.bpartners.annotator.file.FileWriter;
 import api.bpartners.annotator.mail.Email;
 import api.bpartners.annotator.mail.Mailer;
 import api.bpartners.annotator.repository.model.Job;
@@ -31,7 +30,7 @@ public class AnnotationStatisticsComputationTriggeredService
   private final JobService jobService;
   private final Mailer mailer;
   private final ByteWriter byteWriter;
-  private final FileWriter fileWriter;
+  private final ByteWriter writer;
 
   @SneakyThrows
   @Override
@@ -48,7 +47,7 @@ public class AnnotationStatisticsComputationTriggeredService
         annotationBatchService.getLatestAnnotationStatistics(linkedJob);
     var statisticsAsBytes = byteWriter.apply(latestAnnotationStatistics);
     var inFile =
-        fileWriter.write(
+        writer.writeAsFile(
             statisticsAsBytes,
             Files.createTempDirectory(randomUUID().toString()).toFile(),
             linkedJob.getName() + "_statistics_" + JSON_FILE_EXTENSION);

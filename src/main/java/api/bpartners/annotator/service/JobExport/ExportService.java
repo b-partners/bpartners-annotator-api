@@ -1,13 +1,17 @@
 package api.bpartners.annotator.service.JobExport;
 
+import static api.bpartners.annotator.model.exception.ApiException.ExceptionType.SERVER_EXCEPTION;
 import static org.springframework.transaction.annotation.Propagation.REQUIRED;
 
 import api.bpartners.annotator.endpoint.event.EventProducer;
 import api.bpartners.annotator.endpoint.event.model.JobExportInitiated;
 import api.bpartners.annotator.endpoint.rest.model.ExportFormat;
+import api.bpartners.annotator.model.exception.ApiException;
 import api.bpartners.annotator.model.exception.BadRequestException;
 import api.bpartners.annotator.repository.model.AnnotationBatch;
 import api.bpartners.annotator.repository.model.Job;
+import api.bpartners.annotator.service.ExportTaskService;
+import api.bpartners.annotator.service.ExportTaskStatusService;
 import jakarta.mail.internet.InternetAddress;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -21,6 +25,8 @@ public class ExportService {
   private final EventProducer eventProducer;
   private final VggExportService vggExportService;
   private final CocoExportService cocoExportService;
+  private final ExportTaskService exportTaskService;
+  private final ExportTaskStatusService exportTaskStatusService;
 
   @SneakyThrows
   public void initiateJobExport(String jobId, ExportFormat exportFormat, String emailCC) {
@@ -29,11 +35,24 @@ public class ExportService {
   }
 
   @Transactional(propagation = REQUIRED, readOnly = true, rollbackFor = Exception.class)
-  public Object exportJob(Job job, List<AnnotationBatch> batches, ExportFormat format) {
+  private Object exportJob(Job job, List<AnnotationBatch> batches, ExportFormat format) {
     return switch (format) {
       case VGG -> vggExportService.export(job, batches);
       case COCO -> cocoExportService.export(job, batches);
-      case null -> throw new BadRequestException("unknown export format " + format);
+      case null -> throw new BadRequestException("unknown export format " + null);
     };
+  }
+
+  public Object export(Job job, String taskId, ExportFormat format) {
+    var task = exportTaskService.getTaskById(taskId);
+    try {
+      exportTaskStatusService.process(task);
+      var exported = exportJob(job, task.getAnnotationBatches(), format);
+      exportTaskStatusService.succeed(task);
+      return exported;
+    } catch (RuntimeException e) {
+      exportTaskStatusService.fail(task);
+      throw new ApiException(SERVER_EXCEPTION, e.getMessage());
+    }
   }
 }

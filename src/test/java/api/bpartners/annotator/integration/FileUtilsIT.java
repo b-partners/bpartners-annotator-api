@@ -6,7 +6,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import api.bpartners.annotator.conf.FacadeIT;
 import api.bpartners.annotator.file.ExtensionGuesser;
-import api.bpartners.annotator.file.FileWriter;
 import api.bpartners.annotator.service.utils.ByteWriter;
 import java.io.File;
 import java.io.IOException;
@@ -16,7 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 class FileUtilsIT extends FacadeIT {
   private static final String TXT_EXTENSION = ".txt";
-  @Autowired FileWriter fileWriter;
+  @Autowired ByteWriter writer;
   @Autowired ExtensionGuesser extensionGuesser;
   @Autowired ByteWriter byteWriter;
 
@@ -28,8 +27,8 @@ class FileUtilsIT extends FacadeIT {
     String filename = randomUUID() + ".txt";
     File directory = Files.createTempDirectory(directoryName).toFile();
 
-    File newFile = fileWriter.write(expectedContentAsBytes, directory, filename);
-    File newFile2 = fileWriter.apply(expectedContentAsBytes, directory);
+    File newFile = writer.writeAsFile(expectedContentAsBytes, directory, filename);
+    File newFile2 = writer.writeAsFile(expectedContentAsBytes, directory);
     var newFileContent = Files.readAllBytes(newFile.toPath());
     var newFile2Content = Files.readAllBytes(newFile2.toPath());
     var newFileExtension = extensionGuesser.apply(newFileContent);

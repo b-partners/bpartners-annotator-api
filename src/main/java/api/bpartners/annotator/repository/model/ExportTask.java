@@ -1,11 +1,8 @@
 package api.bpartners.annotator.repository.model;
 
-import static api.bpartners.annotator.repository.model.ExportTaskStatus.HealthStatus.SUCCEEDED;
 import static api.bpartners.annotator.repository.model.ExportTaskStatus.HealthStatus.UNKNOWN;
-import static api.bpartners.annotator.repository.model.ExportTaskStatus.ProgressionStatus.FINISHED;
 import static api.bpartners.annotator.repository.model.ExportTaskStatus.ProgressionStatus.PENDING;
 import static jakarta.persistence.CascadeType.ALL;
-import static jakarta.persistence.FetchType.EAGER;
 import static java.time.Instant.now;
 import static java.util.Comparator.comparing;
 import static java.util.Comparator.naturalOrder;
@@ -64,5 +61,4 @@ public class ExportTask {
     }
     this.setStatusHistory(statusHistory);
   }
-
 }

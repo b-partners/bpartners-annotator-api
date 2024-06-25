@@ -17,7 +17,7 @@ $$
 $$;
 
 create table if not exists "export_task_status" (
-    id varchar primary key,
+    id varchar primary key default uuid_generate_v4(),
     task_id varchar references "export_task"(id),
     message varchar,
     creation_datetime timestamp with time zone,

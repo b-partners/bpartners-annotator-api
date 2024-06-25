@@ -15,7 +15,6 @@ import static org.mockito.Mockito.when;
 import api.bpartners.annotator.conf.FacadeIT;
 import api.bpartners.annotator.endpoint.event.model.ExportTaskCreated;
 import api.bpartners.annotator.endpoint.rest.model.ExportFormat;
-import api.bpartners.annotator.file.FileWriter;
 import api.bpartners.annotator.mail.Email;
 import api.bpartners.annotator.mail.Mailer;
 import api.bpartners.annotator.repository.model.ExportTask;
@@ -50,14 +49,13 @@ class ExportTaskCreatedServiceIT extends FacadeIT {
   @MockBean private ExportTaskStatusService exportTaskStatusService;
   @MockBean private JobService jobService;
   @MockBean private Mailer mailerMock;
-  @MockBean private FileWriter fileWriter;
-  @MockBean private ByteWriter byteWriter;
+  @MockBean private ByteWriter writer;
 
   @BeforeEach
   void setup() {
     File mockFile = getMockFile();
-    when(fileWriter.write(any(), any(), any())).thenReturn(mockFile);
-    when(fileWriter.apply(any(), any())).thenReturn(mockFile);
+    when(writer.writeAsFile(any(), any(), any())).thenReturn(mockFile);
+    when(writer.writeAsFile(any(), any())).thenReturn(mockFile);
     when(jobService.getById(COCO_JOB_ID)).thenReturn(aTestJob(COCO_JOB_ID));
     when(jobService.getById(VGG_JOB_ID)).thenReturn(aTestJob(VGG_JOB_ID));
     when(exportTaskServiceMock.getTaskById(any())).thenReturn(exportTask());

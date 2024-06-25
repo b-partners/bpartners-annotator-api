@@ -5,8 +5,11 @@ import static api.bpartners.annotator.endpoint.rest.model.ExportFormat.VGG;
 import static api.bpartners.annotator.integration.conf.utils.TestMocks.aTestAnnotationBatch;
 import static api.bpartners.annotator.integration.conf.utils.TestMocks.aTestJob;
 import static api.bpartners.annotator.integration.conf.utils.TestUtils.getInternetAddress;
+import static java.time.Instant.now;
+import static java.util.UUID.randomUUID;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -14,11 +17,13 @@ import api.bpartners.annotator.conf.FacadeIT;
 import api.bpartners.annotator.endpoint.event.EventProducer;
 import api.bpartners.annotator.endpoint.event.model.JobExportInitiated;
 import api.bpartners.annotator.endpoint.rest.model.ExportFormat;
-import api.bpartners.annotator.model.exception.BadRequestException;
+import api.bpartners.annotator.model.exception.ApiException;
+import api.bpartners.annotator.repository.model.ExportTask;
 import api.bpartners.annotator.repository.model.Job;
 import api.bpartners.annotator.service.JobExport.ExportService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.BeforeEach;
@@ -32,6 +37,7 @@ class ExportServiceIT extends FacadeIT {
   @MockBean EventProducer eventProducerMock;
   @MockBean JobService jobServiceMock;
   @MockBean AnnotationBatchService annotationBatchServiceMock;
+  @MockBean ExportTaskService exportTaskServiceMock;
   @Autowired ObjectMapper objectMapper;
   @Autowired private ExportService subject;
 
@@ -40,6 +46,17 @@ class ExportServiceIT extends FacadeIT {
     when(jobServiceMock.getById(MOCK_JOB_ID)).thenReturn(TEST_JOB);
     when(annotationBatchServiceMock.findLatestPerTaskByJobId(MOCK_JOB_ID))
         .thenReturn(List.of(aTestAnnotationBatch()));
+    when(exportTaskServiceMock.getTaskById(any())).thenReturn(exportTask());
+  }
+
+  ExportTask exportTask() {
+    return ExportTask.builder()
+        .id(randomUUID().toString())
+        .jobId(MOCK_JOB_ID)
+        .submissionInstant(now())
+        .statusHistory(new ArrayList<>())
+        .annotationBatches(List.of(aTestAnnotationBatch()))
+        .build();
   }
 
   @Test
@@ -58,7 +75,7 @@ class ExportServiceIT extends FacadeIT {
   @Test
   void export_vgg_job_ok() {
     Job testJob = TEST_JOB;
-    var actual = subject.exportJob(testJob, List.of(aTestAnnotationBatch()), VGG);
+    var actual = subject.export(testJob, exportTask().getId(), VGG);
 
     assertEquals(getVggTestFile(testJob), actual);
   }
@@ -66,7 +83,7 @@ class ExportServiceIT extends FacadeIT {
   @Test
   void export_coco_job_ok() {
     Job testJob = TEST_JOB;
-    var actual = subject.exportJob(testJob, List.of(aTestAnnotationBatch()), COCO);
+    var actual = subject.export(testJob, exportTask().getJobId(), COCO);
 
     assertEquals(getCocoTestFile(testJob), actual);
   }
@@ -91,8 +108,8 @@ class ExportServiceIT extends FacadeIT {
   void export_job_ko() {
     ExportFormat invalidExportFormat = null;
     assertThrows(
-        BadRequestException.class,
-        () -> subject.exportJob(TEST_JOB, List.of(), invalidExportFormat),
+        ApiException.class,
+        () -> subject.export(TEST_JOB, exportTask().getId(), invalidExportFormat),
         "unknown export format " + invalidExportFormat);
   }
 }
