@@ -23,14 +23,16 @@ Globals:
     Environment:
       Variables:
         ENV: !Ref Env
-        AWS_SQS_QUEUE_URL: !Sub '{{resolve:ssm:/bpartners-annotator/${Env}/sqs/mailbox-queue-url}}'
-        AWS_EVENTBRIDGE_BUS: !Sub '{{resolve:ssm:/bpartners-annotator/${Env}/eventbridge/bus-name}}'
+        AWS_EVENT_STACK_1_SQS_QUEUE_URL: !Sub '{{resolve:ssm:/bpartners-annotator/${Env}/1/sqs/mailbox-queue-url}}'
+        AWS_EVENT_STACK_1_EVENTBRIDGE_BUS: !Sub '{{resolve:ssm:/bpartners-annotator/${Env}/1/eventbridge/bus-name}}'
+        AWS_EVENT_STACK_2_SQS_QUEUE_URL: !Sub '{{resolve:ssm:/bpartners-annotator/${Env}/2/sqs/mailbox-queue-url}}'
+        AWS_EVENT_STACK_2_EVENTBRIDGE_BUS: !Sub '{{resolve:ssm:/bpartners-annotator/${Env}/2/eventbridge/bus-name}}'
         AWS_S3_BUCKET: !Sub '{{resolve:ssm:/bpartners-annotator/${Env}/s3/bucket-name}}'
         AWS_SES_SOURCE: contact@bpartners.app
-
+        
         SPRING_DATASOURCE_URL: !Sub '{{resolve:ssm:/bpartners-annotator/${Env}/db/url}}'
-        SPRING_DATASOURCE_USERNAME: !Sub '{{resolve:ssm:/bpartners-annotator/${Env}/db/username}}'
-        SPRING_DATASOURCE_PASSWORD: !Sub '{{resolve:ssm:/bpartners-annotator/${Env}/db/password}}'
+        SPRING_DATASOURCE_USERNAME: !Sub '{{resolve:ssm:/bpartners-annotator/${Env}/db/user/username}}'
+        SPRING_DATASOURCE_PASSWORD: !Sub '{{resolve:ssm:/bpartners-annotator/${Env}/db/user/password}}'
         ADMIN_API_KEY: !Sub '{{resolve:ssm:/bpartners-annotator/${Env}/admin/api-key}}'
         AWS_COGNITO_USERPOOL_ID: !Sub '{{resolve:ssm:/bpartners-annotator/${Env}/cognito/userpool-id}}'
         AWS_COGNITO_USERPOOL_DOMAIN: !Sub '{{resolve:ssm:/bpartners-annotator/${Env}/cognito/userpool-domain}}'
@@ -38,7 +40,7 @@ Globals:
         AWS_COGNITO_USERPOOL_CLIENTSECRET: !Sub '{{resolve:ssm:/bpartners-annotator/${Env}/cognito/userpool-client-secret}}'
         GEOJOBS_USER_INFO: !Sub '{{resolve:ssm:/bpartners-annotator/${Env}/geojobs/userinfo}}'
         TASKS_INSERT_LIMIT_MAX: !Sub '{{resolve:ssm:/bpartners-annotator/${Env}/max-tasks-insert-nb}}'
-
+        
 
 Parameters:
   Env:
@@ -57,9 +59,9 @@ Resources:
     Properties:
       Handler: api.bpartners.annotator.ApiEventHandler::handleRequest
       MemorySize: 512
-      Timeout: 30
+      Timeout: 300
       Role: !Sub '{{resolve:ssm:/bpartners-annotator/${Env}/execution/role-arn}}'
-
+      
       Events:
         ApiCall:
           Type: Api
@@ -69,19 +71,34 @@ Resources:
             RestApiId:
               Ref: FrontalServerlessRestApi
 
-  WorkerFunction:
+  WorkerFunction1:
     Type: AWS::Serverless::Function
     Properties:
       Handler: api.bpartners.annotator.MailboxEventHandler::handleRequest
       MemorySize: 4096
-      Timeout: 600 #note(sqs-visibility)
+      Timeout: 900 #note(sqs-visibility)
       Role: !Sub '{{resolve:ssm:/bpartners-annotator/${Env}/execution/role-arn}}'
-
+      
       Events:
         AllEvents:
           Type: SQS
           Properties:
-            Queue: !Sub '{{resolve:ssm:/bpartners-annotator/${Env}/sqs/mailbox-queue-arn}}'
+            Queue: !Sub '{{resolve:ssm:/bpartners-annotator/${Env}/1/sqs/mailbox-queue-arn}}'
+            BatchSize: 1
+
+  WorkerFunction2:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: api.bpartners.annotator.MailboxEventHandler::handleRequest
+      MemorySize: 4096
+      Timeout: 900 #note(sqs-visibility)
+      Role: !Sub '{{resolve:ssm:/bpartners-annotator/${Env}/execution/role-arn}}'
+      
+      Events:
+        AllEvents:
+          Type: SQS
+          Properties:
+            Queue: !Sub '{{resolve:ssm:/bpartners-annotator/${Env}/2/sqs/mailbox-queue-arn}}'
             BatchSize: 1
 
   ApplicationResourceGroup:

@@ -1,10 +1,14 @@
 package api.bpartners.annotator.endpoint.event.model;
 
+import static api.bpartners.annotator.endpoint.event.EventStack.EVENT_STACK_1;
+
 import api.bpartners.annotator.PojaGenerated;
+import api.bpartners.annotator.endpoint.event.EventStack;
 import java.io.Serializable;
 import java.time.Duration;
 
 @PojaGenerated
+@SuppressWarnings("all")
 public abstract class PojaEvent implements Serializable {
   public abstract Duration maxConsumerDuration();
 
@@ -20,5 +24,9 @@ public abstract class PojaEvent implements Serializable {
         eventHandlerInitMaxDuration.toSeconds()
             + maxConsumerDuration().toSeconds()
             + randomConsumerBackoffBetweenRetries().toSeconds());
+  }
+
+  public EventStack getEventStack() {
+    return EVENT_STACK_1;
   }
 }

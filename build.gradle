@@ -184,8 +184,6 @@ dependencies {
 
     implementation 'org.apache.tika:tika-core:2.9.1'
 
-    implementation 'com.google.guava:guava:33.2.0-jre'
-
     implementation 'org.reflections:reflections:0.10.2'
 
     compileOnly 'org.projectlombok:lombok'
@@ -209,6 +207,6 @@ implementation 'org.springframework.boot:spring-boot-starter-security'
 implementation 'com.nimbusds:nimbus-jose-jwt:9.37'
 implementation 'software.amazon.awssdk:cognitoidentityprovider:2.17.109'
 implementation 'io.hypersistence:hypersistence-utils-hibernate-63:3.7.3'
-
+implementation 'com.google.guava:guava:33.2.0-jre'
 
 }
