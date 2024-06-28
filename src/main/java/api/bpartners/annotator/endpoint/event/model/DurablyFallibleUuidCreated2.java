@@ -1,8 +1,10 @@
 package api.bpartners.annotator.endpoint.event.model;
 
+import static api.bpartners.annotator.endpoint.event.EventStack.EVENT_STACK_2;
 import static java.lang.Math.random;
 
 import api.bpartners.annotator.PojaGenerated;
+import api.bpartners.annotator.endpoint.event.EventStack;
 import java.time.Duration;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -19,7 +21,7 @@ import lombok.ToString;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @ToString
-public class DurablyFallibleUuidCreated extends PojaEvent {
+public class DurablyFallibleUuidCreated2 extends PojaEvent {
   private UuidCreated uuidCreated;
   private int waitDurationBeforeConsumingInSeconds;
   private double failureRate;
@@ -37,5 +39,10 @@ public class DurablyFallibleUuidCreated extends PojaEvent {
   @Override
   public Duration maxConsumerBackoffBetweenRetries() {
     return uuidCreated.maxConsumerBackoffBetweenRetries();
+  }
+
+  @Override
+  public EventStack getEventStack() {
+    return EVENT_STACK_2;
   }
 }
