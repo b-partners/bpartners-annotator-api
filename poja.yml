@@ -5,7 +5,7 @@ aurora_min_capacity: 2
 aurora_scale_point: 60
 aurora_sleep: 900
 aws_account_id: '205205101409'
-cli_version: 13.8.1
+cli_version: 14.0.0
 codeartifact_domain_name: npm-bpartners-imagery-app
 codeartifact_repository_name: annotator-imagery-store
 custom_java_deps: poja-custom-java-deps.txt
