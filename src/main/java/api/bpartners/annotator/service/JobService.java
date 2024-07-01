@@ -151,8 +151,8 @@ public class JobService {
         case PENDING, TO_REVIEW, TO_CORRECT, COMPLETED -> throw exception;
       };
       case STARTED -> switch (next) {
-        case STARTED, TO_REVIEW, TO_CORRECT, FAILED -> next;
-        case PENDING, READY, COMPLETED -> throw exception;
+        case STARTED, TO_REVIEW, TO_CORRECT, FAILED, COMPLETED -> next;
+        case PENDING, READY -> throw exception;
       };
       case TO_CORRECT -> switch (next) {
         case TO_CORRECT, STARTED, TO_REVIEW, COMPLETED, FAILED -> next;
