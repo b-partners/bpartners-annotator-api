@@ -284,21 +284,23 @@ class JobIT extends FacadeIT {
     String teamId = team1().getId();
     CrupdateJob crupdateJobFromJob = from(actual);
     api.saveJob(jobId, crupdateJobFromJob.status(READY).teamId(teamId));
+
+    assertTrue(admin_can_add_annotated_tasks(jobId, labels));
+
     api.saveJob(jobId, crupdateJobFromJob.status(STARTED).teamId(teamId));
 
     assertEquals(expected, actual);
-    assertTrue(annotator_can_get_job(teamId, jobId, expected));
-    assertTrue(admin_can_add_annotated_tasks(jobId, labels));
-    assertTrue(
-        annotator_can_get_job(
-            teamId,
-            jobId,
-            expected.taskStatistics(
-                new TaskStatistics()
-                    .remainingTasks(2L)
-                    .totalTasks(2L)
-                    .remainingTasksForUserId(2L)
-                    .completedTasksByUserId(0L))));
+
+    var expectedWithStat =
+        expected.taskStatistics(
+            new TaskStatistics()
+                .remainingTasks(2L)
+                .totalTasks(2L)
+                .remainingTasksForUserId(2L)
+                .completedTasksByUserId(0L));
+
+    assertTrue(annotator_can_get_job(teamId, jobId, expectedWithStat));
+    assertTrue(annotator_can_get_job(teamId, jobId, expectedWithStat));
   }
 
   private boolean annotator_can_get_job(String teamId, String jobId, Job expected)

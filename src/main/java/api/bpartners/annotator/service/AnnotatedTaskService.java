@@ -1,6 +1,7 @@
 package api.bpartners.annotator.service;
 
 import static api.bpartners.annotator.endpoint.rest.model.JobType.REVIEWING;
+import static api.bpartners.annotator.repository.model.enums.JobStatus.STARTED;
 import static api.bpartners.annotator.repository.model.enums.TaskStatus.TO_CORRECT;
 import static java.util.Objects.requireNonNull;
 
@@ -46,15 +47,27 @@ public class AnnotatedTaskService implements BiFunction<CreateAnnotatedTask, Job
   public List<Task> saveAll(String jobId, List<CreateAnnotatedTask> annotatedTasks) {
     Job linkedJob = jobService.getById(jobId);
     createAnnotatedTasksValidator.accept(annotatedTasks, jobId);
-    if (!REVIEWING.equals(linkedJob.getType())) {
-      throw new BadRequestException(
-          "cannot add tasks to Job.Id = "
-              + linkedJob.getId()
-              + ", only type "
-              + REVIEWING
-              + " supports this action");
-    }
+    checkCurrentJobState(linkedJob);
     return annotatedTasks.stream().map(annotatedTask -> apply(annotatedTask, linkedJob)).toList();
+  }
+
+  public void checkCurrentJobState(Job job) {
+    var builder = new StringBuilder();
+    if (!REVIEWING.equals(job.getType())) {
+      builder
+          .append("cannot add tasks to Job.Id = ")
+          .append(job.getId())
+          .append(", only type ")
+          .append(REVIEWING)
+          .append(" supports this action");
+    }
+    if (job.getStatus().equals(STARTED)) {
+      builder.append("cannot add tasks to ").append(job.getStatus()).append(" Job.");
+    }
+
+    if (!builder.isEmpty()) {
+      throw new BadRequestException(builder.toString());
+    }
   }
 
   private Task saveAndAnnotateTask(CreateAnnotatedTask annotatedTask, Job linkedJob) {
