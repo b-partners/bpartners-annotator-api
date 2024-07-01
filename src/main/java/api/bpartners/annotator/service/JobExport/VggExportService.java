@@ -30,8 +30,12 @@ public class VggExportService {
     // <-- UNUSED_DATA put at default value
     vggAnnotation.setFileAttributes(
         Map.of(
-            "creation_datetime", String.valueOf(batch.getCreationTimestamp()),
-            "batch_id", batch.getId()));
+            "creation_datetime",
+            String.valueOf(batch.getCreationTimestamp()),
+            "batch_id",
+            batch.getId(),
+            "task_id",
+            batch.getTask().getId()));
     vggAnnotation.setSize(null);
     vggAnnotation.setBase64ImageData(null);
     // UNUSED_DATA -->
