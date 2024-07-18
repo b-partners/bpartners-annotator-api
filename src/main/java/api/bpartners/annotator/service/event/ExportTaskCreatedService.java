@@ -13,7 +13,10 @@ import api.bpartners.annotator.service.utils.ByteWriter;
 import jakarta.mail.internet.InternetAddress;
 import java.io.File;
 import java.nio.file.Files;
+import java.nio.file.attribute.PosixFilePermission;
+import java.nio.file.attribute.PosixFilePermissions;
 import java.util.List;
+import java.util.Set;
 import java.util.function.Consumer;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
@@ -60,7 +63,10 @@ public class ExportTaskCreatedService implements Consumer<ExportTaskCreated> {
 
   @SneakyThrows
   private static File createTempDirectory() {
-    return Files.createTempDirectory(randomUUID().toString()).toFile();
+    Set<PosixFilePermission> perms = PosixFilePermissions.fromString("rwx------");
+    return Files.createTempDirectory(
+            randomUUID().toString(), PosixFilePermissions.asFileAttribute(perms))
+        .toFile();
   }
 
   private static Context configureContext(Job job) {
