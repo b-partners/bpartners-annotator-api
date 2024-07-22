@@ -86,7 +86,7 @@ public class SecurityConf {
                         new AntPathRequestMatcher("/health/event/uuids", POST.name())))),
             AnonymousAuthenticationFilter.class)
         .authorizeHttpRequests(
-            (authorize) ->
+            authorize ->
                 authorize
                     .requestMatchers(OPTIONS, "/**")
                     .permitAll()
