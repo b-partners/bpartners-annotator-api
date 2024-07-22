@@ -2,7 +2,7 @@ package api.bpartners.annotator.endpoint.rest.security;
 
 import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jose.jwk.source.JWKSource;
-import com.nimbusds.jose.jwk.source.RemoteJWKSet;
+import com.nimbusds.jose.jwk.source.JWKSourceBuilder;
 import com.nimbusds.jose.proc.JWSKeySelector;
 import com.nimbusds.jose.proc.JWSVerificationKeySelector;
 import com.nimbusds.jose.proc.SecurityContext;
@@ -30,7 +30,8 @@ public class JWTConf {
 
   public static ConfigurableJWTProcessor<SecurityContext> getContextConfigurableJWTProcessor(
       ResourceRetriever resourceRetriever, URL jwkUrl, JWSAlgorithm rs256) {
-    JWKSource<SecurityContext> keySource = new RemoteJWKSet<>(jwkUrl, resourceRetriever);
+    JWKSource<SecurityContext> keySource =
+        JWKSourceBuilder.create(jwkUrl, resourceRetriever).build();
     ConfigurableJWTProcessor<SecurityContext> jwtProcessor = new DefaultJWTProcessor<>();
     JWSKeySelector<SecurityContext> keySelector =
         new JWSVerificationKeySelector<>(rs256, keySource);
