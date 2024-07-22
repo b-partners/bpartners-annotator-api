@@ -29,6 +29,7 @@ public class CognitoComponent {
   public static final String BASIC_AUTH_PREFIX = "Basic ";
   private final CognitoConf cognitoConf;
   private final CognitoIdentityProviderClient cognitoClient;
+  private static final String COGNITO_RESPONSE_MESSAGE = "Cognito response: ";
 
   public CognitoComponent(CognitoConf cognitoConf, CognitoIdentityProviderClient cognitoClient) {
     this.cognitoConf = cognitoConf;
@@ -98,7 +99,7 @@ public class CognitoComponent {
     if (createResponse == null
         || createResponse.user() == null
         || createResponse.user().username().isBlank()) {
-      throw new ApiException(SERVER_EXCEPTION, "Cognito response: " + createResponse);
+      throw new ApiException(SERVER_EXCEPTION, COGNITO_RESPONSE_MESSAGE + createResponse);
     }
     String createdUser = createResponse.user().username();
     log.info("User with name {} is successfully created.", createdUser);
@@ -116,7 +117,7 @@ public class CognitoComponent {
 
     AdminListGroupsForUserResponse response = cognitoClient.adminListGroupsForUser(request);
     if (response == null || response.groups() == null) {
-      throw new ApiException(SERVER_EXCEPTION, "Cognito response: " + response);
+      throw new ApiException(SERVER_EXCEPTION, COGNITO_RESPONSE_MESSAGE + response);
     }
     // Get only the first because for us one user can only have one group
     if (response.groups().isEmpty()) {
@@ -140,7 +141,7 @@ public class CognitoComponent {
           "User with username {} has successfully been removed from group {}", username, groupName);
     } else {
       log.error("Removing user {} from group {} have failed.", username, groupName);
-      throw new ApiException(SERVER_EXCEPTION, "Cognito response: " + response);
+      throw new ApiException(SERVER_EXCEPTION, COGNITO_RESPONSE_MESSAGE + response);
     }
   }
 
