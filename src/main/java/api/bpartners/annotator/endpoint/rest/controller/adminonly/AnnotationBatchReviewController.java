@@ -1,4 +1,4 @@
-package api.bpartners.annotator.endpoint.rest.controller.adminOnly;
+package api.bpartners.annotator.endpoint.rest.controller.adminonly;
 
 import api.bpartners.annotator.endpoint.rest.controller.mapper.AnnotationBatchReviewMapper;
 import api.bpartners.annotator.endpoint.rest.model.AnnotationBatchReview;

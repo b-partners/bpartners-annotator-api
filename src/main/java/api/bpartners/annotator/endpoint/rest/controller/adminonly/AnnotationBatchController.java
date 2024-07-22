@@ -1,6 +1,4 @@
-package api.bpartners.annotator.endpoint.rest.controller.adminOnly;
-
-import static java.util.stream.Collectors.toList;
+package api.bpartners.annotator.endpoint.rest.controller.adminonly;
 
 import api.bpartners.annotator.endpoint.rest.controller.mapper.AnnotationBatchMapper;
 import api.bpartners.annotator.endpoint.rest.model.AnnotationBatch;
@@ -26,9 +24,7 @@ public class AnnotationBatchController {
       @PathVariable String taskId,
       @RequestParam PageFromOne page,
       @RequestParam BoundedPageSize pageSize) {
-    return service.findAllByTask(taskId, page, pageSize).stream()
-        .map(mapper::toRest)
-        .collect(toList());
+    return service.findAllByTask(taskId, page, pageSize).stream().map(mapper::toRest).toList();
   }
 
   @GetMapping("/jobs/{jobId}/tasks/{taskId}/annotations/{annotationBatchId}")

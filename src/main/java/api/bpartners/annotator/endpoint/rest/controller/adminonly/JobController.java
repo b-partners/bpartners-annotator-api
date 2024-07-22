@@ -1,4 +1,4 @@
-package api.bpartners.annotator.endpoint.rest.controller.adminOnly;
+package api.bpartners.annotator.endpoint.rest.controller.adminonly;
 
 import static org.springframework.http.HttpStatus.OK;
 import static org.springframework.http.MediaType.TEXT_PLAIN;
