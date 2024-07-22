@@ -53,7 +53,7 @@ public class SecurityConf {
   public SecurityFilterChain configure(HttpSecurity http) throws Exception {
     // @formatter:off
     http.exceptionHandling(
-            (exceptionHandler) ->
+            exceptionHandler ->
                 exceptionHandler
                     .authenticationEntryPoint(
                         // note(spring-exception)
