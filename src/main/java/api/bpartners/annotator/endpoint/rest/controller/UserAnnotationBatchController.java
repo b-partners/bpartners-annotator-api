@@ -1,6 +1,5 @@
 package api.bpartners.annotator.endpoint.rest.controller;
 
-
 import api.bpartners.annotator.endpoint.rest.controller.mapper.AnnotationBatchMapper;
 import api.bpartners.annotator.endpoint.rest.model.AnnotationBatch;
 import api.bpartners.annotator.endpoint.rest.validator.AnnotationBatchIdValidator;
