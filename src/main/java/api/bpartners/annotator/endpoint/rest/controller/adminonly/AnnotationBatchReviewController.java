@@ -42,6 +42,7 @@ public class AnnotationBatchReviewController {
       @PathVariable String jobId,
       @PathVariable String taskId,
       @PathVariable String annotationBatchId,
+      @PathVariable String reviewId,
       @RequestBody AnnotationBatchReview annotationBatchReview) {
     api.bpartners.annotator.repository.model.AnnotationBatchReview saved =
         service.save(taskId, annotationBatchId, mapper.toDomain(annotationBatchReview));
