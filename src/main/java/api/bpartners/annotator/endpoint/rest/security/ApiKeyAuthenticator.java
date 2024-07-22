@@ -26,11 +26,11 @@ public class ApiKeyAuthenticator implements UsernamePasswordAuthenticator {
   public UserDetails retrieveUser(
       String username, UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken)
       throws AuthenticationException {
-    String apiKey = getApiKeyFromHeader(usernamePasswordAuthenticationToken);
-    if (!this.apiKey.equals(apiKey)) {
+    String apiKeyToVerify = getApiKeyFromHeader(usernamePasswordAuthenticationToken);
+    if (!this.apiKey.equals(apiKeyToVerify)) {
       throw new UsernameNotFoundException("Invalid Api key");
     }
-    return new Principal(userService.getAdmin(), apiKey);
+    return new Principal(userService.getAdmin(), apiKeyToVerify);
   }
 
   private String getApiKeyFromHeader(
