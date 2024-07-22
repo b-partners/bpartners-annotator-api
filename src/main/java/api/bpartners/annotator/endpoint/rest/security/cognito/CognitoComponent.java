@@ -3,7 +3,6 @@ package api.bpartners.annotator.endpoint.rest.security.cognito;
 import static api.bpartners.annotator.model.exception.ApiException.ExceptionType.SERVER_EXCEPTION;
 
 import api.bpartners.annotator.model.exception.ApiException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.proc.BadJOSEException;
 import com.nimbusds.jwt.JWTClaimsSet;
@@ -30,7 +29,6 @@ public class CognitoComponent {
   public static final String BASIC_AUTH_PREFIX = "Basic ";
   private final CognitoConf cognitoConf;
   private final CognitoIdentityProviderClient cognitoClient;
-  private final ObjectMapper objectMapper = new ObjectMapper().findAndRegisterModules();
 
   public CognitoComponent(CognitoConf cognitoConf, CognitoIdentityProviderClient cognitoClient) {
     this.cognitoConf = cognitoConf;
