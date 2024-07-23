@@ -3,7 +3,6 @@ package api.bpartners.annotator.endpoint.rest.security.model;
 import api.bpartners.annotator.repository.model.User;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;
@@ -19,9 +18,7 @@ public class Principal implements UserDetails {
 
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
-    return Arrays.stream(user.getRoles())
-        .map(role -> Role.valueOf(String.valueOf(role)))
-        .collect(Collectors.toList());
+    return Arrays.stream(user.getRoles()).map(role -> Role.valueOf(String.valueOf(role))).toList();
   }
 
   @Override
