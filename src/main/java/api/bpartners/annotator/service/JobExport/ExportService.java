@@ -1,7 +1,6 @@
 package api.bpartners.annotator.service.JobExport;
 
 import static api.bpartners.annotator.model.exception.ApiException.ExceptionType.SERVER_EXCEPTION;
-import static org.springframework.transaction.annotation.Propagation.REQUIRED;
 
 import api.bpartners.annotator.endpoint.event.EventProducer;
 import api.bpartners.annotator.endpoint.event.model.JobExportInitiated;
@@ -17,7 +16,6 @@ import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @AllArgsConstructor
@@ -34,7 +32,6 @@ public class ExportService {
         List.of(new JobExportInitiated(jobId, exportFormat, new InternetAddress(emailCC))));
   }
 
-  @Transactional(propagation = REQUIRED, readOnly = true, rollbackFor = Exception.class)
   public Object exportJob(Job job, List<AnnotationBatch> batches, ExportFormat format) {
     return switch (format) {
       case VGG -> vggExportService.export(job, batches);
