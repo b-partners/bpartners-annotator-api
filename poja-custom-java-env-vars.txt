@@ -1,4 +1,6 @@
 ADMIN_API_KEY: !Sub '{{resolve:ssm:/bpartners-annotator/${Env}/admin/api-key}}'
+GEO_JOBS_API_KEY: !Sub '{{resolve:ssm:/bpartners-annotator/${Env}/geojobs/api-key}}'
+GEO_JOBS_API_URL: !Sub '{{resolve:ssm:/bpartners-annotator/${Env}/geojobs/api-url}}'
 AWS_COGNITO_USERPOOL_ID: !Sub '{{resolve:ssm:/bpartners-annotator/${Env}/cognito/userpool-id}}'
 AWS_COGNITO_USERPOOL_DOMAIN: !Sub '{{resolve:ssm:/bpartners-annotator/${Env}/cognito/userpool-domain}}'
 AWS_COGNITO_USERPOOL_CLIENTID: !Sub '{{resolve:ssm:/bpartners-annotator/${Env}/cognito/userpool-client-id}}'

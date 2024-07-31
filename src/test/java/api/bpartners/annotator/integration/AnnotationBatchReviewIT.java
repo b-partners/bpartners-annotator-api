@@ -21,6 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import api.bpartners.annotator.conf.FacadeIT;
+import api.bpartners.annotator.endpoint.event.EventProducer;
 import api.bpartners.annotator.endpoint.rest.api.AnnotationsApi;
 import api.bpartners.annotator.endpoint.rest.api.UserAnnotationsApi;
 import api.bpartners.annotator.endpoint.rest.client.ApiClient;
@@ -52,6 +53,7 @@ class AnnotationBatchReviewIT extends FacadeIT {
   @Autowired JobRepository jobRepository;
   @Autowired LabelRepository labelRepository;
   @MockBean CognitoComponent cognitoComponentMock;
+  @MockBean EventProducer eventProducerMock;
 
   @BeforeEach
   void setup() {

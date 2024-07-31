@@ -17,7 +17,7 @@ import lombok.ToString;
 @Data
 @EqualsAndHashCode
 @ToString
-public class GeoJobNotificationSent extends PojaEvent {
+public class GeoJobsNotificationSent extends PojaEvent {
   @JsonProperty("annotationJobId")
   private String annotationJobId;
 

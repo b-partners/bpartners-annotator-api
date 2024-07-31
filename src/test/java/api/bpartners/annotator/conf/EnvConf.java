@@ -13,6 +13,8 @@ public class EnvConf {
     registry.add("aws.cognito.userPool.clientId", () -> "dummy");
     registry.add("aws.cognito.userPool.clientSecret", () -> "dummy");
     registry.add("admin.api.key", () -> ADMIN_API_KEY);
+    registry.add("geo.jobs.api.key", () -> "dummy");
+    registry.add("geo.jobs.api.url", () -> "dummy");
     registry.add("spring.flyway.locations", () -> "classpath:/db/migration,classpath:/db/testdata");
     registry.add(
         "GEOJOBS.USER.INFO",
