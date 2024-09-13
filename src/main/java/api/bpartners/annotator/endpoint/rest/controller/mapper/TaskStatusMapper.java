@@ -20,9 +20,10 @@ public class TaskStatusMapper {
       case TO_CORRECT -> TO_CORRECT;
       case TO_REVIEW -> TO_REVIEW;
       case COMPLETED -> COMPLETED;
-      default -> throw new ApiException(
-          ApiException.ExceptionType.SERVER_EXCEPTION,
-          "unknown TaskStatus from server = " + domain);
+      default ->
+          throw new ApiException(
+              ApiException.ExceptionType.SERVER_EXCEPTION,
+              "unknown TaskStatus from server = " + domain);
     };
   }
 
@@ -32,8 +33,8 @@ public class TaskStatusMapper {
     }
     return switch (rest) {
       case PENDING -> api.bpartners.annotator.repository.model.enums.TaskStatus.PENDING;
-      case UNDER_COMPLETION -> api.bpartners.annotator.repository.model.enums.TaskStatus
-          .UNDER_COMPLETION;
+      case UNDER_COMPLETION ->
+          api.bpartners.annotator.repository.model.enums.TaskStatus.UNDER_COMPLETION;
       case TO_CORRECT -> api.bpartners.annotator.repository.model.enums.TaskStatus.TO_CORRECT;
       case TO_REVIEW -> api.bpartners.annotator.repository.model.enums.TaskStatus.TO_REVIEW;
       case COMPLETED -> api.bpartners.annotator.repository.model.enums.TaskStatus.COMPLETED;

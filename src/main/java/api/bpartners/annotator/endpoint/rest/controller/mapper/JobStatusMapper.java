@@ -24,8 +24,10 @@ public class JobStatusMapper {
       case TO_CORRECT -> TO_CORRECT;
       case FAILED -> FAILED;
       case COMPLETED -> COMPLETED;
-      default -> throw new ApiException(
-          ApiException.ExceptionType.SERVER_EXCEPTION, "unknown JobStatus from server = " + domain);
+      default ->
+          throw new ApiException(
+              ApiException.ExceptionType.SERVER_EXCEPTION,
+              "unknown JobStatus from server = " + domain);
     };
   }
 

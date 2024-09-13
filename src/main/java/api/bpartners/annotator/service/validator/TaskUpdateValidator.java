@@ -51,26 +51,31 @@ public class TaskUpdateValidator implements BiConsumer<Task, Task> {
     BadRequestException exception =
         new BadRequestException(String.format("illegal transition: %s -> %s", current, next));
     return switch (current) {
-      case PENDING -> switch (next) {
-        case PENDING, UNDER_COMPLETION -> next;
-        case TO_CORRECT, TO_REVIEW, COMPLETED -> throw exception;
-      };
-      case UNDER_COMPLETION -> switch (next) {
-        case PENDING, UNDER_COMPLETION, TO_REVIEW -> next;
-        case TO_CORRECT, COMPLETED -> throw exception;
-      };
-      case TO_CORRECT -> switch (next) {
-        case PENDING, UNDER_COMPLETION, COMPLETED -> throw exception;
-        case TO_CORRECT, TO_REVIEW -> next;
-      };
-      case TO_REVIEW -> switch (next) {
-        case TO_CORRECT, TO_REVIEW, COMPLETED -> next;
-        case PENDING, UNDER_COMPLETION -> throw exception;
-      };
-      case COMPLETED -> switch (next) {
-        case COMPLETED, TO_CORRECT -> next;
-        case PENDING, UNDER_COMPLETION, TO_REVIEW -> throw exception;
-      };
+      case PENDING ->
+          switch (next) {
+            case PENDING, UNDER_COMPLETION -> next;
+            case TO_CORRECT, TO_REVIEW, COMPLETED -> throw exception;
+          };
+      case UNDER_COMPLETION ->
+          switch (next) {
+            case PENDING, UNDER_COMPLETION, TO_REVIEW -> next;
+            case TO_CORRECT, COMPLETED -> throw exception;
+          };
+      case TO_CORRECT ->
+          switch (next) {
+            case PENDING, UNDER_COMPLETION, COMPLETED -> throw exception;
+            case TO_CORRECT, TO_REVIEW -> next;
+          };
+      case TO_REVIEW ->
+          switch (next) {
+            case TO_CORRECT, TO_REVIEW, COMPLETED -> next;
+            case PENDING, UNDER_COMPLETION -> throw exception;
+          };
+      case COMPLETED ->
+          switch (next) {
+            case COMPLETED, TO_CORRECT -> next;
+            case PENDING, UNDER_COMPLETION, TO_REVIEW -> throw exception;
+          };
     };
   }
 }

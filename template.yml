@@ -39,9 +39,9 @@ Globals:
         AWS_COGNITO_USERPOOL_CLIENTSECRET: !Sub '{{resolve:ssm:/bpartners-annotator/${Env}/cognito/userpool-client-secret}}'
         GEOJOBS_USER_INFO: !Sub '{{resolve:ssm:/bpartners-annotator/${Env}/geojobs/userinfo}}'
         TASKS_INSERT_LIMIT_MAX: !Sub '{{resolve:ssm:/bpartners-annotator/${Env}/max-tasks-insert-nb}}'
-        SPRING_DATASOURCE_URL: !Sub '{{resolve:ssm:/bpartners-annotator/${Env}/db/url}}'
-        SPRING_DATASOURCE_USERNAME: !Sub '{{resolve:ssm:/bpartners-annotator/${Env}/db/username}}'
-        SPRING_DATASOURCE_PASSWORD: !Sub '{{resolve:ssm:/bpartners-annotator/${Env}/db/password}}'
+        SPRING_DATASOURCE_URL: !Sub '{{resolve:ssm:/bpartners-annotator/${Env}/neon/db/url}}'
+        SPRING_DATASOURCE_USERNAME: !Sub '{{resolve:ssm:/bpartners-annotator/${Env}/neon/db/username}}'
+        SPRING_DATASOURCE_PASSWORD: !Sub '{{resolve:ssm:/bpartners-annotator/${Env}/neon/db/password}}'
         
 
 Parameters:
