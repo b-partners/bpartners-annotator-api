@@ -1,13 +1,13 @@
 package api.bpartners.annotator.endpoint.rest.controller.health;
 
-import static api.bpartners.annotator.file.FileHashAlgorithm.NONE;
+import static api.bpartners.annotator.file.hash.FileHashAlgorithm.NONE;
 import static java.io.File.createTempFile;
 import static java.nio.file.Files.createTempDirectory;
 import static java.util.UUID.randomUUID;
 
 import api.bpartners.annotator.PojaGenerated;
-import api.bpartners.annotator.file.BucketComponent;
-import api.bpartners.annotator.file.FileHash;
+import api.bpartners.annotator.file.bucket.BucketComponent;
+import api.bpartners.annotator.file.hash.FileHash;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;

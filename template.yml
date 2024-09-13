@@ -29,9 +29,7 @@ Globals:
         AWS_EVENT_STACK_1_SQS_QUEUE_URL: !Sub '{{resolve:ssm:/bpartners-annotator/${Env}/1/sqs/mailbox-queue-url}}'
         AWS_EVENT_STACK_2_SQS_QUEUE_URL: !Sub '{{resolve:ssm:/bpartners-annotator/${Env}/2/sqs/mailbox-queue-url}}'
         
-        SPRING_DATASOURCE_URL: !Sub '{{resolve:ssm:/bpartners-annotator/${Env}/db/url}}'
-        SPRING_DATASOURCE_USERNAME: !Sub '{{resolve:ssm:/bpartners-annotator/${Env}/db/user/username}}'
-        SPRING_DATASOURCE_PASSWORD: !Sub '{{resolve:ssm:/bpartners-annotator/${Env}/db/user/password}}'
+        
         ADMIN_API_KEY: !Sub '{{resolve:ssm:/bpartners-annotator/${Env}/admin/api-key}}'
         GEO_JOBS_API_KEY: !Sub '{{resolve:ssm:/bpartners-annotator/${Env}/geojobs/api-key}}'
         GEO_JOBS_API_URL: !Sub '{{resolve:ssm:/bpartners-annotator/${Env}/geojobs/api-url}}'
@@ -41,6 +39,9 @@ Globals:
         AWS_COGNITO_USERPOOL_CLIENTSECRET: !Sub '{{resolve:ssm:/bpartners-annotator/${Env}/cognito/userpool-client-secret}}'
         GEOJOBS_USER_INFO: !Sub '{{resolve:ssm:/bpartners-annotator/${Env}/geojobs/userinfo}}'
         TASKS_INSERT_LIMIT_MAX: !Sub '{{resolve:ssm:/bpartners-annotator/${Env}/max-tasks-insert-nb}}'
+        SPRING_DATASOURCE_URL: !Sub '{{resolve:ssm:/bpartners-annotator/${Env}/db/url}}'
+        SPRING_DATASOURCE_USERNAME: !Sub '{{resolve:ssm:/bpartners-annotator/${Env}/db/username}}'
+        SPRING_DATASOURCE_PASSWORD: !Sub '{{resolve:ssm:/bpartners-annotator/${Env}/db/password}}'
         
 
 Parameters:
