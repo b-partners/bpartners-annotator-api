@@ -28,12 +28,18 @@ import org.junit.jupiter.api.Test;
 import org.springframework.core.io.ClassPathResource;
 
 class VGGtoSQL {
-  private static final String BATCH_6_NANTES_VGG_FILENAME = "batch-6-Nantes-VGG.json";
   private static final String DIJON_VGG_VALIDATION_FILENAME = "Dijon-VGG-validation2.json";
-  private static final String GLOBAL_ANNOTATION_SIX_REGION =
-      "annotation-globale-six-region-train.json";
-  private static final String OWNER_EMAIL = "hei.mahefa@gmail.com";
+  private static final String ANNOTATIONS_FILENAME =
+      "annotation-10429.json";
+  private static final String OWNER_EMAIL = "ikram@bpartners.app";
   private static final String ANNOTATOR_TEAM_ID = "25c2052d-705f-4ab4-8eb1-17fefe8c182b";
+  // IKRAM AND SOFIANE
+  private static final String[] ANNOTATOR_IDS = {
+    "29d4c060-77e6-4e19-b2cb-86a052047ed8", "76e23de5-a8dc-402d-a137-230309745227"
+  };
+  private static final Random random = new Random();
+  private static final ObjectMapper OM = new ObjectMapper().findAndRegisterModules();
+
   private static final Map<String, String> DIJON_METADATA =
       Map.of(
           "bucketName", "annotations-images-6-regions",
@@ -41,26 +47,14 @@ class VGGtoSQL {
           "folderPath", "val-dijon/all-images/",
           "jobName", "val_dijon",
           "vgg_filename", DIJON_VGG_VALIDATION_FILENAME);
-  // IKRAM AND SOFIANE
-  private static final String[] ANNOTATOR_IDS = {
-    "29d4c060-77e6-4e19-b2cb-86a052047ed8", "76e23de5-a8dc-402d-a137-230309745227"
-  };
-  private static final Random random = new Random();
-  private static final ObjectMapper OM = new ObjectMapper().findAndRegisterModules();
-  private static final Map<String, String> NANTES_METADATA =
-      Map.of(
-          "bucketName", "annotations-images-6-regions",
-          "teamId", ANNOTATOR_TEAM_ID,
-          "folderPath", "val-nantes/images-val/",
-          "jobName", "val_nantes",
-          "vgg_filename", BATCH_6_NANTES_VGG_FILENAME);
+
   private static final Map<String, String> ALL_REGION_METADATA =
       Map.of(
-          "bucketName", "annotations-images-6-regions",
+          "bucketName", "all-data-final",
           "teamId", ANNOTATOR_TEAM_ID,
-          "folderPath", "all-images-train/images/",
-          "jobName", "all_images_train",
-          "vgg_filename", GLOBAL_ANNOTATION_SIX_REGION);
+          "folderPath", "images-10429/",
+          "jobName", "All_data_final_images_10_000",
+          "vgg_filename", ANNOTATIONS_FILENAME);
   public static final String INSERT_INTO_LABEL_ID_NAME_COLOR_VALUES_TEMPLATE =
       "INSERT INTO label(id, name, color) VALUES %s";
   public static final String ID_NAME_COLOR = "('{ID}', '{NAME}', '{COLOR}')";
@@ -78,7 +72,7 @@ class VGGtoSQL {
 
   @Test
   void generate_sql() {
-    var metadata = ALL_REGION_METADATA;
+    var metadata = DIJON_METADATA;
     VGG vggAnnotation = getVGGAnnotation(metadata.get("vgg_filename"));
 
     Job job = jobFromMetadata(metadata);
@@ -219,7 +213,7 @@ class VGGtoSQL {
     String annotationSqlTemplate =
         """
                 INSERT INTO annotation (id, task_id, user_id, label_id, batch_id, polygon)
-                VALUES %s
+                VALUES 
                 """;
     String annotationSqlInsertValuesTemplate =
         "('{ID}', '{TASK_ID}', '{ANNOTATOR_ID}', '{LABEL_ID}','{BATCH_ID}', '{POLYGON}')";
@@ -302,10 +296,7 @@ class VGGtoSQL {
               .replace(
                   "{POLYGON}",
                   writeValueAsString(toDomainPolygon(regionEntry.getValue().getShapeAttribute())));
-      annotationSqlTemplate = String.format(annotationSqlTemplate, annotationSqlInsertValues);
-      if (--numberOfAnnotationRegionEntriesLeft != 0) {
-        annotationSqlTemplate += ", %s";
-      }
+      annotationSqlTemplate = annotationSqlTemplate + annotationSqlInsertValues+",";
     }
     return annotationSqlTemplate;
   }
@@ -350,7 +341,7 @@ class VGGtoSQL {
 
   @Test
   void generate_label_and_has_label_from_label_list_and_job() {
-    String labelsAsString = "pathway,pool,velux,shadow";
+    String labelsAsString = "tree,line,shadow,roof_tuiles,roof_beton,roof_ardoise,pathway,sidewalk,velux";
     String[] splitLabel = labelsAsString.split(",");
     List<Label> labels = Arrays.stream(splitLabel).map(this::createLabelFrom).toList();
     System.out.println(
