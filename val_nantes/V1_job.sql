@@ -1,1 +1,0 @@
-INSERT INTO job(id, bucket_name, team_id, status, folder_path, owner_email, "name") VALUES ('c1c1f05d-b529-446c-987c-7d9aa69a4b5c', 'annotations-images-6-regions', '25c2052d-705f-4ab4-8eb1-17fefe8c182b', 'TO_REVIEW', 'val_nantes/images_val/', 'hei.mahefa@gmail.com', 'val_nantes');
