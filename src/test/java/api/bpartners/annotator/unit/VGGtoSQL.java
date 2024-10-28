@@ -28,32 +28,20 @@ import org.junit.jupiter.api.Test;
 import org.springframework.core.io.ClassPathResource;
 
 class VGGtoSQL {
-  private static final String DIJON_VGG_VALIDATION_FILENAME = "Dijon-VGG-validation2.json";
-  private static final String ANNOTATIONS_FILENAME =
-      "annotation-10429.json";
+  private static final String ANNOTATIONS_FILENAME = "output_part3.json";
   private static final String OWNER_EMAIL = "ikram@bpartners.app";
   private static final String ANNOTATOR_TEAM_ID = "25c2052d-705f-4ab4-8eb1-17fefe8c182b";
   // IKRAM AND SOFIANE
-  private static final String[] ANNOTATOR_IDS = {
-    "29d4c060-77e6-4e19-b2cb-86a052047ed8", "76e23de5-a8dc-402d-a137-230309745227"
-  };
+  private static final String[] ANNOTATOR_IDS = {"417dba86-dd09-4ca4-84d1-be4559d00957"};
   private static final Random random = new Random();
   private static final ObjectMapper OM = new ObjectMapper().findAndRegisterModules();
-
-  private static final Map<String, String> DIJON_METADATA =
-      Map.of(
-          "bucketName", "annotations-images-6-regions",
-          "teamId", ANNOTATOR_TEAM_ID,
-          "folderPath", "val-dijon/all-images/",
-          "jobName", "val_dijon",
-          "vgg_filename", DIJON_VGG_VALIDATION_FILENAME);
 
   private static final Map<String, String> ALL_REGION_METADATA =
       Map.of(
           "bucketName", "all-data-final",
           "teamId", ANNOTATOR_TEAM_ID,
-          "folderPath", "images-10429/",
-          "jobName", "All_data_final_images_10_000",
+          "folderPath", "batch-to-correct/batch3/",
+          "jobName", "batch3-274images-test-resnet50",
           "vgg_filename", ANNOTATIONS_FILENAME);
   public static final String INSERT_INTO_LABEL_ID_NAME_COLOR_VALUES_TEMPLATE =
       "INSERT INTO label(id, name, color) VALUES %s";
@@ -72,7 +60,7 @@ class VGGtoSQL {
 
   @Test
   void generate_sql() {
-    var metadata = DIJON_METADATA;
+    var metadata = ALL_REGION_METADATA;
     VGG vggAnnotation = getVGGAnnotation(metadata.get("vgg_filename"));
 
     Job job = jobFromMetadata(metadata);
@@ -101,7 +89,7 @@ class VGGtoSQL {
                 INSERT INTO job(id, bucket_name, team_id, status, folder_path, owner_email, "name") VALUES %s
                 """;
     String jobInsertValuesTemplate =
-        "('{ID}', '{BUCKET_NAME}', '{TEAM_ID}', 'TO_REVIEW', '{FOLDER_PATH}', '{OWNER_EMAIL}', '{NAME}')";
+        "('{ID}', '{BUCKET_NAME}', '{TEAM_ID}', 'TO_CORRECT', '{FOLDER_PATH}', '{OWNER_EMAIL}', '{NAME}')";
 
     String jobInsertValues =
         jobInsertValuesTemplate
@@ -201,7 +189,7 @@ class VGGtoSQL {
                 VALUES %s
                 """;
     String taskInsertValuesTemplate =
-        "('{ID}', '{JOB_ID}', 'TO_REVIEW', '{FILENAME}', '{USER_ID}')";
+        "('{ID}', '{JOB_ID}', 'TO_CORRECT', '{FILENAME}', '{USER_ID}')";
 
     String annotationBatchSqlTemplate =
         """
@@ -255,7 +243,6 @@ class VGGtoSQL {
       if (--numberOfAnnotationEntriesLeft != 0) {
         taskInsertSqlTemplate += ", %s";
         annotationBatchSqlTemplate += ", %s";
-        annotationSqlTemplate += ", %s";
       } else {
         taskInsertSqlTemplate += ";";
         annotationBatchSqlTemplate += ";";

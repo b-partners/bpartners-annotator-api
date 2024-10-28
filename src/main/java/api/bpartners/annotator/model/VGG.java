@@ -20,7 +20,7 @@ public class VGG extends HashMap<String, VGG.Annotation> {
     @JsonProperty("fileref")
     private String fileRef;
 
-    private Long size;
+    private Object size;
     private String filename;
 
     @JsonProperty("base64_img_data")
