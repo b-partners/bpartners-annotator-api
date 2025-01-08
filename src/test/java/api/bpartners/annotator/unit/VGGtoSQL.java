@@ -28,10 +28,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.core.io.ClassPathResource;
 
 class VGGtoSQL {
-  private static final String ANNOTATIONS_FILENAME = "output_part3.json";
+  private static final String ANNOTATIONS_FILENAME = "batch_3.json";
   private static final String OWNER_EMAIL = "ikram@bpartners.app";
   private static final String ANNOTATOR_TEAM_ID = "25c2052d-705f-4ab4-8eb1-17fefe8c182b";
   // IKRAM AND SOFIANE
+  //Samir : 29d4c060-77e6-4e19-b2cb-86a052047ed8
+  //Ghiles : 76e23de5-a8dc-402d-a137-230309745227
+  //Mourad: 417dba86-dd09-4ca4-84d1-be4559d00957
   private static final String[] ANNOTATOR_IDS = {"417dba86-dd09-4ca4-84d1-be4559d00957"};
   private static final Random random = new Random();
   private static final ObjectMapper OM = new ObjectMapper().findAndRegisterModules();
@@ -40,8 +43,8 @@ class VGGtoSQL {
       Map.of(
           "bucketName", "all-data-final",
           "teamId", ANNOTATOR_TEAM_ID,
-          "folderPath", "batch-to-correct/batch3/",
-          "jobName", "batch3-274images-test-resnet50",
+          "folderPath", "dijon-50000/batch1-final/",
+          "jobName", "Dijon-to-correct-batch1-1630",
           "vgg_filename", ANNOTATIONS_FILENAME);
   public static final String INSERT_INTO_LABEL_ID_NAME_COLOR_VALUES_TEMPLATE =
       "INSERT INTO label(id, name, color) VALUES %s";
@@ -86,10 +89,10 @@ class VGGtoSQL {
   String sqlFromJob(Job job) {
     String jobInsertSqlTemplate =
         """
-                INSERT INTO job(id, bucket_name, team_id, status, folder_path, owner_email, "name") VALUES %s
+                INSERT INTO job(id, bucket_name, team_id, status, folder_path, owner_email, "name", images_height, images_width) VALUES %s
                 """;
     String jobInsertValuesTemplate =
-        "('{ID}', '{BUCKET_NAME}', '{TEAM_ID}', 'TO_CORRECT', '{FOLDER_PATH}', '{OWNER_EMAIL}', '{NAME}')";
+        "('{ID}', '{BUCKET_NAME}', '{TEAM_ID}', 'TO_CORRECT', '{FOLDER_PATH}', '{OWNER_EMAIL}', '{NAME}', 1024, 1024)";
 
     String jobInsertValues =
         jobInsertValuesTemplate

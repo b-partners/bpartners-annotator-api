@@ -14,7 +14,7 @@ def split_insert_or_update_script(sql_script, chunk_size=1000, conflict_target="
     return chunks
 
 if __name__ == '__main__':
-    folder = "../batch6-274images-test-resnet50"
+    folder = "../../Dijon-to-correct-batch3-1777"
     with open(f"{folder}/V6_annotation.sql", "r") as file:
         sql_script = file.read().replace(', %s', '')
         sql_script = sql_script[0:len(sql_script)-2]+';'

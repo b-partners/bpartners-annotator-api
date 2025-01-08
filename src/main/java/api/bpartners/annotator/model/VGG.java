@@ -1,5 +1,6 @@
 package api.bpartners.annotator.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.HashMap;
 import java.util.List;
@@ -11,6 +12,7 @@ import lombok.NoArgsConstructor;
 
 @AllArgsConstructor
 @Builder
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class VGG extends HashMap<String, VGG.Annotation> {
   @AllArgsConstructor
   @Data
@@ -62,6 +64,7 @@ public class VGG extends HashMap<String, VGG.Annotation> {
       @NoArgsConstructor
       public static class RegionAttribute {
         private String label;
+        private String confidence;
       }
     }
   }
