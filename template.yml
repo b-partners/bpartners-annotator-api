@@ -49,12 +49,38 @@ Parameters:
     Type: String
 
 Resources:
-  FrontalServerlessRestApi:
-    Type: AWS::Serverless::Api
+  FrontalServerlessHttpApi:
+    StageName: $default
+    Type: AWS::Serverless::HttpApi
     Properties:
-      StageName: Prod
-      BinaryMediaTypes:
-        - "*~1*"
+      CorsConfiguration:
+        AllowMethods:
+          - GET
+          - POST
+          - PUT
+          - DELETE
+          - OPTIONS
+        AllowHeaders:
+          - "*"
+        AllowOrigins:
+          - "*"
+
+  HttpApiIntegration:
+    Type: AWS::ApiGatewayV2::Integration
+    Properties:
+      ApiId: !Ref FrontalServerlessHttpApi
+      IntegrationType: AWS_PROXY
+      IntegrationUri: !Sub "${FrontalFunction.Arn}:live"
+      PayloadFormatVersion: "1.0"
+      IntegrationMethod: ANY
+      TimeoutInMillis: 30000
+
+  DefaultRoute:
+    Type: AWS::ApiGatewayV2::Route
+    Properties:
+      ApiId: !Ref FrontalServerlessHttpApi
+      RouteKey: $default
+      Target: !Sub "integrations/${HttpApiIntegration}"
 
   FrontalFunction:
     Type: AWS::Serverless::Function
@@ -66,12 +92,12 @@ Resources:
       
       Events:
         ApiCall:
-          Type: Api
+          Type: HttpApi
           Properties:
             Path: /{proxy+}
             Method: ANY
-            RestApiId:
-              Ref: FrontalServerlessRestApi
+            ApiId:
+              Ref: FrontalServerlessHttpApi
 
   WorkerFunction1:
     Type: AWS::Serverless::Function
@@ -121,7 +147,7 @@ Resources:
     Properties:
       Name: !Join [ '', [ /bpartners-annotator/, !Ref Env, /api/url ] ]
       Type: String
-      Value: !Sub "https://${FrontalServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod"
+      Value: !GetAtt FrontalServerlessHttpApi.ApiEndpoint
 
 Outputs:
   ApiUrl:
