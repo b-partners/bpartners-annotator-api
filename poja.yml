@@ -6,8 +6,8 @@ compute:
   worker_function_2_timeout: 600
   worker_memory: 512
 concurrency:
-  frontal_reserved_concurrent_executions_nb: null
-  worker_reserved_concurrent_executions_nb: null
+  frontal_reserved_concurrent_executions_nb: 0
+  worker_reserved_concurrent_executions_nb: 0
 database:
   aurora_auto_pause: 'true'
   aurora_max_capacity: 16
